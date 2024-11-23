@@ -1,0 +1,44 @@
+﻿CREATE TABLE [dbo].[Applications]
+(
+	[Id] INT IDENTITY(1, 1) NOT NULL,
+	[Name] NVARCHAR (50) NOT NULL,
+	[Creation_DateTime] SMALLDATETIME NOT NULL,
+	CONSTRAINT [PK_Application_Id] PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [UC_Application_Name] UNIQUE NONCLUSTERED ([Name] ASC),
+)
+
+CREATE TABLE [dbo].[Containers]
+(
+	[Id] INT IDENTITY(1, 1) NOT NULL,
+	[Name] NVARCHAR (50) NOT NULL,
+	[Creation_DateTime] SMALLDATETIME NOT NULL,
+	[Parent] INT NOT NULL,
+	CONSTRAINT [PK_Container_Id] PRIMARY KEY CLUSTERED ([Id] ASC),
+	CONSTRAINT [FK_Container_Parent] FOREIGN KEY (Parent) REFERENCES Applications(Id),
+    --CONSTRAINT [UC_Container_Name] UNIQUE NONCLUSTERED ([Name] ASC),
+)
+
+CREATE TABLE [dbo].[Records]
+(
+	[Id] INT IDENTITY(1, 1) NOT NULL,
+	[Name] NVARCHAR (50) NOT NULL,
+	[Content] NVARCHAR (MAX) NOT NULL,
+	[Creation_DateTime] SMALLDATETIME NOT NULL,
+	[Parent] INT NOT NULL,
+	CONSTRAINT [PK_Record_Id] PRIMARY KEY CLUSTERED ([Id] ASC),
+	CONSTRAINT [FK_Record_Parent] FOREIGN KEY (Parent) REFERENCES Containers(Id),
+	--CONSTRAINT [UC_Record_Name] UNIQUE NONCLUSTERED ([Name] ASC),
+)
+
+CREATE TABLE [dbo].[Notifications]
+(
+	[Id] INT IDENTITY(1, 1) NOT NULL,
+	[Name] NVARCHAR (50) NOT NULL,
+	[Creation_DateTime] SMALLDATETIME NOT NULL,
+	[Parent] INT NOT NULL,
+	[Event] NVARCHAR (150) NOT NULL,
+	[Endpoint] NVARCHAR (150) NOT NULL,
+	CONSTRAINT [PK_Notification_Id] PRIMARY KEY CLUSTERED ([Id] ASC),
+	CONSTRAINT [FK_Notification_Parent] FOREIGN KEY (Parent) REFERENCES Containers(Id),
+	--CONSTRAINT [UC_Notification_Name] UNIQUE NONCLUSTERED ([Name] ASC),
+)
