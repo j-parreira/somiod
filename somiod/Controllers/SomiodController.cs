@@ -10,5 +10,10 @@ namespace somiod.Controllers
     [RoutePrefix("api/somiod")]
     public class SomiodController : ApiController
     {
+        // ---Application---
+        // GET: api/somiod
+        [Route("")]
+        [HttpGet]
+
     }
 }
