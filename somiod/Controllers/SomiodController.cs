@@ -7,9 +7,8 @@ using System.Web.Http;
 
 namespace somiod.Controllers
 {
-    [RoutePrefix("api/applications")]
-    public class ApplicationsController : ApiController
+    [RoutePrefix("api/somiod")]
+    public class SomiodController : ApiController
     {
-        string connectionString = Properties.Settings.Default.ConnStr;
     }
 }

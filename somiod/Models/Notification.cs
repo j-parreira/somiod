@@ -9,7 +9,7 @@ namespace somiod.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public DateTime Creation_DateTime { get; set; }
+        public DateTime CreationDateTime { get; set; }
         public int Parent { get; set; }
         public string Event { get; set; }
         public string Endpoint { get; set; }

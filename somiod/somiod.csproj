@@ -92,10 +92,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\ApplicationsController.cs" />
+    <Compile Include="Controllers\SomiodController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Handlers\ApplicationHandler.cs" />
+    <Compile Include="Handlers\CointainerHandler.cs" />
+    <Compile Include="Handlers\NotificationHandler.cs" />
+    <Compile Include="Handlers\RecordHandler.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Container.cs" />
     <Compile Include="Models\Notification.cs" />
