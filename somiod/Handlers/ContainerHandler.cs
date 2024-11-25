@@ -7,38 +7,32 @@ using System.Web;
 
 namespace somiod.Handlers
 {
-    public class ApplicationHandler
+    public class ContainerHandler
     {
         protected SqlConnection sqlConnection;
         protected String connectionString = Properties.Settings.Default.ConnStr;
         protected string sqlCommand = "";
 
-        internal static List<Application> FindApplicationsInDatabase()
+        internal static List<Container> FindContainersInDatabase(string application)
         {
             throw new NotImplementedException(); //TODO: Implement this method
         }
 
-        internal static Application FindApplicationInDatabase(string application)
+        internal static Container FindContainerInDatabase(string application, string container)
         {
             throw new NotImplementedException(); //TODO: Implement this method
         }
 
-        internal static Application AddApplicationToDatabase(Application app)
+        internal static Container AddContainerToDatabase(string application, Container container)
         {
             throw new NotImplementedException(); //TODO: Implement this method
         }
 
-        internal static bool DeleteApplicationFromDatabase(string application)
+        internal static bool DeleteContainerFromDatabase(string application, string container)
         {
             throw new NotImplementedException(); //TODO: Implement this method
         }
-
-        internal static bool UpdateApplicationInDatabase(string application, Application app)
-        {
-            throw new NotImplementedException(); //TODO: Implement this method
-        }
-
-        internal static bool ApplicationExists(string application)
+        internal static bool UpdateContainerInDatabase(string application, string container, Container cont)
         {
             throw new NotImplementedException(); //TODO: Implement this method
         }
