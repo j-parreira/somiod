@@ -247,7 +247,7 @@ namespace somiod.Controllers
                     return NotFound();
                 }
                 createdCont = ContainerHandler.AddContainerToDatabase(application, container);
-                
+
             }
             catch (Exception ex)
             {
@@ -335,5 +335,50 @@ namespace somiod.Controllers
 
         // ---Records and Notifications---
 
+        // POST: api/somiod/{application}/{container}
+        [Route("{application}/{container}")]
+        [HttpPost]
+        public IHttpActionResult PostRecordOrNotification(string application, string container, [FromBody] RecordOrNotification recordOrNotification)
+        {
+            if (string.IsNullOrWhiteSpace(application))
+            {
+                return BadRequest("Application name must be provided.");
+            }
+            if (string.IsNullOrWhiteSpace(container))
+            {
+                return BadRequest("Container name must be provided.");
+            }
+            if (recordOrNotification == null)
+            {
+                return BadRequest("Record or notification must be provided.");
+            }
+
+            if (!ApplicationHandler.ApplicationExists(application))
+            {
+                return NotFound();
+            }
+            if (!ContainerHandler.ContainerExists(application, container))
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                if (recordOrNotification is Record)
+                {
+                    RecordHandler.AddRecordToDatabase(application, container, recordOrNotification as Record);
+                    return Created(new Uri($"{Request.RequestUri}/{recordOrNotification.Name}"), recordOrNotification);
+                }
+                else if (recordOrNotification is Notification)
+                {
+                    NotificationHandler.AddNotificationToDatabase(application, container, recordOrNotification as Notification);
+                    return Created(new Uri($"{Request.RequestUri}/{recordOrNotification.Name}"), recordOrNotification);
+                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
     }
 }

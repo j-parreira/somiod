@@ -5,7 +5,7 @@ using System.Web;
 
 namespace somiod.Models
 {
-    public class Record
+    public class Record : RecordOrNotification
     {
         public int Id { get; set; }
         public string Name { get; set; }
