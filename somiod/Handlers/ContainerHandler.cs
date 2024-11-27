@@ -36,7 +36,7 @@ namespace somiod.Handlers
         {
             throw new NotImplementedException(); //TODO: Implement this method
         }
-        internal static bool ContainerExists(string application)
+        internal static bool ContainerExists(string application, string container)
         {
             throw new NotImplementedException(); //TODO: Implement this method
         }

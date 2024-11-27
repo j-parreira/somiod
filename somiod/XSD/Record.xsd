@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="Record">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Id" type="xs:int" />
+				<xs:element name="Name" type="xs:string" />
+				<xs:element name="Content" type="xs:string" />
+				<xs:element name="CreationDateTime" type="xs:dateTime" />
+				<xs:element name="Parent" type="xs:int" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
