@@ -209,7 +209,7 @@ namespace somiod.Controllers
         // PUT: api/somiod/{application}
         [Route("{application}")]
         [HttpPut]
-        public IHttpActionResult PutApplication(string application, [FromBody] Application app)
+        public IHttpActionResult PutApplication(string application, [FromBody] Application newApp)
         {
             if (string.IsNullOrWhiteSpace(application))
             {
@@ -218,21 +218,30 @@ namespace somiod.Controllers
 
             string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Application.xsd");
 
-            if (!XMLHandler.ValidateWithXSD(app, xsdPath, out string validationError))
+            if (!XMLHandler.ValidateWithXSD(newApp, xsdPath, out string validationError))
             {
                 return BadRequest(validationError);
             }
 
-            if (!string.Equals(application, app.Name, StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(application, newApp.Name, StringComparison.OrdinalIgnoreCase))
             {
                 return BadRequest("The application name in the URL does not match the name in the request body.");
             }
 
+            if (newApp.Name == "application")
+            {
+                return BadRequest("The application name 'application' is reserved and cannot be used.");
+            }
+
+            if (!ApplicationHandler.ApplicationExists(application))
+            {
+                return NotFound();
+            }
+
             try
             {
-                bool isUpdated = ApplicationHandler.UpdateApplicationInDatabase(application, app);
-                if (!isUpdated)
-                {
+                bool isUpdated = ApplicationHandler.UpdateApplicationInDatabase(application, newApp);
+                if (!isUpdated) {
                     return NotFound();
                 }
             }
@@ -241,7 +250,7 @@ namespace somiod.Controllers
                 return InternalServerError(ex);
             }
 
-            return Content(HttpStatusCode.OK, application, new XmlMediaTypeFormatter());
+            return Content(HttpStatusCode.OK, newApp, new XmlMediaTypeFormatter());
         }
 
         // ---End of Application---
@@ -257,8 +266,8 @@ namespace somiod.Controllers
             {
                 return BadRequest("Application name must be provided.");
             }
-
-            List<Container> containers;
+                        
+            List<Container> conts;
 
             try
             {
@@ -268,9 +277,9 @@ namespace somiod.Controllers
                     return NotFound();
                 }
 
-                containers = ContainerHandler.FindContainersByApplication(application);
+                conts = ContainerHandler.FindContainersByApplication(application);
 
-                if (containers == null || !containers.Any())
+                if (conts == null || !conts.Any())
                 {
                     return Ok(new List<Container>());
                 }
@@ -280,7 +289,7 @@ namespace somiod.Controllers
                 return InternalServerError(ex);
             }
 
-            return Content(HttpStatusCode.OK, containers, new XmlMediaTypeFormatter());
+            return Content(HttpStatusCode.OK, conts, new XmlMediaTypeFormatter());
         }
 
         // GET: api/somiod/{application}/{container}
@@ -344,7 +353,7 @@ namespace somiod.Controllers
                 {
                     return NotFound();
                 }
-                cont = ContainerHandler.FindContainerInDatabase(application, container);
+                cont = ContainerHandler.FindContainerInDatabase(container);
                 if (cont == null)
                 {
                     return NotFound();
@@ -365,6 +374,11 @@ namespace somiod.Controllers
             if (string.IsNullOrWhiteSpace(application))
             {
                 return BadRequest("Application name must be provided.");
+            }
+
+            if (container.Name == "container")
+            {
+                return BadRequest("The container name 'container' is reserved and cannot be used.");
             }
 
             string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Container.xsd");
@@ -420,7 +434,12 @@ namespace somiod.Controllers
                 {
                     return NotFound();
                 }
-                bool isDeleted = ContainerHandler.DeleteContainerFromDatabase(application, container);
+                bool containerExists = ContainerHandler.ContainerExists(container);
+                if (!containerExists)
+                {
+                    return NotFound();
+                }
+                bool isDeleted = ContainerHandler.DeleteContainerFromDatabase(container);
                 if (!isDeleted)
                 {
                     return NotFound();
@@ -436,7 +455,7 @@ namespace somiod.Controllers
         // PUT: api/somiod/{application}/{container}
         [Route("{application}/{container}")]
         [HttpPut]
-        public IHttpActionResult PutContainer(string application, string container, [FromBody] Container cont)
+        public IHttpActionResult PutContainer(string application, string container, [FromBody] Container newContainer)
         {
             if (string.IsNullOrWhiteSpace(application))
             {
@@ -449,11 +468,11 @@ namespace somiod.Controllers
 
             string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Container.xsd");
 
-            if (!XMLHandler.ValidateWithXSD(cont, xsdPath, out string validationError))
+            if (!XMLHandler.ValidateWithXSD(newContainer, xsdPath, out string validationError))
             {
                 return BadRequest(validationError);
             }
-            if (!string.Equals(container, cont.Name, StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(container, newContainer.Name, StringComparison.OrdinalIgnoreCase))
             {
                 return BadRequest("The container name in the URL does not match the name in the request body.");
             }
@@ -464,7 +483,7 @@ namespace somiod.Controllers
                 {
                     return NotFound();
                 }
-                bool isUpdated = ContainerHandler.UpdateContainerInDatabase(application, container, cont);
+                bool isUpdated = ContainerHandler.UpdateContainerInDatabase(container, newContainer);
                 if (!isUpdated)
                 {
                     return NotFound();
@@ -474,7 +493,7 @@ namespace somiod.Controllers
             {
                 return InternalServerError(ex);
             }
-            return Content(HttpStatusCode.OK, cont, new XmlMediaTypeFormatter());
+            return Content(HttpStatusCode.OK, newContainer, new XmlMediaTypeFormatter());
         }
 
         // ---End of Container---
@@ -502,7 +521,7 @@ namespace somiod.Controllers
             {
                 return NotFound();
             }
-            if (!ContainerHandler.ContainerExists(application, container))
+            if (!ContainerHandler.ContainerExists(container))
             {
                 return NotFound();
             }

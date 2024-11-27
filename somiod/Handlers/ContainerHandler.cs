@@ -32,7 +32,7 @@ namespace somiod.Handlers
         {
             throw new NotImplementedException(); //TODO: Implement this method
         }
-        internal static bool UpdateContainerInDatabase(string application, string container, Container cont)
+        internal static bool UpdateContainerInDatabase(string container, Container newContainer)
         {
             throw new NotImplementedException(); //TODO: Implement this method
         }

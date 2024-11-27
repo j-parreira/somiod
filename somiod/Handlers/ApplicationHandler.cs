@@ -33,7 +33,7 @@ namespace somiod.Handlers
             throw new NotImplementedException(); //TODO: Implement this method
         }
 
-        internal static bool UpdateApplicationInDatabase(string application, Application app)
+        internal static bool UpdateApplicationInDatabase(string application, Application newApp)
         {
             throw new NotImplementedException(); //TODO: Implement this method
         }
