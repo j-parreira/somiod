@@ -7,7 +7,7 @@ using System.Web;
 
 namespace somiod.Handlers
 {
-    public class ApplicationHandler
+    public class ApplicationHandler : XMLValidator
     {
         protected SqlConnection sqlConnection;
         protected String connectionString = Properties.Settings.Default.ConnStr;

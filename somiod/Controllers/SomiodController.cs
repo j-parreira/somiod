@@ -2,11 +2,12 @@
 using somiod.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Web.Http;
+using Application = somiod.Models.Application;
 
 namespace somiod.Controllers
 {
@@ -20,18 +21,54 @@ namespace somiod.Controllers
         [HttpGet]
         public IHttpActionResult GetApplications()
         {
+            var locateHeader = Request.Headers.FirstOrDefault(h => h.Key.Equals("somiod-locate", StringComparison.OrdinalIgnoreCase));
+            if (locateHeader.Key != null)
+            {
+                string locateType = locateHeader.Value.FirstOrDefault();
+                if (string.IsNullOrWhiteSpace(locateType))
+                {
+                    return BadRequest("Invalid somiod-locate header value.");
+                }
+
+                try
+                {
+                    switch (locateType.ToLower())
+                    {
+                        case "application":
+                            var applications = ApplicationHandler.FindApplicationsInDatabase();
+                            if (applications == null || !applications.Any())
+                            {
+                                return Content(HttpStatusCode.OK, new List<string>(), new XmlMediaTypeFormatter());
+                            }
+                            return Content(HttpStatusCode.OK, applications.Select(a => a.Name), new XmlMediaTypeFormatter());
+
+                        default:
+                            return BadRequest($"Unsupported locate type: {locateType}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return InternalServerError(ex);
+                }
+            }
+
             List<Application> apps = new List<Application>();
 
             try
             {
                 apps = ApplicationHandler.FindApplicationsInDatabase();
+
+                if (apps == null || !apps.Any())
+                {
+                    return Ok(new List<Application>());
+                }
             }
             catch (Exception ex)
             {
                 return InternalServerError(ex);
             }
 
-            return Ok(apps);
+            return Content(HttpStatusCode.OK, apps, new XmlMediaTypeFormatter());
         }
 
         // GET: api/somiod/{application}
@@ -42,6 +79,53 @@ namespace somiod.Controllers
             if (string.IsNullOrWhiteSpace(application))
             {
                 return BadRequest("Application name must be provided.");
+            }
+
+            var locateHeader = Request.Headers.FirstOrDefault(h => h.Key.Equals("somiod-locate", StringComparison.OrdinalIgnoreCase));
+            if (locateHeader.Key != null)
+            {
+                string locateType = locateHeader.Value.FirstOrDefault();
+                if (string.IsNullOrWhiteSpace(locateType))
+                {
+                    return BadRequest("Invalid somiod-locate header value.");
+                }
+
+                try
+                {
+                    switch (locateType.ToLower())
+                    {
+                        case "container":
+                            var containers = ContainerHandler.FindContainersInDatabase(application);
+                            if (containers == null || !containers.Any())
+                            {
+                                return Content(HttpStatusCode.OK, new List<string>(), new XmlMediaTypeFormatter());
+                            }
+                            return Content(HttpStatusCode.OK, containers.Select(c => c.Name), new XmlMediaTypeFormatter());
+
+                        case "record":
+                            var records = RecordHandler.FindRecordsByApplication(application);
+                            if (records == null || !records.Any())
+                            {
+                                return Content(HttpStatusCode.OK, new List<string>(), new XmlMediaTypeFormatter());
+                            }
+                            return Content(HttpStatusCode.OK, records.Select(r => r.Name), new XmlMediaTypeFormatter());
+
+                        case "notification":
+                            var notifications = NotificationHandler.FindNotificationsByApplication(application);
+                            if (notifications == null || !notifications.Any())
+                            {
+                                return Content(HttpStatusCode.OK, new List<string>(), new XmlMediaTypeFormatter());
+                            }
+                            return Content(HttpStatusCode.OK, notifications.Select(n => n.Name), new XmlMediaTypeFormatter());
+
+                        default:
+                            return BadRequest($"Unsupported locate type: {locateType}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return InternalServerError(ex);
+                }
             }
 
             Application app;
@@ -60,17 +144,20 @@ namespace somiod.Controllers
                 return NotFound();
             }
 
-            return Ok(app);
+            return Content(HttpStatusCode.OK, app, new XmlMediaTypeFormatter());
         }
+
 
         // POST: api/somiod
         [Route("")]
         [HttpPost]
         public IHttpActionResult PostApplication([FromBody] Application application)
         {
-            if (!ModelState.IsValid)
+            string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Application.xsd");
+
+            if (!XMLValidator.ValidateWithXSD(application, xsdPath, out string validationError))
             {
-                return BadRequest(ModelState);
+                return BadRequest(validationError);
             }
 
             Application createdApp;
@@ -84,8 +171,14 @@ namespace somiod.Controllers
                 return InternalServerError(ex);
             }
 
-            return CreatedAtRoute("GetApplication", new { application = createdApp.Name }, createdApp);
+            return Content(HttpStatusCode.Created, createdApp, new XmlMediaTypeFormatter());
         }
+
+        /// <summary>
+        /// // Estamos aqui
+        /// </summary>
+        /// <param name="application"></param>
+        /// <returns></returns>
 
         // DELETE: api/somiod/{application}
         [Route("{application}")]
@@ -147,7 +240,7 @@ namespace somiod.Controllers
                 return InternalServerError(ex);
             }
 
-            return Ok(app);
+            return Content(HttpStatusCode.OK, application, new XmlMediaTypeFormatter());
         }
 
         // ---End of Application---
@@ -186,7 +279,7 @@ namespace somiod.Controllers
                 return InternalServerError(ex);
             }
 
-            return Ok(containers);
+            return Content(HttpStatusCode.OK, containers, new XmlMediaTypeFormatter());
         }
 
         // GET: api/somiod/{application}/{container}
@@ -220,7 +313,7 @@ namespace somiod.Controllers
             {
                 return InternalServerError(ex);
             }
-            return Ok(cont);
+            return Content(HttpStatusCode.OK, cont, new XmlMediaTypeFormatter());
         }
 
         // POST: api/somiod/{application}
@@ -254,7 +347,7 @@ namespace somiod.Controllers
                 return InternalServerError(ex);
             }
 
-            return CreatedAtRoute("GetContainer", new { application, container = createdCont.Name }, createdCont);
+            return Content(HttpStatusCode.Created, createdCont, new XmlMediaTypeFormatter());
         }
 
         // DELETE: api/somiod/{application}/{container}
@@ -328,7 +421,7 @@ namespace somiod.Controllers
             {
                 return InternalServerError(ex);
             }
-            return Ok(cont);
+            return Content(HttpStatusCode.OK, cont, new XmlMediaTypeFormatter());
         }
 
         // ---End of Container---
@@ -352,7 +445,6 @@ namespace somiod.Controllers
             {
                 return BadRequest("Record or notification must be provided.");
             }
-
             if (!ApplicationHandler.ApplicationExists(application))
             {
                 return NotFound();
@@ -367,18 +459,23 @@ namespace somiod.Controllers
                 if (recordOrNotification is Record)
                 {
                     RecordHandler.AddRecordToDatabase(application, container, recordOrNotification as Record);
-                    return Created(new Uri($"{Request.RequestUri}/{recordOrNotification.Name}"), recordOrNotification);
+                    return Content(HttpStatusCode.Created, recordOrNotification, new XmlMediaTypeFormatter());
                 }
                 else if (recordOrNotification is Notification)
                 {
                     NotificationHandler.AddNotificationToDatabase(application, container, recordOrNotification as Notification);
-                    return Created(new Uri($"{Request.RequestUri}/{recordOrNotification.Name}"), recordOrNotification);
+                    return Content(HttpStatusCode.Created, recordOrNotification, new XmlMediaTypeFormatter());
                 }
             }
             catch (Exception ex)
             {
                 return InternalServerError(ex);
             }
+
+            return BadRequest("Invalid record or notification.");
         }
+
+        // DELETE: api/somiod/{application}/{container}/{record}
+        [Route("{application}/{container}/{record}")]
     }
 }
