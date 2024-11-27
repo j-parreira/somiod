@@ -160,6 +160,11 @@ namespace somiod.Controllers
                 return BadRequest(validationError);
             }
 
+            if (application.Name == "application")
+            {
+                return BadRequest("The application name 'application' is reserved and cannot be used.");
+            }
+
             Application createdApp;
 
             try
@@ -213,7 +218,7 @@ namespace somiod.Controllers
 
             string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Application.xsd");
 
-            if (!XMLHandler.ValidateWithXSD(application, xsdPath, out string validationError))
+            if (!XMLHandler.ValidateWithXSD(app, xsdPath, out string validationError))
             {
                 return BadRequest(validationError);
             }
@@ -243,40 +248,40 @@ namespace somiod.Controllers
 
         // ---Container---
 
-        // GET: api/somiod/{application}/containers
-        //[Route("{application}/containers")]
-        //[HttpGet]
-        //public IHttpActionResult GetContainers(string application)
-        //{
-        //    if (string.IsNullOrWhiteSpace(application))
-        //    {
-        //        return BadRequest("Application name must be provided.");
-        //    }
+        // GET: api/somiod/{application}/container
+        [Route("{application}/container")]
+        [HttpGet]
+        public IHttpActionResult GetContainers(string application)
+        {
+            if (string.IsNullOrWhiteSpace(application))
+            {
+                return BadRequest("Application name must be provided.");
+            }
 
-        //    List<Container> containers;
+            List<Container> containers;
 
-        //    try
-        //    {
-        //        bool applicationExists = ApplicationHandler.ApplicationExists(application);
-        //        if (!applicationExists)
-        //        {
-        //            return NotFound();
-        //        }
+            try
+            {
+                bool applicationExists = ApplicationHandler.ApplicationExists(application);
+                if (!applicationExists)
+                {
+                    return NotFound();
+                }
 
-        //        containers = ContainerHandler.FindContainersByApplication(application);
+                containers = ContainerHandler.FindContainersByApplication(application);
 
-        //        if (containers == null || !containers.Any())
-        //        {
-        //            return Ok(new List<Container>());
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return InternalServerError(ex);
-        //    }
+                if (containers == null || !containers.Any())
+                {
+                    return Ok(new List<Container>());
+                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
 
-        //    return Content(HttpStatusCode.OK, containers, new XmlMediaTypeFormatter());
-        //}
+            return Content(HttpStatusCode.OK, containers, new XmlMediaTypeFormatter());
+        }
 
         // GET: api/somiod/{application}/{container}
         [Route("{application}/{container}")]
@@ -441,9 +446,12 @@ namespace somiod.Controllers
             {
                 return BadRequest("Container name must be provided.");
             }
-            if (!ModelState.IsValid)
+
+            string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Container.xsd");
+
+            if (!XMLHandler.ValidateWithXSD(cont, xsdPath, out string validationError))
             {
-                return BadRequest(ModelState);
+                return BadRequest(validationError);
             }
             if (!string.Equals(container, cont.Name, StringComparison.OrdinalIgnoreCase))
             {
@@ -476,7 +484,7 @@ namespace somiod.Controllers
         // POST: api/somiod/{application}/{container}
         [Route("{application}/{container}")]
         [HttpPost]
-        public IHttpActionResult PostRecordOrNotification(string application, string container, [FromBody] RecordOrNotification recordOrNotification)
+        public IHttpActionResult PostRecordOrNotification(string application, string container, [FromBody] Object recordOrNotification)
         {
             if (string.IsNullOrWhiteSpace(application))
             {
