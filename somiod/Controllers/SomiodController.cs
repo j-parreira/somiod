@@ -95,7 +95,7 @@ namespace somiod.Controllers
                     switch (locateType.ToLower())
                     {
                         case "container":
-                            var containers = ContainerHandler.FindContainersInDatabase(application);
+                            var containers = ContainerHandler.FindContainersByApplication(application);
                             if (containers == null || !containers.Any())
                             {
                                 return Content(HttpStatusCode.OK, new List<string>(), new XmlMediaTypeFormatter());
@@ -155,7 +155,7 @@ namespace somiod.Controllers
         {
             string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Application.xsd");
 
-            if (!XMLValidator.ValidateWithXSD(application, xsdPath, out string validationError))
+            if (!XMLHandler.ValidateWithXSD(application, xsdPath, out string validationError))
             {
                 return BadRequest(validationError);
             }
@@ -173,12 +173,6 @@ namespace somiod.Controllers
 
             return Content(HttpStatusCode.Created, createdApp, new XmlMediaTypeFormatter());
         }
-
-        /// <summary>
-        /// // Estamos aqui
-        /// </summary>
-        /// <param name="application"></param>
-        /// <returns></returns>
 
         // DELETE: api/somiod/{application}
         [Route("{application}")]
@@ -217,9 +211,11 @@ namespace somiod.Controllers
                 return BadRequest("Application name must be provided.");
             }
 
-            if (!ModelState.IsValid)
+            string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Application.xsd");
+
+            if (!XMLHandler.ValidateWithXSD(application, xsdPath, out string validationError))
             {
-                return BadRequest(ModelState);
+                return BadRequest(validationError);
             }
 
             if (!string.Equals(application, app.Name, StringComparison.OrdinalIgnoreCase))
@@ -248,39 +244,39 @@ namespace somiod.Controllers
         // ---Container---
 
         // GET: api/somiod/{application}/containers
-        [Route("{application}/containers")]
-        [HttpGet]
-        public IHttpActionResult GetContainers(string application)
-        {
-            if (string.IsNullOrWhiteSpace(application))
-            {
-                return BadRequest("Application name must be provided.");
-            }
+        //[Route("{application}/containers")]
+        //[HttpGet]
+        //public IHttpActionResult GetContainers(string application)
+        //{
+        //    if (string.IsNullOrWhiteSpace(application))
+        //    {
+        //        return BadRequest("Application name must be provided.");
+        //    }
 
-            List<Container> containers;
+        //    List<Container> containers;
 
-            try
-            {
-                bool applicationExists = ApplicationHandler.ApplicationExists(application);
-                if (!applicationExists)
-                {
-                    return NotFound();
-                }
+        //    try
+        //    {
+        //        bool applicationExists = ApplicationHandler.ApplicationExists(application);
+        //        if (!applicationExists)
+        //        {
+        //            return NotFound();
+        //        }
 
-                containers = ContainerHandler.FindContainersInDatabase(application);
+        //        containers = ContainerHandler.FindContainersByApplication(application);
 
-                if (containers == null || !containers.Any())
-                {
-                    return Ok(new List<Container>());
-                }
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
-            }
+        //        if (containers == null || !containers.Any())
+        //        {
+        //            return Ok(new List<Container>());
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return InternalServerError(ex);
+        //    }
 
-            return Content(HttpStatusCode.OK, containers, new XmlMediaTypeFormatter());
-        }
+        //    return Content(HttpStatusCode.OK, containers, new XmlMediaTypeFormatter());
+        //}
 
         // GET: api/somiod/{application}/{container}
         [Route("{application}/{container}")]
@@ -295,6 +291,46 @@ namespace somiod.Controllers
             {
                 return BadRequest("Container name must be provided.");
             }
+
+            var locateHeader = Request.Headers.FirstOrDefault(h => h.Key.Equals("somiod-locate", StringComparison.OrdinalIgnoreCase));
+            if (locateHeader.Key != null)
+            {
+                string locateType = locateHeader.Value.FirstOrDefault();
+                if (string.IsNullOrWhiteSpace(locateType))
+                {
+                    return BadRequest("Invalid somiod-locate header value.");
+                }
+
+                try
+                {
+                    switch (locateType.ToLower())
+                    {
+                        case "record":
+                            var records = RecordHandler.FindRecordsByContainer(application);
+                            if (records == null || !records.Any())
+                            {
+                                return Content(HttpStatusCode.OK, new List<string>(), new XmlMediaTypeFormatter());
+                            }
+                            return Content(HttpStatusCode.OK, records.Select(r => r.Name), new XmlMediaTypeFormatter());
+
+                        case "notification":
+                            var notifications = NotificationHandler.FindNotificationsByContainer(application);
+                            if (notifications == null || !notifications.Any())
+                            {
+                                return Content(HttpStatusCode.OK, new List<string>(), new XmlMediaTypeFormatter());
+                            }
+                            return Content(HttpStatusCode.OK, notifications.Select(n => n.Name), new XmlMediaTypeFormatter());
+
+                        default:
+                            return BadRequest($"Unsupported locate type: {locateType}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return InternalServerError(ex);
+                }
+            }
+
             Container cont;
             try
             {
@@ -325,9 +361,12 @@ namespace somiod.Controllers
             {
                 return BadRequest("Application name must be provided.");
             }
-            if (!ModelState.IsValid)
+
+            string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Container.xsd");
+
+            if (!XMLHandler.ValidateWithXSD(container, xsdPath, out string validationError))
             {
-                return BadRequest(ModelState);
+                return BadRequest(validationError);
             }
 
             Container createdCont;
@@ -349,6 +388,12 @@ namespace somiod.Controllers
 
             return Content(HttpStatusCode.Created, createdCont, new XmlMediaTypeFormatter());
         }
+
+        /// <summary>
+        /// // Estamos aqui
+        /// </summary>
+        /// <param name="application"></param>
+        /// <returns></returns>
 
         // DELETE: api/somiod/{application}/{container}
         [Route("{application}/{container}")]

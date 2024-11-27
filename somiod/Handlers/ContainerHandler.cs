@@ -13,7 +13,7 @@ namespace somiod.Handlers
         protected String connectionString = Properties.Settings.Default.ConnStr;
         protected string sqlCommand = "";
 
-        internal static List<Container> FindContainersInDatabase(string application)
+        internal static List<Container> FindContainersByApplication(string application)
         {
             throw new NotImplementedException(); //TODO: Implement this method
         }

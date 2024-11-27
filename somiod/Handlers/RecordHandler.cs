@@ -17,5 +17,10 @@ namespace somiod.Handlers
         {
             throw new NotImplementedException();
         }
+
+        internal static List<Record> FindRecordsByContainer(string application)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

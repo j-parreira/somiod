@@ -17,5 +17,10 @@ namespace somiod.Handlers
         {
             throw new NotImplementedException();
         }
+
+        internal static List<Notification> FindNotificationsByContainer(string application)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

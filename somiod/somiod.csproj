@@ -100,7 +100,7 @@
     <Compile Include="Handlers\ContainerHandler.cs" />
     <Compile Include="Handlers\NotificationHandler.cs" />
     <Compile Include="Handlers\RecordHandler.cs" />
-    <Compile Include="Handlers\XMLValidator.cs" />
+    <Compile Include="Handlers\XMLHandler.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Container.cs" />
     <Compile Include="Models\Notification.cs" />

@@ -8,7 +8,7 @@ using System.Xml;
 
 namespace somiod.Handlers
 {
-    public class XMLValidator
+    public class XMLHandler
     {
         public static bool ValidateWithXSD<T>(T model, string xsdPath, out string validationError)
         {
