@@ -28,11 +28,11 @@ namespace somiod.Handlers
             throw new NotImplementedException(); //TODO: Implement this method
         }
 
-        internal static bool DeleteContainerFromDatabase(string application, string container)
+        internal static void DeleteContainerFromDatabase(string application, string container)
         {
             throw new NotImplementedException(); //TODO: Implement this method
         }
-        internal static bool UpdateContainerInDatabase(string container, Container newContainer)
+        internal static Container UpdateContainerInDatabase(string container, Container newContainer)
         {
             throw new NotImplementedException(); //TODO: Implement this method
         }

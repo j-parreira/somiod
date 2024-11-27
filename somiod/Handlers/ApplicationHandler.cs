@@ -28,12 +28,12 @@ namespace somiod.Handlers
             throw new NotImplementedException(); //TODO: Implement this method
         }
 
-        internal static bool DeleteApplicationFromDatabase(string application)
+        internal static void DeleteApplicationFromDatabase(string application)
         {
             throw new NotImplementedException(); //TODO: Implement this method
         }
 
-        internal static bool UpdateApplicationInDatabase(string application, Application newApp)
+        internal static Application UpdateApplicationInDatabase(string application, Application newApp)
         {
             throw new NotImplementedException(); //TODO: Implement this method
         }

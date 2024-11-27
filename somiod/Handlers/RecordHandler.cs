@@ -13,12 +13,22 @@ namespace somiod.Handlers
             throw new NotImplementedException();
         }
 
+        internal static Record FindRecordInDatabase(string application, string container, string record)
+        {
+            throw new NotImplementedException();
+        }
+
         internal static List<Record> FindRecordsByApplication(string application)
         {
             throw new NotImplementedException();
         }
 
-        internal static List<Record> FindRecordsByContainer(string application)
+        internal static List<Record> FindRecordsByContainer(string application, string container)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static bool RecordExists(string application, string container, string record)
         {
             throw new NotImplementedException();
         }
