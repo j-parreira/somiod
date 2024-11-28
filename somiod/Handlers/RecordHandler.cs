@@ -13,6 +13,11 @@ namespace somiod.Handlers
             throw new NotImplementedException();
         }
 
+        internal static void DeleteRecordFromDatabase(string application, string container, string record)
+        {
+            throw new NotImplementedException();
+        }
+
         internal static Record FindRecordInDatabase(string application, string container, string record)
         {
             throw new NotImplementedException();

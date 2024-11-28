@@ -9,18 +9,79 @@ namespace somiod.Handlers
 {
     public class ContainerHandler
     {
-        protected SqlConnection sqlConnection;
-        protected String connectionString = Properties.Settings.Default.ConnStr;
-        protected string sqlCommand = "";
-
         internal static List<Container> FindContainersByApplication(string application)
         {
-            throw new NotImplementedException(); //TODO: Implement this method
+            List<Container> containers = new List<Container>();
+            try
+            {
+                using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
+                {
+                    sqlConnection.Open();
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Containers WHERE Parent = @ApplicationId", sqlConnection))
+                    {
+                        int appId = ApplicationHandler.FindApplicationInDatabase(application).Id;
+                        sqlCommand.Parameters.AddWithValue("@ApplicationId", appId);
+                        using (SqlDataReader reader = sqlCommand.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                containers.Add(new Container
+                                {
+                                    Id = reader.GetInt32(0),
+                                    Name = reader.GetString(1),
+                                    CreationDateTime = reader.GetDateTime(2),
+                                    Parent = reader.GetInt32(3)
+                                });
+                            }
+                            reader.Close();
+                        }
+                    }
+                    sqlConnection.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error finding containers by application", e);
+            }
+            return containers;
         }
 
         internal static Container FindContainerInDatabase(string application, string container)
         {
-            throw new NotImplementedException(); //TODO: Implement this method
+            Container cont = new Container();
+            try
+            {
+                using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
+                {
+                    sqlConnection.Open();
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Containers WHERE Name = @ContainerName AND Parent = @ApplicationId", sqlConnection))
+                    {
+                        int appId = ApplicationHandler.FindApplicationInDatabase(application).Id;
+                        sqlCommand.Parameters.AddWithValue("@ApplicationId", appId);
+                        sqlCommand.Parameters.AddWithValue("@ContainerName", container);
+                        using (SqlDataReader reader = sqlCommand.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                cont = new Container
+                                {
+                                    Id = reader.GetInt32(0),
+                                    Name = reader.GetString(1),
+                                    CreationDateTime = reader.GetDateTime(2),
+                                    Parent = reader.GetInt32(3)
+                                };
+                            }
+                            reader.Close();
+                        }
+                    }
+                    sqlConnection.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error finding container by application", e);
+            }
+            return cont;
         }
 
         internal static Container AddContainerToDatabase(string application, Container container)
@@ -38,7 +99,32 @@ namespace somiod.Handlers
         }
         internal static bool ContainerExists(string application, string container)
         {
-            throw new NotImplementedException(); //TODO: Implement this method
+            try
+            {
+                var app = ApplicationHandler.FindApplicationInDatabase(application);
+                if (app == null)
+                {
+                    return false;
+                }
+
+                using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
+                {
+                    sqlConnection.Open();
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM Containers WHERE Name = @ContainerName AND Parent = @ApplicationId", sqlConnection))
+                    {
+                        sqlCommand.Parameters.AddWithValue("@ContainerName", container);
+                        sqlCommand.Parameters.AddWithValue("@ApplicationId", app.Id);
+
+                        int count = (int)sqlCommand.ExecuteScalar();
+                        return count > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error checking if container exists", ex);
+            }
         }
+
     }
 }
