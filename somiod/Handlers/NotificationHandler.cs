@@ -13,6 +13,11 @@ namespace somiod.Handlers
             throw new NotImplementedException();
         }
 
+        internal static void DeleteNotificationFromDatabase(string application, string container, string notification)
+        {
+            throw new NotImplementedException();
+        }
+
         internal static Notification FindNotificationInDatabase(string application, string container, string notification)
         {
             throw new NotImplementedException();

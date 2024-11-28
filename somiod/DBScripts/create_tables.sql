@@ -36,7 +36,7 @@ CREATE TABLE [dbo].[Notifications]
 	[Name] NVARCHAR (50) NOT NULL,
 	[CreationDateTime] SMALLDATETIME NOT NULL,
 	[Parent] INT NOT NULL,
-	[Event] NVARCHAR (150) NOT NULL,
+	[Event] INT NOT NULL,
 	[Endpoint] NVARCHAR (150) NOT NULL,
 	CONSTRAINT [PK_Notification_Id] PRIMARY KEY CLUSTERED ([Id] ASC),
 	CONSTRAINT [FK_Notification_Parent] FOREIGN KEY (Parent) REFERENCES Containers(Id),

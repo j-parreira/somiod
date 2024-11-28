@@ -7,7 +7,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http.Formatting;
 using System.Web.Http;
-using Application = somiod.Models.Application;
 
 namespace somiod.Controllers
 {
@@ -22,9 +21,11 @@ namespace somiod.Controllers
         public IHttpActionResult GetApplications()
         {
             var locateHeader = Request.Headers.FirstOrDefault(h => h.Key.Equals("somiod-locate", StringComparison.OrdinalIgnoreCase));
+
             if (locateHeader.Key != null)
             {
                 string locateType = locateHeader.Value.FirstOrDefault();
+
                 if (string.IsNullOrWhiteSpace(locateType))
                 {
                     return BadRequest("Invalid somiod-locate header value.");
@@ -36,10 +37,12 @@ namespace somiod.Controllers
                     {
                         case "application":
                             var applications = ApplicationHandler.FindApplicationsInDatabase();
+
                             if (applications == null || !applications.Any())
                             {
                                 return Content(HttpStatusCode.OK, new List<string>(), new XmlMediaTypeFormatter());
                             }
+
                             return Content(HttpStatusCode.OK, applications.Select(a => a.Name), new XmlMediaTypeFormatter());
 
                         default:
@@ -82,9 +85,11 @@ namespace somiod.Controllers
             }
 
             var locateHeader = Request.Headers.FirstOrDefault(h => h.Key.Equals("somiod-locate", StringComparison.OrdinalIgnoreCase));
+
             if (locateHeader.Key != null)
             {
                 string locateType = locateHeader.Value.FirstOrDefault();
+
                 if (string.IsNullOrWhiteSpace(locateType))
                 {
                     return BadRequest("Invalid somiod-locate header value.");
@@ -96,26 +101,32 @@ namespace somiod.Controllers
                     {
                         case "container":
                             var containers = ContainerHandler.FindContainersByApplication(application);
+
                             if (containers == null || !containers.Any())
                             {
                                 return Content(HttpStatusCode.OK, new List<string>(), new XmlMediaTypeFormatter());
                             }
+
                             return Content(HttpStatusCode.OK, containers.Select(c => c.Name), new XmlMediaTypeFormatter());
 
                         case "record":
                             var records = RecordHandler.FindRecordsByApplication(application);
+
                             if (records == null || !records.Any())
                             {
                                 return Content(HttpStatusCode.OK, new List<string>(), new XmlMediaTypeFormatter());
                             }
+
                             return Content(HttpStatusCode.OK, records.Select(r => r.Name), new XmlMediaTypeFormatter());
 
                         case "notification":
                             var notifications = NotificationHandler.FindNotificationsByApplication(application);
+
                             if (notifications == null || !notifications.Any())
                             {
                                 return Content(HttpStatusCode.OK, new List<string>(), new XmlMediaTypeFormatter());
                             }
+
                             return Content(HttpStatusCode.OK, notifications.Select(n => n.Name), new XmlMediaTypeFormatter());
 
                         default:
@@ -188,9 +199,17 @@ namespace somiod.Controllers
             {
                 return BadRequest("Application name must be provided.");
             }
-            if (!ApplicationHandler.ApplicationExists(application))
+
+            try
             {
-                return NotFound();
+                if (!ApplicationHandler.ApplicationExists(application))
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
             }
 
             try
@@ -232,16 +251,22 @@ namespace somiod.Controllers
                 return BadRequest("The application name 'application' is reserved and cannot be used.");
             }
 
-            if (!ApplicationHandler.ApplicationExists(application))
+            try {
+                if (!ApplicationHandler.ApplicationExists(application))
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                return InternalServerError(ex);
             }
 
             Application updatedApp;
+
             try
             {
                 updatedApp = ApplicationHandler.UpdateApplicationInDatabase(application, newApp);
-
             }
             catch (Exception ex)
             {
@@ -265,9 +290,16 @@ namespace somiod.Controllers
                 return BadRequest("Application name must be provided.");
             }
 
-            if (!ApplicationHandler.ApplicationExists(application))
+            try
             {
-                return NotFound();
+                if (!ApplicationHandler.ApplicationExists(application))
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
             }
 
             List<Container> conts;
@@ -298,23 +330,35 @@ namespace somiod.Controllers
             {
                 return BadRequest("Application name must be provided.");
             }
+
             if (string.IsNullOrWhiteSpace(container))
             {
                 return BadRequest("Container name must be provided.");
             }
-            if (!ApplicationHandler.ApplicationExists(application))
+
+            try
             {
-                return NotFound();
+                if (!ApplicationHandler.ApplicationExists(application))
+                {
+                    return NotFound();
+                }
+
+                if (!ContainerHandler.ContainerExists(application, container))
+                {
+                    return NotFound();
+                }
             }
-            if (!ContainerHandler.ContainerExists(application, container))
+            catch (Exception ex)
             {
-                return NotFound();
-            }
+                return InternalServerError(ex);
+            }            
 
             var locateHeader = Request.Headers.FirstOrDefault(h => h.Key.Equals("somiod-locate", StringComparison.OrdinalIgnoreCase));
+
             if (locateHeader.Key != null)
             {
                 string locateType = locateHeader.Value.FirstOrDefault();
+
                 if (string.IsNullOrWhiteSpace(locateType))
                 {
                     return BadRequest("Invalid somiod-locate header value.");
@@ -326,18 +370,22 @@ namespace somiod.Controllers
                     {
                         case "record":
                             var records = RecordHandler.FindRecordsByContainer(application, container);
+
                             if (records == null || !records.Any())
                             {
                                 return Content(HttpStatusCode.OK, new List<string>(), new XmlMediaTypeFormatter());
                             }
+
                             return Content(HttpStatusCode.OK, records.Select(r => r.Name), new XmlMediaTypeFormatter());
 
                         case "notification":
                             var notifications = NotificationHandler.FindNotificationsByContainer(application, container);
+
                             if (notifications == null || !notifications.Any())
                             {
                                 return Content(HttpStatusCode.OK, new List<string>(), new XmlMediaTypeFormatter());
                             }
+
                             return Content(HttpStatusCode.OK, notifications.Select(n => n.Name), new XmlMediaTypeFormatter());
 
                         default:
@@ -351,14 +399,21 @@ namespace somiod.Controllers
             }
 
             Container cont;
+
             try
             {
                 cont = ContainerHandler.FindContainerInDatabase(application, container);
+
+                if (cont == null)
+                {
+                    return StatusCode(HttpStatusCode.NoContent);
+                }
             }
             catch (Exception ex)
             {
                 return InternalServerError(ex);
             }
+
             return Content(HttpStatusCode.OK, cont, new XmlMediaTypeFormatter());
         }
 
@@ -372,9 +427,16 @@ namespace somiod.Controllers
                 return BadRequest("Application name must be provided.");
             }
 
-            if (!ApplicationHandler.ApplicationExists(application))
+            try
             {
-                return NotFound();
+                if (!ApplicationHandler.ApplicationExists(application))
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
             }
 
             if (container.Name == "container")
@@ -412,18 +474,29 @@ namespace somiod.Controllers
             {
                 return BadRequest("Application name must be provided.");
             }
+
             if (string.IsNullOrWhiteSpace(container))
             {
                 return BadRequest("Container name must be provided.");
             }
-            if (!ApplicationHandler.ApplicationExists(application))
+
+            try
             {
-                return NotFound();
+                if (!ApplicationHandler.ApplicationExists(application))
+                {
+                    return NotFound();
+                }
+
+                if (!ContainerHandler.ContainerExists(application, container))
+                {
+                    return NotFound();
+                }
             }
-            if (!ContainerHandler.ContainerExists(application, container))
+            catch (Exception ex)
             {
-                return NotFound();
+                return InternalServerError(ex);
             }
+
             try
             {
                 ContainerHandler.DeleteContainerFromDatabase(application, container);
@@ -432,6 +505,7 @@ namespace somiod.Controllers
             {
                 return InternalServerError(ex);
             }
+
             return StatusCode(HttpStatusCode.NoContent);
         }
 
@@ -444,17 +518,27 @@ namespace somiod.Controllers
             {
                 return BadRequest("Application name must be provided.");
             }
+
             if (string.IsNullOrWhiteSpace(container))
             {
                 return BadRequest("Container name must be provided.");
             }
-            if (ApplicationHandler.ApplicationExists(application))
+
+            try
             {
-                return NotFound();
+                if (!ApplicationHandler.ApplicationExists(application))
+                {
+                    return NotFound();
+                }
+
+                if (!ContainerHandler.ContainerExists(application, container))
+                {
+                    return NotFound();
+                }
             }
-            if (!ContainerHandler.ContainerExists(application, container))
+            catch (Exception ex)
             {
-                return NotFound();
+                return InternalServerError(ex);
             }
 
             string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Container.xsd");
@@ -463,11 +547,14 @@ namespace somiod.Controllers
             {
                 return BadRequest(validationError);
             }
+
             if (!string.Equals(container, newContainer.Name, StringComparison.OrdinalIgnoreCase))
             {
                 return BadRequest("The container name in the URL does not match the name in the request body.");
             }
+
             Container updatedCont;
+
             try
             {
                 updatedCont = ContainerHandler.UpdateContainerInDatabase(container, newContainer);
@@ -476,6 +563,7 @@ namespace somiod.Controllers
             {
                 return InternalServerError(ex);
             }
+
             return Content(HttpStatusCode.OK, updatedCont, new XmlMediaTypeFormatter());
         }
 
@@ -492,22 +580,35 @@ namespace somiod.Controllers
             {
                 return BadRequest("Application name must be provided.");
             }
+
             if (string.IsNullOrWhiteSpace(container))
             {
                 return BadRequest("Container name must be provided.");
             }
-            if (!ApplicationHandler.ApplicationExists(application))
+
+            try
             {
-                return NotFound();
+                if (!ApplicationHandler.ApplicationExists(application))
+                {
+                    return NotFound();
+                }
+
+                if (!ContainerHandler.ContainerExists(application, container))
+                {
+                    return NotFound();
+                }
             }
-            if (!ContainerHandler.ContainerExists(application, container))
+            catch (Exception ex)
             {
-                return NotFound();
+                return InternalServerError(ex);
             }
+
             List<Record> records;
+
             try
             {
                 records = RecordHandler.FindRecordsByContainer(application, container);
+
                 if (records == null || !records.Any())
                 {
                     return Ok(new List<Record>());
@@ -517,6 +618,7 @@ namespace somiod.Controllers
             {
                 return InternalServerError(ex);
             }
+
             return Content(HttpStatusCode.OK, records, new XmlMediaTypeFormatter());
         }
 
@@ -529,22 +631,35 @@ namespace somiod.Controllers
             {
                 return BadRequest("Application name must be provided.");
             }
+
             if (string.IsNullOrWhiteSpace(container))
             {
                 return BadRequest("Container name must be provided.");
             }
-            if (!ApplicationHandler.ApplicationExists(application))
+
+            try
             {
-                return NotFound();
+                if (!ApplicationHandler.ApplicationExists(application))
+                {
+                    return NotFound();
+                }
+
+                if (!ContainerHandler.ContainerExists(application, container))
+                {
+                    return NotFound();
+                }
             }
-            if (!ContainerHandler.ContainerExists(application, container))
+            catch (Exception ex)
             {
-                return NotFound();
+                return InternalServerError(ex);
             }
+
             List<Notification> notifications;
+
             try
             {
                 notifications = NotificationHandler.FindNotificationsByContainer(application, container);
+
                 if (notifications == null || !notifications.Any())
                 {
                     return Ok(new List<Notification>());
@@ -554,6 +669,7 @@ namespace somiod.Controllers
             {
                 return InternalServerError(ex);
             }
+
             return Content(HttpStatusCode.OK, notifications, new XmlMediaTypeFormatter());
         }
 
@@ -566,27 +682,41 @@ namespace somiod.Controllers
             {
                 return BadRequest("Application name must be provided.");
             }
+
             if (string.IsNullOrWhiteSpace(container))
             {
                 return BadRequest("Container name must be provided.");
             }
+
             if (string.IsNullOrWhiteSpace(record))
             {
                 return BadRequest("Record name must be provided.");
             }
-            if (!ApplicationHandler.ApplicationExists(application))
+
+            try
             {
-                return NotFound();
+                if (!ApplicationHandler.ApplicationExists(application))
+                {
+                    return NotFound();
+                }
+
+                if (!ContainerHandler.ContainerExists(application, container))
+                {
+                    return NotFound();
+                }
+
+                if (!RecordHandler.RecordExists(application, container, record))
+                {
+                    return NotFound();
+                }
             }
-            if (!ContainerHandler.ContainerExists(application, container))
+            catch (Exception ex)
             {
-                return NotFound();
+                return InternalServerError(ex);
             }
-            if (!RecordHandler.RecordExists(application, container, record))
-            {
-                return NotFound();
-            }
+
             Record rec;
+
             try
             {
                 rec = RecordHandler.FindRecordInDatabase(application, container, record);
@@ -595,6 +725,7 @@ namespace somiod.Controllers
             {
                 return InternalServerError(ex);
             }
+
             return Content(HttpStatusCode.OK, rec, new XmlMediaTypeFormatter());
         }
 
@@ -607,27 +738,41 @@ namespace somiod.Controllers
             {
                 return BadRequest("Application name must be provided.");
             }
+
             if (string.IsNullOrWhiteSpace(container))
             {
                 return BadRequest("Container name must be provided.");
             }
+
             if (string.IsNullOrWhiteSpace(notification))
             {
                 return BadRequest("Notification name must be provided.");
             }
-            if (!ApplicationHandler.ApplicationExists(application))
+
+            try
             {
-                return NotFound();
+                if (!ApplicationHandler.ApplicationExists(application))
+                {
+                    return NotFound();
+                }
+
+                if (!ContainerHandler.ContainerExists(application, container))
+                {
+                    return NotFound();
+                }
+
+                if (!NotificationHandler.NotificationExists(application, container, notification))
+                {
+                    return NotFound();
+                }
             }
-            if (!ContainerHandler.ContainerExists(application, container))
+            catch (Exception ex)
             {
-                return NotFound();
+                return InternalServerError(ex);
             }
-            if (!NotificationHandler.NotificationExists(application, container, notification))
-            {
-                return NotFound();
-            }
+
             Notification not;
+
             try
             {
                 not = NotificationHandler.FindNotificationInDatabase(application, container, notification);
@@ -636,6 +781,7 @@ namespace somiod.Controllers
             {
                 return InternalServerError(ex);
             }
+
             return Content(HttpStatusCode.OK, not, new XmlMediaTypeFormatter());
         }
 
@@ -648,27 +794,40 @@ namespace somiod.Controllers
             {
                 return BadRequest("Application name must be provided.");
             }
+
             if (string.IsNullOrWhiteSpace(container))
             {
                 return BadRequest("Container name must be provided.");
             }
+
             if (recordOrNotification == null)
             {
                 return BadRequest("Record or notification must be provided.");
             }
-            if (!ApplicationHandler.ApplicationExists(application))
+
+            try
             {
-                return NotFound();
+                if (!ApplicationHandler.ApplicationExists(application))
+                {
+                    return NotFound();
+                }
+
+                if (!ContainerHandler.ContainerExists(application, container))
+                {
+                    return NotFound();
+                }
             }
-            if (!ContainerHandler.ContainerExists(application, container))
+            catch (Exception ex)
             {
-                return NotFound();
+                return InternalServerError(ex);
             }
 
             var resourceHeader = Request.Headers.FirstOrDefault(h => h.Key.Equals("res_type", StringComparison.OrdinalIgnoreCase));
+
             if (resourceHeader.Key != null)
             {
                 string resourceType = resourceHeader.Value.FirstOrDefault();
+
                 if (string.IsNullOrWhiteSpace(resourceType))
                 {
                     return BadRequest("Invalid res_type header value.");
@@ -680,15 +839,19 @@ namespace somiod.Controllers
                     {
                         case "record":
                             Record record = recordOrNotification as Record;
+
                             if (record.Name == "record")
                             {
                                 return BadRequest("The record name 'record' is reserved and cannot be used.");
                             }
+
                             string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Record.xsd");
+
                             if (!XMLHandler.ValidateWithXSD(record, xsdPath, out string validationError))
                             {
                                 return BadRequest(validationError);
                             }
+
                             try
                             {
                                 RecordHandler.AddRecordToDatabase(application, container, record);
@@ -697,19 +860,24 @@ namespace somiod.Controllers
                             {
                                 return InternalServerError(ex);
                             }
+
                             return Content(HttpStatusCode.Created, record, new XmlMediaTypeFormatter());
 
                         case "notification":
                             Notification notification = recordOrNotification as Notification;
+
                             if (notification.Name == "notification")
                             {
                                 return BadRequest("The notification name 'notification' is reserved and cannot be used.");
                             }
+
                             xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Notification.xsd");
+
                             if (!XMLHandler.ValidateWithXSD(notification, xsdPath, out validationError))
                             {
                                 return BadRequest(validationError);
                             }
+
                             try
                             {
                                 NotificationHandler.AddNotificationToDatabase(application, container, notification);
@@ -718,6 +886,7 @@ namespace somiod.Controllers
                             {
                                 return InternalServerError(ex);
                             }
+
                             return Content(HttpStatusCode.Created, notification, new XmlMediaTypeFormatter());
 
                         default:
@@ -734,6 +903,111 @@ namespace somiod.Controllers
         }
 
         // DELETE: api/somiod/{application}/{container}/{record}
-        //[Route("{application}/{container}/{record}")]
+        [Route("{application}/{container}/{record}")]
+        [HttpDelete]
+        public IHttpActionResult DeleteRecord(string application, string container, string record)
+        {
+            if (string.IsNullOrWhiteSpace(application))
+            {
+                return BadRequest("Application name must be provided.");
+            }
+
+            if (string.IsNullOrWhiteSpace(container))
+            {
+                return BadRequest("Container name must be provided.");
+            }
+
+            if (string.IsNullOrWhiteSpace(record))
+            {
+                return BadRequest("Record name must be provided.");
+            }
+
+            try
+            {
+                if (!ApplicationHandler.ApplicationExists(application))
+                {
+                    return NotFound();
+                }
+
+                if (!ContainerHandler.ContainerExists(application, container))
+                {
+                    return NotFound();
+                }
+
+                if (!RecordHandler.RecordExists(application, container, record))
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+
+            try
+            {
+                RecordHandler.DeleteRecordFromDatabase(application, container, record);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        // DELETE: api/somiod/{application}/{container}/{notification}
+        [Route("{application}/{container}/{notification}")]
+        [HttpDelete]
+        public IHttpActionResult DeleteNotification(string application, string container, string notification)
+        {
+            if (string.IsNullOrWhiteSpace(application))
+            {
+                return BadRequest("Application name must be provided.");
+            }
+
+            if (string.IsNullOrWhiteSpace(container))
+            {
+                return BadRequest("Container name must be provided.");
+            }
+
+            if (string.IsNullOrWhiteSpace(notification))
+            {
+                return BadRequest("Notification name must be provided.");
+            }
+
+            try
+            {
+                if (!ApplicationHandler.ApplicationExists(application))
+                {
+                    return NotFound();
+                }
+
+                if (!ContainerHandler.ContainerExists(application, container))
+                {
+                    return NotFound();
+                }
+
+                if (!NotificationHandler.NotificationExists(application, container, notification))
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+
+            try
+            {
+                NotificationHandler.DeleteNotificationFromDatabase(application, container, notification);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+
+            return StatusCode(HttpStatusCode.NoContent);
+        }
     }
 }
