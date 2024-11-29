@@ -99,6 +99,7 @@ namespace somiod.Handlers
                 {
                     newName = container.Name + "_" + i.ToString();
                     cont = FindContainerInDatabase(application, newName);
+                    i++;
                 }
                 container.Name = newName;
             }
