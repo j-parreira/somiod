@@ -94,7 +94,7 @@ namespace somiod.Handlers
             if (cont != null)
             {
                 int i = 1;
-                String newName = "";
+                string newName = "";
                 while (cont != null)
                 {
                     newName = container.Name + "_" + i.ToString();
@@ -129,9 +129,28 @@ namespace somiod.Handlers
 
         internal static void DeleteContainerFromDatabase(string application, string container)
         {
-            throw new NotImplementedException(); //TODO: Implement this method
+            var app = ApplicationHandler.FindApplicationInDatabase(application);
+            try
+            {
+                using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
+                {
+                    sqlConnection.Open();
+                    using (SqlCommand sqlCommand = new SqlCommand("DELETE FROM Containers WHERE Name = @ContainerName AND Parent = @ApplicationId", sqlConnection))
+                    {
+                        sqlCommand.Parameters.AddWithValue("@ContainerName", container);
+                        sqlCommand.Parameters.AddWithValue("@ApplicationId", app.Id);
+                        sqlCommand.CommandType = System.Data.CommandType.Text;
+                        sqlCommand.ExecuteNonQuery();
+                    }
+                    sqlConnection.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error deleting container from database", e);
+            }
         }
-        internal static Container UpdateContainerInDatabase(string container, Container newContainer)
+        internal static Container UpdateContainerInDatabase(string application, string container, Container newContainer)
         {
             throw new NotImplementedException(); //TODO: Implement this method
         }

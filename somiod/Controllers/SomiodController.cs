@@ -557,7 +557,7 @@ namespace somiod.Controllers
 
             try
             {
-                updatedCont = ContainerHandler.UpdateContainerInDatabase(container, newContainer);
+                updatedCont = ContainerHandler.UpdateContainerInDatabase(application, container, newContainer);
             }
             catch (Exception ex)
             {
