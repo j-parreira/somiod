@@ -13,7 +13,7 @@ namespace somiod.Controllers
     [RoutePrefix("api/somiod")]
     public class SomiodController : ApiController
     {
-        // ---Application---
+        // ---------------------------- Applications ----------------------------
 
         // GET: api/somiod
         [Route("")]
@@ -276,9 +276,7 @@ namespace somiod.Controllers
             return Content(HttpStatusCode.OK, updatedApp, new XmlMediaTypeFormatter());
         }
 
-        // ---End of Application---
-
-        // ---Container---
+        // ---------------------------- Containers ----------------------------
 
         // GET: api/somiod/{application}/container
         [Route("{application}/container")]
@@ -567,9 +565,7 @@ namespace somiod.Controllers
             return Content(HttpStatusCode.OK, updatedCont, new XmlMediaTypeFormatter());
         }
 
-        // ---End of Container---
-
-        // ---Records and Notifications---
+        // ---------------------------- Records and Notifications ----------------------------
 
         // GET: api/somiod/{application}/{container}/record
         [Route("{application}/{container}/record")]
@@ -888,10 +884,10 @@ namespace somiod.Controllers
             return BadRequest("Must specify res_type value in header.");
         }
 
-        // DELETE: api/somiod/{application}/{container}/{record}
-        [Route("{application}/{container}/{record}")]
+        // DELETE: api/somiod/{application}/{container}/{recordOrNotification}
+        [Route("{application}/{container}/{recordOrNotification}")]
         [HttpDelete]
-        public IHttpActionResult DeleteRecord(string application, string container, string record)
+        public IHttpActionResult DeleteRecordOrNotification(string application, string container, string recordOrNotification)
         {
             if (string.IsNullOrWhiteSpace(application))
             {
@@ -903,9 +899,9 @@ namespace somiod.Controllers
                 return BadRequest("Container name must be provided.");
             }
 
-            if (string.IsNullOrWhiteSpace(record))
+            if (string.IsNullOrWhiteSpace(recordOrNotification))
             {
-                return BadRequest("Record name must be provided.");
+                return BadRequest("Record or Notification name must be provided.");
             }
 
             try
@@ -920,7 +916,7 @@ namespace somiod.Controllers
                     return NotFound();
                 }
 
-                if (!RecordAndNotificationHandler.RecordExists(application, container, record))
+                if (!RecordAndNotificationHandler.RecordExists(application, container, recordOrNotification) && !RecordAndNotificationHandler.NotificationExists(application, container, recordOrNotification))
                 {
                     return NotFound();
                 }
@@ -930,70 +926,56 @@ namespace somiod.Controllers
                 return InternalServerError(ex);
             }
 
-            try
-            {
-                RecordAndNotificationHandler.DeleteRecordFromDatabase(application, container, record);
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
-            }
+            var resourceHeader = Request.Headers.FirstOrDefault(h => h.Key.Equals("res_type", StringComparison.OrdinalIgnoreCase));
 
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        // DELETE: api/somiod/{application}/{container}/{notification}
-        [Route("{application}/{container}/{notification}")]
-        [HttpDelete]
-        public IHttpActionResult DeleteNotification(string application, string container, string notification)
-        {
-            if (string.IsNullOrWhiteSpace(application))
+            if (resourceHeader.Key != null)
             {
-                return BadRequest("Application name must be provided.");
-            }
+                string resourceType = resourceHeader.Value.FirstOrDefault();
 
-            if (string.IsNullOrWhiteSpace(container))
-            {
-                return BadRequest("Container name must be provided.");
-            }
-
-            if (string.IsNullOrWhiteSpace(notification))
-            {
-                return BadRequest("Notification name must be provided.");
-            }
-
-            try
-            {
-                if (!ApplicationHandler.ApplicationExists(application))
+                if (string.IsNullOrWhiteSpace(resourceType))
                 {
-                    return NotFound();
+                    return BadRequest("Invalid res_type header value.");
                 }
 
-                if (!ContainerHandler.ContainerExists(application, container))
+                try
                 {
-                    return NotFound();
-                }
+                    switch (resourceType.ToLower())
+                    {
+                        case "record":
+                            try
+                            {
+                                RecordAndNotificationHandler.DeleteRecordFromDatabase(application, container, recordOrNotification);
+                            }
+                            catch (Exception ex)
+                            {
+                                return InternalServerError(ex);
+                            }
 
-                if (!RecordAndNotificationHandler.NotificationExists(application, container, notification))
+                            return StatusCode(HttpStatusCode.NoContent);
+
+                        case "notification":
+                            try
+                            {
+                                RecordAndNotificationHandler.DeleteNotificationFromDatabase(application, container, recordOrNotification);
+                            }
+                            catch (Exception ex)
+                            {
+                                return InternalServerError(ex);
+                            }
+
+                            return StatusCode(HttpStatusCode.NoContent);
+
+                        default:
+                            return BadRequest($"Unsupported res_type type: {resourceType}");
+                    }
+                }
+                catch (Exception ex)
                 {
-                    return NotFound();
+                    return InternalServerError(ex);
                 }
             }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
-            }
 
-            try
-            {
-                RecordAndNotificationHandler.DeleteNotificationFromDatabase(application, container, notification);
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
+            return BadRequest("Must specify res_type value in header.");
         }
     }
 }

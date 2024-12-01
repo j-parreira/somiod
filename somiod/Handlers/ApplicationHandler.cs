@@ -10,9 +10,27 @@ namespace somiod.Handlers
 {
     public class ApplicationHandler
     {
-        protected SqlConnection sqlConnection;
-        protected String connectionString = Properties.Settings.Default.ConnStr;
-        protected string sqlCommand = "";
+        internal static bool ApplicationExists(string application)
+        {
+            try
+            {
+                using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
+                {
+                    sqlConnection.Open();
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM Applications WHERE Name = @ApplicationName", sqlConnection))
+                    {
+                        sqlCommand.Parameters.AddWithValue("@ApplicationName", application);
+                        sqlCommand.CommandType = System.Data.CommandType.Text;
+                        int count = (int)sqlCommand.ExecuteScalar();
+                        return count > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error checking if container exists", ex);
+            }
+        }
 
         internal static List<Application> FindApplicationsInDatabase()
         {
@@ -116,28 +134,6 @@ namespace somiod.Handlers
         internal static Application UpdateApplicationInDatabase(string application, Application newApp)
         {
             throw new NotImplementedException(); //TODO: Implement this method
-        }
-
-        internal static bool ApplicationExists(string application)
-        {
-            try
-            {
-                using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
-                {
-                    sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM Applications WHERE Name = @ApplicationName", sqlConnection))
-                    {
-                        sqlCommand.Parameters.AddWithValue("@ApplicationName", application);
-                        sqlCommand.CommandType = System.Data.CommandType.Text;
-                        int count = (int)sqlCommand.ExecuteScalar();
-                        return count > 0;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error checking if container exists", ex);
-            }
         }
     }
 }

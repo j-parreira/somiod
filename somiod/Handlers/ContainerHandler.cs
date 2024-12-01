@@ -10,6 +10,35 @@ namespace somiod.Handlers
 {
     public class ContainerHandler
     {
+        internal static bool ContainerExists(string application, string container)
+        {
+            try
+            {
+                var app = ApplicationHandler.FindApplicationInDatabase(application);
+                if (app == null)
+                {
+                    return false;
+                }
+
+                using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
+                {
+                    sqlConnection.Open();
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM Containers WHERE Name = @ContainerName AND Parent = @ApplicationId", sqlConnection))
+                    {
+                        sqlCommand.Parameters.AddWithValue("@ContainerName", container);
+                        sqlCommand.Parameters.AddWithValue("@ApplicationId", app.Id);
+                        sqlCommand.CommandType = System.Data.CommandType.Text;
+                        int count = (int)sqlCommand.ExecuteScalar();
+                        return count > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error checking if container exists", ex);
+            }
+        }
+
         internal static List<Container> FindContainersByApplication(string application)
         {
             List<Container> containers = new List<Container>();
@@ -150,37 +179,10 @@ namespace somiod.Handlers
                 throw new Exception("Error deleting container from database", e);
             }
         }
+
         internal static Container UpdateContainerInDatabase(string application, string container, Container newContainer)
         {
             throw new NotImplementedException(); //TODO: Implement this method
-        }
-        internal static bool ContainerExists(string application, string container)
-        {
-            try
-            {
-                var app = ApplicationHandler.FindApplicationInDatabase(application);
-                if (app == null)
-                {
-                    return false;
-                }
-
-                using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
-                {
-                    sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM Containers WHERE Name = @ContainerName AND Parent = @ApplicationId", sqlConnection))
-                    {
-                        sqlCommand.Parameters.AddWithValue("@ContainerName", container);
-                        sqlCommand.Parameters.AddWithValue("@ApplicationId", app.Id);
-                        sqlCommand.CommandType = System.Data.CommandType.Text;
-                        int count = (int)sqlCommand.ExecuteScalar();
-                        return count > 0;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error checking if container exists", ex);
-            }
         }
     }
 }
