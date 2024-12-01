@@ -192,6 +192,8 @@ namespace somiod.Handlers
 
         internal static void DeleteRecordFromDatabase(string application, string container, string record)
         {
+
+            var content = FindRecordInDatabase(application, container, record).Content;
             var cont = ContainerHandler.FindContainerInDatabase(application, container);
             try
             {
@@ -425,5 +427,7 @@ namespace somiod.Handlers
                 throw new Exception("Error deleting notification from database", e);
             }
         }
+
+        // ---------------------------- MQTT & HTTP ----------------------------
     }
 }
