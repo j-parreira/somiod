@@ -11,7 +11,7 @@ namespace somiod.Models
         public string Name { get; set; }
         public DateTime CreationDateTime { get; set; }
         public int Parent { get; set; }
-        public int Event { get; set; }
+        public int Event { get; set; } // 0 = creation & deletion, 1 = creation, 2 = deletion
         public string Endpoint { get; set; }
         public bool Enabled { get; set; }
     }

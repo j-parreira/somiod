@@ -665,8 +665,8 @@ namespace somiod.Controllers
             return Content(HttpStatusCode.OK, records, new XmlMediaTypeFormatter());
         }
 
-        // GET: api/somiod/{application}/{container}/notification
-        [Route("{application}/{container}/notification")]
+        // GET: api/somiod/{application}/{container}/notif
+        [Route("{application}/{container}/notif")]
         [HttpGet]
         public IHttpActionResult GetNotifications(string application, string container)
         {
@@ -716,10 +716,10 @@ namespace somiod.Controllers
             return Content(HttpStatusCode.OK, notifications, new XmlMediaTypeFormatter());
         }
 
-        // GET: api/somiod/{application}/{container}/{recordOrNotification}
-        [Route("{application}/{container}/{recordOrNotification}")]
+        // GET: api/somiod/{application}/{container}/record/{record}
+        [Route("{application}/{container}/record/{record}")]
         [HttpGet]
-        public IHttpActionResult GetRecordOrNotification(string application, string container, string recordOrNotification)
+        public IHttpActionResult GetRecord(string application, string container, string record)
         {
             if (string.IsNullOrWhiteSpace(application))
             {
@@ -731,9 +731,9 @@ namespace somiod.Controllers
                 return BadRequest("Container name must be provided.");
             }
 
-            if (string.IsNullOrWhiteSpace(recordOrNotification))
+            if (string.IsNullOrWhiteSpace(record))
             {
-                return BadRequest("Record or Notification name must be provided.");
+                return BadRequest("Record name must be provided.");
             }
 
             try
@@ -748,7 +748,7 @@ namespace somiod.Controllers
                     return NotFound();
                 }
 
-                if (!RecordAndNotificationHandler.RecordExists(recordOrNotification) && !RecordAndNotificationHandler.NotificationExists(recordOrNotification))
+                if (!RecordAndNotificationHandler.RecordExists(record))
                 {
                     return NotFound();
                 }
@@ -758,60 +758,74 @@ namespace somiod.Controllers
                 return InternalServerError(ex);
             }
 
-            var resourceHeader = Request.Headers.FirstOrDefault(h => h.Key.Equals("res_type", StringComparison.OrdinalIgnoreCase));
+            Record rec;
 
-            if (resourceHeader.Key != null)
+            try
             {
-                string resourceType = resourceHeader.Value.FirstOrDefault();
-
-                if (string.IsNullOrWhiteSpace(resourceType))
-                {
-                    return BadRequest("Invalid res_type header value.");
-                }
-
-                try
-                {
-                    switch (resourceType.ToLower())
-                    {
-                        case "record":
-                            Record record;
-
-                            try
-                            {
-                                record = RecordAndNotificationHandler.FindRecordInDatabase(application, container, recordOrNotification);
-                            }
-                            catch (Exception ex)
-                            {
-                                return InternalServerError(ex);
-                            }
-
-                            return Content(HttpStatusCode.OK, record, new XmlMediaTypeFormatter());
-
-                        case "notification":
-                            Notification notification;
-
-                            try
-                            {
-                                notification = RecordAndNotificationHandler.FindNotificationInDatabase(application, container, recordOrNotification);
-                            }
-                            catch (Exception ex)
-                            {
-                                return InternalServerError(ex);
-                            }
-
-                            return Content(HttpStatusCode.OK, notification, new XmlMediaTypeFormatter());
-
-                        default:
-                            return BadRequest($"Unsupported res_type type: {resourceType}");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    return InternalServerError(ex);
-                }
+                rec = RecordAndNotificationHandler.FindRecordInDatabase(application, container, record);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
             }
 
-            return BadRequest("Must specify res_type value in header.");
+            return Content(HttpStatusCode.OK, rec, new XmlMediaTypeFormatter());
+        }
+
+        // GET: api/somiod/{application}/{container}/notif/{notification}
+        [Route("{application}/{container}/notif/{notification}")]
+        [HttpGet]
+        public IHttpActionResult GetNotification(string application, string container, string notification)
+        {
+            if (string.IsNullOrWhiteSpace(application))
+            {
+                return BadRequest("Application name must be provided.");
+            }
+
+            if (string.IsNullOrWhiteSpace(container))
+            {
+                return BadRequest("Container name must be provided.");
+            }
+
+            if (string.IsNullOrWhiteSpace(notification))
+            {
+                return BadRequest("Notification name must be provided.");
+            }
+
+            try
+            {
+                if (!ApplicationHandler.ApplicationExists(application))
+                {
+                    return NotFound();
+                }
+
+                if (!ContainerHandler.ContainerExists(container))
+                {
+                    return NotFound();
+                }
+
+                if (!RecordAndNotificationHandler.NotificationExists(notification))
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+
+            Notification not;
+
+            try
+            {
+                not = RecordAndNotificationHandler.FindNotificationInDatabase(application, container, notification);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+
+            return Content(HttpStatusCode.OK, not, new XmlMediaTypeFormatter());
         }
 
         // POST: api/somiod/{application}/{container}
@@ -950,10 +964,10 @@ namespace somiod.Controllers
             return BadRequest("Must specify res_type value in header.");
         }
 
-        // DELETE: api/somiod/{application}/{container}/{recordOrNotification}
-        [Route("{application}/{container}/{recordOrNotification}")]
+        // DELETE: api/somiod/{application}/{container}/record/{record}
+        [Route("{application}/{container}/record/{record}")]
         [HttpDelete]
-        public IHttpActionResult DeleteRecordOrNotification(string application, string container, string recordOrNotification)
+        public IHttpActionResult DeleteRecord(string application, string container, string record)
         {
             if (string.IsNullOrWhiteSpace(application))
             {
@@ -965,9 +979,9 @@ namespace somiod.Controllers
                 return BadRequest("Container name must be provided.");
             }
 
-            if (string.IsNullOrWhiteSpace(recordOrNotification))
+            if (string.IsNullOrWhiteSpace(record))
             {
-                return BadRequest("Record or Notification name must be provided.");
+                return BadRequest("Record name must be provided.");
             }
 
             try
@@ -982,7 +996,7 @@ namespace somiod.Controllers
                     return NotFound();
                 }
 
-                if (!RecordAndNotificationHandler.RecordExists(recordOrNotification) && !RecordAndNotificationHandler.NotificationExists(recordOrNotification))
+                if (!RecordAndNotificationHandler.RecordExists(record))
                 {
                     return NotFound();
                 }
@@ -992,56 +1006,70 @@ namespace somiod.Controllers
                 return InternalServerError(ex);
             }
 
-            var resourceHeader = Request.Headers.FirstOrDefault(h => h.Key.Equals("res_type", StringComparison.OrdinalIgnoreCase));
-
-            if (resourceHeader.Key != null)
+            try
             {
-                string resourceType = resourceHeader.Value.FirstOrDefault();
-
-                if (string.IsNullOrWhiteSpace(resourceType))
-                {
-                    return BadRequest("Invalid res_type header value.");
-                }
-
-                try
-                {
-                    switch (resourceType.ToLower())
-                    {
-                        case "record":
-                            try
-                            {
-                                RecordAndNotificationHandler.DeleteRecordFromDatabase(application, container, recordOrNotification);
-                            }
-                            catch (Exception ex)
-                            {
-                                return InternalServerError(ex);
-                            }
-
-                            return StatusCode(HttpStatusCode.NoContent);
-
-                        case "notification":
-                            try
-                            {
-                                RecordAndNotificationHandler.DeleteNotificationFromDatabase(application, container, recordOrNotification);
-                            }
-                            catch (Exception ex)
-                            {
-                                return InternalServerError(ex);
-                            }
-
-                            return StatusCode(HttpStatusCode.NoContent);
-
-                        default:
-                            return BadRequest($"Unsupported res_type type: {resourceType}");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    return InternalServerError(ex);
-                }
+                RecordAndNotificationHandler.DeleteRecordFromDatabase(application, container, record);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
             }
 
-            return BadRequest("Must specify res_type value in header.");
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        // DELETE: api/somiod/{application}/{container}/notif/{notification}
+        [Route("{application}/{container}/notif/{notification}")]
+        [HttpDelete]
+        public IHttpActionResult DeleteNotification(string application, string container, string notification)
+        {
+            if (string.IsNullOrWhiteSpace(application))
+            {
+                return BadRequest("Application name must be provided.");
+            }
+
+            if (string.IsNullOrWhiteSpace(container))
+            {
+                return BadRequest("Container name must be provided.");
+            }
+
+            if (string.IsNullOrWhiteSpace(notification))
+            {
+                return BadRequest("Notification name must be provided.");
+            }
+
+            try
+            {
+                if (!ApplicationHandler.ApplicationExists(application))
+                {
+                    return NotFound();
+                }
+
+                if (!ContainerHandler.ContainerExists(container))
+                {
+                    return NotFound();
+                }
+
+                if (!RecordAndNotificationHandler.NotificationExists(notification))
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+
+            try
+            {
+                RecordAndNotificationHandler.DeleteNotificationFromDatabase(application, container, notification);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+
+            return StatusCode(HttpStatusCode.NoContent);
         }
     }
 }
