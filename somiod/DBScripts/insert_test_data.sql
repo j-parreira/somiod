@@ -28,11 +28,11 @@ VALUES
     ('ON6', 'Alarm is turned on', GETDATE(), 6),
     ('OFF6', 'Alarm is turned off', GETDATE(), 6);
 
-INSERT INTO Notifications ([Name], [CreationDateTime], [Parent], [Event], [Endpoint]) 
+INSERT INTO Notifications ([Name], [CreationDateTime], [Parent], [Event], [Endpoint], [Enabled]) 
 VALUES 
-    ('Notification 1', GETDATE(), 1, '1', 'http://127.0.0.1'),
-    ('Notification 2', GETDATE(), 2, '2', 'mqtt://127.0.0.1'),
-    ('Notification 3', GETDATE(), 3, '3', 'http://127.0.0.1'),
-    ('Notification 4', GETDATE(), 4, '4', 'mqtt://127.0.0.1'),
-    ('Notification 5', GETDATE(), 5, '5', 'http://127.0.0.1'),
-    ('Notification 6', GETDATE(), 6, '6', 'mqtt://127.0.0.1');
+    ('Notification 1', GETDATE(), 1, '1', 'http://127.0.0.1', 1),
+    ('Notification 2', GETDATE(), 2, '2', 'mqtt://127.0.0.1', 1),
+    ('Notification 3', GETDATE(), 3, '3', 'http://127.0.0.1', 0),
+    ('Notification 4', GETDATE(), 4, '4', 'mqtt://127.0.0.1', 0),
+    ('Notification 5', GETDATE(), 5, '5', 'http://127.0.0.1', 1),
+    ('Notification 6', GETDATE(), 6, '6', 'mqtt://127.0.0.1', 1);

@@ -50,7 +50,7 @@ namespace somiod.Handlers
 
         internal static Container FindContainerInDatabase(string application, string container)
         {
-            Container cont = new Container();
+            Container cont = null;
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))

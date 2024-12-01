@@ -84,7 +84,7 @@
     <Content Include="App_Data\DBsomiod_log.ldf">
       <DependentUpon>DBsomiod.mdf</DependentUpon>
     </Content>
-    <Content Include="DBScripts\insert_test_tables.sql" />
+    <Content Include="DBScripts\insert_test_data.sql" />
     <Content Include="DBScripts\create_tables.sql" />
     <Content Include="DBScripts\drop_tables.sql" />
     <Content Include="Global.asax" />
