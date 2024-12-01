@@ -140,7 +140,7 @@ namespace somiod.Handlers
                     using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO Containers (Name, CreationDateTime, Parent) VALUES (@Name, @DateTime, @Parent)", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@Name", container.Name);
-                        sqlCommand.Parameters.AddWithValue("@DateTime", container.CreationDateTime);
+                        sqlCommand.Parameters.AddWithValue("@DateTime", DateTime.Now);
                         sqlCommand.Parameters.AddWithValue("@Parent", app.Id);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         sqlCommand.ExecuteNonQuery();

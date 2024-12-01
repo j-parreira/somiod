@@ -171,7 +171,7 @@ namespace somiod.Controllers
                 return BadRequest(validationError);
             }
 
-            if (application.Name == "application")
+            if (application.Name.ToLower() == "application")
             {
                 return BadRequest("The application name 'application' is reserved and cannot be used.");
             }
@@ -241,12 +241,7 @@ namespace somiod.Controllers
                 return BadRequest(validationError);
             }
 
-            if (!string.Equals(application, newApp.Name, StringComparison.OrdinalIgnoreCase))
-            {
-                return BadRequest("The application name in the URL does not match the name in the request body.");
-            }
-
-            if (newApp.Name == "application")
+            if (newApp.Name.ToLower() == "application")
             {
                 return BadRequest("The application name 'application' is reserved and cannot be used.");
             }

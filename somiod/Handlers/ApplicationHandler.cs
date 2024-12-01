@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 
@@ -103,9 +104,42 @@ namespace somiod.Handlers
             return app;
         }
 
-        internal static Application AddApplicationToDatabase(Application app)
+        internal static Application AddApplicationToDatabase(Application application)
         {
-            throw new NotImplementedException(); //TODO: Implement this method
+            var app = FindApplicationInDatabase(application.Name);
+            if (app != null)
+            {
+                int i = 1;
+                string newName = "";
+                while (app != null)
+                {
+                    newName = app.Name + i.ToString();
+                    app = FindApplicationInDatabase(newName);
+                    i++;
+                }
+                application.Name = newName;
+            }
+            try
+            {
+                using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
+                {
+                    sqlConnection.Open();
+                    using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO Applications (Name, CreationDateTime) VALUES (@ApplicationName, @CreationDateTime)", sqlConnection))
+                    {
+                        sqlCommand.Parameters.AddWithValue("@ApplicationName", application.Name);
+                        sqlCommand.Parameters.AddWithValue("@CreationDateTime", DateTime.Now);
+                        sqlCommand.CommandType = System.Data.CommandType.Text;
+                        sqlCommand.ExecuteNonQuery();
+                    }
+                    sqlConnection.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error adding application to database", e);
+            }
+            application = FindApplicationInDatabase(application.Name);
+            return application;
         }
 
         internal static void DeleteApplicationFromDatabase(string application)
@@ -133,7 +167,41 @@ namespace somiod.Handlers
 
         internal static Application UpdateApplicationInDatabase(string application, Application newApp)
         {
-            throw new NotImplementedException(); //TODO: Implement this method
+            var app = FindApplicationInDatabase(application);
+            var app2 = FindApplicationInDatabase(newApp.Name);
+            if (app2 != null)
+            {
+                int i = 1;
+                string newName = "";
+                while (app2 != null)
+                {
+                    newName = newApp.Name + i.ToString();
+                    app2 = FindApplicationInDatabase(newName);
+                    i++;
+                }
+                newApp.Name = newName;
+            }
+            try
+            {
+                using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
+                {
+                    sqlConnection.Open();
+                    using (SqlCommand sqlCommand = new SqlCommand("UPDATE Applications SET Name = @NewName WHERE Id = @ApplicationId", sqlConnection))
+                    {
+                        sqlCommand.Parameters.AddWithValue("@NewName", newApp.Name);
+                        sqlCommand.Parameters.AddWithValue("@ApplicationId", app.Id);
+                        sqlCommand.CommandType = System.Data.CommandType.Text;
+                        sqlCommand.ExecuteNonQuery();
+                    }
+                    sqlConnection.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error updating application in database", e);
+            }
+            newApp = FindApplicationInDatabase(newApp.Name);
+            return newApp;
         }
     }
 }

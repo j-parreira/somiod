@@ -165,7 +165,26 @@ namespace somiod.Handlers
 
         internal static void DeleteRecordFromDatabase(string application, string container, string record)
         {
-            throw new NotImplementedException();
+            var cont = ContainerHandler.FindContainerInDatabase(application, container);
+            try
+            {
+                using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
+                {
+                    sqlConnection.Open();
+                    using (SqlCommand sqlCommand = new SqlCommand("DELETE FROM Records WHERE Name = @RecordName AND Parent = @ContainerId", sqlConnection))
+                    {
+                        sqlCommand.Parameters.AddWithValue("@RecordName", record);
+                        sqlCommand.Parameters.AddWithValue("@ContainerId", cont.Id);
+                        sqlCommand.CommandType = System.Data.CommandType.Text;
+                        sqlCommand.ExecuteNonQuery();
+                    }
+                    sqlConnection.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error deleting record from database", e);
+            }
         }
 
         // ---------------------------- Notifications ----------------------------
@@ -328,7 +347,26 @@ namespace somiod.Handlers
 
         internal static void DeleteNotificationFromDatabase(string application, string container, string notification)
         {
-            throw new NotImplementedException();
+            var cont = ContainerHandler.FindContainerInDatabase(application, container);
+            try
+            {
+                using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
+                {
+                    sqlConnection.Open();
+                    using (SqlCommand sqlCommand = new SqlCommand("DELETE FROM Notifications WHERE Name = @NotificationName AND Parent = @ContainerId", sqlConnection))
+                    {
+                        sqlCommand.Parameters.AddWithValue("@NotificationName", notification);
+                        sqlCommand.Parameters.AddWithValue("@ContainerId", cont.Id);
+                        sqlCommand.CommandType = System.Data.CommandType.Text;
+                        sqlCommand.ExecuteNonQuery();
+                    }
+                    sqlConnection.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error deleting notification from database", e);
+            }
         }
     }
 }
