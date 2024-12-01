@@ -892,16 +892,18 @@ namespace somiod.Controllers
                             //    return BadRequest(validationError);
                             //}
 
+                            Record createdRecord;
+
                             try
                             {
-                                RecordAndNotificationHandler.AddRecordToDatabase(application, container, record);
+                                createdRecord = RecordAndNotificationHandler.AddRecordToDatabase(application, container, record);
                             }
                             catch (Exception ex)
                             {
                                 return InternalServerError(ex);
                             }
 
-                            return Content(HttpStatusCode.Created, record, new XmlMediaTypeFormatter());
+                            return Content(HttpStatusCode.Created, createdRecord, new XmlMediaTypeFormatter());
 
                         case "notification":
                             Notification notification = DeserializeXml<Notification>(recordOrNotification.ToString());
@@ -923,16 +925,18 @@ namespace somiod.Controllers
                             //    return BadRequest(validationError);
                             //}
 
+                            Notification createdNotification;
+
                             try
                             {
-                                RecordAndNotificationHandler.AddNotificationToDatabase(application, container, notification);
+                                createdNotification = RecordAndNotificationHandler.AddNotificationToDatabase(application, container, notification);
                             }
                             catch (Exception ex)
                             {
                                 return InternalServerError(ex);
                             }
 
-                            return Content(HttpStatusCode.Created, notification, new XmlMediaTypeFormatter());
+                            return Content(HttpStatusCode.Created, createdNotification, new XmlMediaTypeFormatter());
 
                         default:
                             return BadRequest($"Unsupported res_type type: {resourceType}");

@@ -151,9 +151,43 @@ namespace somiod.Handlers
             return rec;
         }
 
-        internal static void AddRecordToDatabase(string application, string container, Record record)
+        internal static Record AddRecordToDatabase(string application, string container, Record record)
         {
-            throw new NotImplementedException();
+            if (RecordExists(record.Name))
+            {
+                int i = 1;
+                while (RecordExists(record.Name))
+                {
+                    record.Name += i.ToString();
+                    i++;
+                }
+            }
+
+            var cont = ContainerHandler.FindContainerInDatabase(application, container);
+
+            try
+            {
+                using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
+                {
+                    sqlConnection.Open();
+                    using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO Records (Name, Content, CreationDateTime, Parent) VALUES (@RecordName, @RecordContent, @RecordCreationDateTime, @RecordParent)", sqlConnection))
+                    {
+                        sqlCommand.Parameters.AddWithValue("@RecordName", record.Name);
+                        sqlCommand.Parameters.AddWithValue("@RecordContent", record.Content);
+                        sqlCommand.Parameters.AddWithValue("@RecordCreationDateTime", DateTime.Now);
+                        sqlCommand.Parameters.AddWithValue("@RecordParent", cont.Id);
+                        sqlCommand.CommandType = System.Data.CommandType.Text;
+                        sqlCommand.ExecuteNonQuery();
+                    }
+                    sqlConnection.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error adding record to database", e);
+            }
+            record = FindRecordInDatabase(application, container, record.Name);
+            return record;
         }
 
         internal static void DeleteRecordFromDatabase(string application, string container, string record)
@@ -327,9 +361,45 @@ namespace somiod.Handlers
             return not;
         }
 
-        internal static void AddNotificationToDatabase(string application, string container, Notification notification)
+        internal static Notification AddNotificationToDatabase(string application, string container, Notification notification)
         {
-            throw new NotImplementedException();
+            if (NotificationExists(notification.Name))
+            {
+                int i = 1;
+                while (NotificationExists(notification.Name))
+                {
+                    notification.Name += i.ToString();
+                    i++;
+                }
+            }
+
+            var cont = ContainerHandler.FindContainerInDatabase(application, container);
+
+            try
+            {
+                using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
+                {
+                    sqlConnection.Open();
+                    using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO Notifications (Name, CreationDateTime, Parent, Event, Endpoint, Enabled) VALUES (@NotificationName, @NotificationCreationDateTime, @NotificationParent, @NotificationEvent, @NotificationEndpoint, @NotificationEnabled)", sqlConnection))
+                    {
+                        sqlCommand.Parameters.AddWithValue("@NotificationName", notification.Name);
+                        sqlCommand.Parameters.AddWithValue("@NotificationCreationDateTime", DateTime.Now);
+                        sqlCommand.Parameters.AddWithValue("@NotificationParent", cont.Id);
+                        sqlCommand.Parameters.AddWithValue("@NotificationEvent", notification.Event);
+                        sqlCommand.Parameters.AddWithValue("@NotificationEndpoint", notification.Endpoint);
+                        sqlCommand.Parameters.AddWithValue("@NotificationEnabled", notification.Enabled);
+                        sqlCommand.CommandType = System.Data.CommandType.Text;
+                        sqlCommand.ExecuteNonQuery();
+                    }
+                    sqlConnection.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error adding notification to database", e);
+            }
+            notification = FindNotificationInDatabase(application, container, notification.Name);
+            return notification;
         }
 
         internal static void DeleteNotificationFromDatabase(string application, string container, string notification)
