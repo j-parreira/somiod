@@ -30,9 +30,9 @@ VALUES
 
 INSERT INTO Notifications ([Name], [CreationDateTime], [Parent], [Event], [Endpoint], [Enabled]) 
 VALUES 
-    ('Notification 1', GETDATE(), 1, '1', 'http://127.0.0.1', 1),
-    ('Notification 2', GETDATE(), 2, '2', 'mqtt://127.0.0.1', 1),
-    ('Notification 3', GETDATE(), 3, '3', 'http://127.0.0.1', 0),
-    ('Notification 4', GETDATE(), 4, '4', 'mqtt://127.0.0.1', 0),
-    ('Notification 5', GETDATE(), 5, '5', 'http://127.0.0.1', 1),
-    ('Notification 6', GETDATE(), 6, '6', 'mqtt://127.0.0.1', 1);
+    ('Notification_1', GETDATE(), 1, '1', 'http://127.0.0.1', 1),
+    ('Notification_2', GETDATE(), 2, '2', 'mqtt://127.0.0.1', 1),
+    ('Notification_3', GETDATE(), 3, '3', 'http://127.0.0.1', 0),
+    ('Notification_4', GETDATE(), 4, '4', 'mqtt://127.0.0.1', 0),
+    ('Notification_5', GETDATE(), 5, '5', 'http://127.0.0.1', 1),
+    ('Notification_6', GETDATE(), 6, '6', 'mqtt://127.0.0.1', 1);
