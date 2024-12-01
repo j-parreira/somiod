@@ -10,23 +10,16 @@ namespace somiod.Handlers
 {
     public class ContainerHandler
     {
-        internal static bool ContainerExists(string application, string container)
+        internal static bool ContainerExists(string container)
         {
             try
             {
-                var app = ApplicationHandler.FindApplicationInDatabase(application);
-                if (app == null)
-                {
-                    return false;
-                }
-
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM Containers WHERE Name = @ContainerName AND Parent = @ApplicationId", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM Containers WHERE Name = @ContainerName", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@ContainerName", container);
-                        sqlCommand.Parameters.AddWithValue("@ApplicationId", app.Id);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         int count = (int)sqlCommand.ExecuteScalar();
                         return count > 0;
@@ -118,30 +111,28 @@ namespace somiod.Handlers
 
         internal static Container AddContainerToDatabase(string application, Container container)
         {
-            var app = ApplicationHandler.FindApplicationInDatabase(application);
-            var cont = FindContainerInDatabase(application, container.Name);
-            if (cont != null)
+            if (ContainerExists(container.Name))
             {
                 int i = 1;
-                string newName = "";
-                while (cont != null)
+                while (ContainerExists(container.Name))
                 {
-                    newName = container.Name + "_" + i.ToString();
-                    cont = FindContainerInDatabase(application, newName);
+                    container.Name += i.ToString();
                     i++;
                 }
-                container.Name = newName;
             }
+
+            var app = ApplicationHandler.FindApplicationInDatabase(application);
+
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO Containers (Name, CreationDateTime, Parent) VALUES (@Name, @DateTime, @Parent)", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO Containers (Name, CreationDateTime, Parent) VALUES (@ContainerName, @CreationDateTime, @ParentId)", sqlConnection))
                     {
-                        sqlCommand.Parameters.AddWithValue("@Name", container.Name);
-                        sqlCommand.Parameters.AddWithValue("@DateTime", DateTime.Now);
-                        sqlCommand.Parameters.AddWithValue("@Parent", app.Id);
+                        sqlCommand.Parameters.AddWithValue("@ContainerName", container.Name);
+                        sqlCommand.Parameters.AddWithValue("@CreationDateTime", DateTime.Now);
+                        sqlCommand.Parameters.AddWithValue("@ParentId", app.Id);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         sqlCommand.ExecuteNonQuery();
                     }
@@ -182,7 +173,40 @@ namespace somiod.Handlers
 
         internal static Container UpdateContainerInDatabase(string application, string container, Container newContainer)
         {
-            throw new NotImplementedException(); //TODO: Implement this method
+            if (ContainerExists(newContainer.Name))
+            {
+                int i = 1;
+                while (ContainerExists(newContainer.Name))
+                {
+                    newContainer.Name += i.ToString();
+                    i++;
+                }
+            }
+
+            var app = ApplicationHandler.FindApplicationInDatabase(application);
+            
+            try
+            {
+                using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
+                {
+                    sqlConnection.Open();
+                    using (SqlCommand sqlCommand = new SqlCommand("UPDATE Containers SET Name = @NewContainerName WHERE Name = @ContainerName AND Parent = @ApplicationId", sqlConnection))
+                    {
+                        sqlCommand.Parameters.AddWithValue("@NewContainerName", newContainer.Name);
+                        sqlCommand.Parameters.AddWithValue("@ContainerName", container);
+                        sqlCommand.Parameters.AddWithValue("@ApplicationId", app.Id);
+                        sqlCommand.CommandType = System.Data.CommandType.Text;
+                        sqlCommand.ExecuteNonQuery();
+                    }
+                    sqlConnection.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error updating container in database", e);
+            }
+            var NewCont = FindContainerInDatabase(application, newContainer.Name);
+            return NewCont;
         }
     }
 }

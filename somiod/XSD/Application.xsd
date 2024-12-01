@@ -3,9 +3,9 @@
 	<xs:element name="Application">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="Id" type="xs:int" />
-				<xs:element name="Name" type="xs:string" />
-				<xs:element name="CreationDateTime" type="xs:dateTime" />
+				<xs:element name="Id" type="xs:int" minOccurs="1" />
+				<xs:element name="Name" type="xs:string" minOccurs="1" />
+				<xs:element name="CreationDateTime" type="xs:dateTime" minOccurs="1" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>

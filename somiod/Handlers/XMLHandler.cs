@@ -26,13 +26,15 @@ namespace somiod.Handlers
                     xmlData = stringWriter.ToString();
                 }
 
+                Console.WriteLine(xmlData);
+
                 // Set up the XSD validation
                 XmlReaderSettings settings = new XmlReaderSettings();
                 settings.Schemas.Add(null, xsdPath);
                 settings.ValidationType = ValidationType.Schema;
                 settings.ValidationEventHandler += (sender, e) =>
                 {
-                    localValidationError = e.Message;
+                    localValidationError = $"Exception during validation: {e.Message}";
                 };
 
                 // Validate the XML

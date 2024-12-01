@@ -11,23 +11,16 @@ namespace somiod.Handlers
     public class RecordAndNotificationHandler
     {
         // ---------------------------- Records ----------------------------
-        internal static bool RecordExists(string application, string container, string record)
+        internal static bool RecordExists(string record)
         {
             try
             {
-                var cont = ContainerHandler.FindContainerInDatabase(application, container);
-                if (cont == null)
-                {
-                    return false;
-                }
-
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM Records WHERE Name = @RecordName AND Parent = @ParentId", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM Records WHERE Name = @RecordName", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@RecordName", record);
-                        sqlCommand.Parameters.AddWithValue("@ParentId", cont.Id);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         int count = (int)sqlCommand.ExecuteScalar();
                         return count > 0;
@@ -188,22 +181,16 @@ namespace somiod.Handlers
         }
 
         // ---------------------------- Notifications ----------------------------
-        internal static bool NotificationExists(string application, string container, string notification)
+        internal static bool NotificationExists(string notification)
         {
             try
             {
-                var cont = ContainerHandler.FindContainerInDatabase(application, container);
-                if (cont == null)
-                {
-                    return false;
-                }
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM Notifications WHERE Name = @NotificationName AND Parent = @ParentId", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM Notifications WHERE Name = @NotificationName", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@NotificationName", notification);
-                        sqlCommand.Parameters.AddWithValue("@ParentId", cont.Id);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         int count = (int)sqlCommand.ExecuteScalar();
                         return count > 0;

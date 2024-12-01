@@ -106,19 +106,17 @@ namespace somiod.Handlers
 
         internal static Application AddApplicationToDatabase(Application application)
         {
-            var app = FindApplicationInDatabase(application.Name);
-            if (app != null)
+            
+            if (ApplicationExists(application.Name))
             {
                 int i = 1;
-                string newName = "";
-                while (app != null)
+                while (ApplicationExists(application.Name))
                 {
-                    newName = app.Name + i.ToString();
-                    app = FindApplicationInDatabase(newName);
+                    application.Name += i.ToString();
                     i++;
                 }
-                application.Name = newName;
             }
+
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
@@ -168,19 +166,17 @@ namespace somiod.Handlers
         internal static Application UpdateApplicationInDatabase(string application, Application newApp)
         {
             var app = FindApplicationInDatabase(application);
-            var app2 = FindApplicationInDatabase(newApp.Name);
-            if (app2 != null)
+
+            if (ApplicationExists(newApp.Name))
             {
                 int i = 1;
-                string newName = "";
-                while (app2 != null)
+                while (ApplicationExists(newApp.Name))
                 {
-                    newName = newApp.Name + i.ToString();
-                    app2 = FindApplicationInDatabase(newName);
+                    newApp.Name += i.ToString();
                     i++;
                 }
-                newApp.Name = newName;
             }
+
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
