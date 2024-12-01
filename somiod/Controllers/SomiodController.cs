@@ -17,15 +17,8 @@ namespace somiod.Controllers
     [RoutePrefix("api/somiod")]
     public class SomiodController : ApiController
     {
-        // ---------------------------- Helper Methods ----------------------------
-        public static T DeserializeXml<T>(string xml)
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(T));
-            using (StringReader reader = new StringReader(xml))
-            {
-                return (T)serializer.Deserialize(reader);
-            }
-        }
+        // ---------------------------- XML Handler ----------------------------
+
 
         // ---------------------------- Applications ----------------------------
 
@@ -178,12 +171,13 @@ namespace somiod.Controllers
         [HttpPost]
         public IHttpActionResult PostApplication([FromBody] Application application)
         {
-            //string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Application.xsd");
+            string xmlApp = XMLHandler.SerializeXml(application);
+            string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Application.xsd");
 
-            //if (!XMLHandler.ValidateWithXSD(application, xsdPath, out string validationError))
-            //{
-            //    return BadRequest(validationError);
-            //}
+            if (!XMLHandler.ValidateXml(xmlApp, xsdPath, out string validationError))
+            {
+                return BadRequest($"XML validation failed: {validationError}");
+            }
 
             if (application == null)
             {
@@ -253,6 +247,14 @@ namespace somiod.Controllers
         [HttpPut]
         public IHttpActionResult PutApplication(string application, [FromBody] Application newApp)
         {
+            string xmlApp = XMLHandler.SerializeXml(newApp);
+            string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Application.xsd");
+
+            if (!XMLHandler.ValidateXml(xmlApp, xsdPath, out string validationError))
+            {
+                return BadRequest($"XML validation failed: {validationError}");
+            }
+
             if (string.IsNullOrWhiteSpace(application))
             {
                 return BadRequest("Application name must be provided.");
@@ -269,13 +271,6 @@ namespace somiod.Controllers
             {
                 return InternalServerError(ex);
             }
-
-            //string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Application.xsd");
-
-            //if (!XMLHandler.ValidateWithXSD(newApp, xsdPath, out string validationError))
-            //{
-            //    return BadRequest(validationError);
-            //}
 
             if (newApp == null)
             {
@@ -450,6 +445,14 @@ namespace somiod.Controllers
         [HttpPost]
         public IHttpActionResult PostContainer(string application, [FromBody] Container container)
         {
+            string xmlCont = XMLHandler.SerializeXml(container);
+            string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Container.xsd");
+
+            if (!XMLHandler.ValidateXml(xmlCont, xsdPath, out string validationError))
+            {
+                return BadRequest($"XML validation failed: {validationError}");
+            }
+
             if (string.IsNullOrWhiteSpace(application))
             {
                 return BadRequest("Application name must be provided.");
@@ -466,13 +469,6 @@ namespace somiod.Controllers
             {
                 return InternalServerError(ex);
             }
-
-            //string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Container.xsd");
-
-            //if (!XMLHandler.ValidateWithXSD(container, xsdPath, out string validationError))
-            //{
-            //    return BadRequest(validationError);
-            //}
 
             if (container == null)
             {
@@ -552,6 +548,14 @@ namespace somiod.Controllers
         [HttpPut]
         public IHttpActionResult PutContainer(string application, string container, [FromBody] Container newContainer)
         {
+            string xmlCont = XMLHandler.SerializeXml(newContainer);
+            string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Container.xsd");
+
+            if (!XMLHandler.ValidateXml(xmlCont, xsdPath, out string validationError))
+            {
+                return BadRequest($"XML validation failed: {validationError}");
+            }
+
             if (string.IsNullOrWhiteSpace(application))
             {
                 return BadRequest("Application name must be provided.");
@@ -578,13 +582,6 @@ namespace somiod.Controllers
             {
                 return InternalServerError(ex);
             }
-
-            //string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Container.xsd");
-
-            //if (!XMLHandler.ValidateWithXSD(newContainer, xsdPath, out string validationError))
-            //{
-            //    return BadRequest(validationError);
-            //}
 
             if (container == null)
             {
@@ -873,7 +870,15 @@ namespace somiod.Controllers
                     {
                         case "record":
 
-                            Record record = DeserializeXml<Record>(recordOrNotification.ToString());
+                            Record record = XMLHandler.DeserializeXml<Record>(recordOrNotification.ToString());
+
+                            string xmlRec = XMLHandler.SerializeXml(record);
+                            string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Record.xsd");
+
+                            if (!XMLHandler.ValidateXml(xmlRec, xsdPath, out string validationError))
+                            {
+                                return BadRequest($"XML validation failed: {validationError}");
+                            }
 
                             if (string.IsNullOrWhiteSpace(record.Name))
                             {
@@ -884,13 +889,6 @@ namespace somiod.Controllers
                             {
                                 return BadRequest("The record name 'record' is reserved and cannot be used.");
                             }
-
-                            //string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Record.xsd");
-
-                            //if (!XMLHandler.ValidateWithXSD(record, xsdPath, out string validationError))
-                            //{
-                            //    return BadRequest(validationError);
-                            //}
 
                             Record createdRecord;
 
@@ -906,7 +904,15 @@ namespace somiod.Controllers
                             return Content(HttpStatusCode.Created, createdRecord, new XmlMediaTypeFormatter());
 
                         case "notification":
-                            Notification notification = DeserializeXml<Notification>(recordOrNotification.ToString());
+                            Notification notification = XMLHandler.DeserializeXml<Notification>(recordOrNotification.ToString());
+
+                            string xmlNot = XMLHandler.SerializeXml(notification);
+                            xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Notification.xsd");
+
+                            if (!XMLHandler.ValidateXml(xmlNot, xsdPath, out validationError))
+                            {
+                                return BadRequest($"XML validation failed: {validationError}");
+                            }
 
                             if (string.IsNullOrWhiteSpace(notification.Name))
                             {
@@ -917,13 +923,6 @@ namespace somiod.Controllers
                             {
                                 return BadRequest("The notification name 'Notification' is reserved and cannot be used.");
                             }
-
-                            //xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Notification.xsd");
-
-                            //if (!XMLHandler.ValidateWithXSD(notification, xsdPath, out validationError))
-                            //{
-                            //    return BadRequest(validationError);
-                            //}
 
                             Notification createdNotification;
 

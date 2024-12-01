@@ -2,15 +2,15 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:element name="Notification">
 		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="Id" type="xs:int" minOccurs="1" />
-				<xs:element name="Name" type="xs:string" minOccurs="1" />
-				<xs:element name="CreationDateTime" type="xs:dateTime" minOccurs="1" />
-				<xs:element name="Parent" type="xs:int" minOccurs="1" />
-				<xs:element name="Event" type="xs:int" minOccurs="1" />
-				<xs:element name="Endpoint" type="xs:string" minOccurs="1" />
-				<xs:element name="Enabled" type="xs:boolean" minOccurs="1" />
-			</xs:sequence>
+			<xs:all>
+				<xs:element name="Id" type="xs:int" />
+				<xs:element name="Name" type="xs:string" />
+				<xs:element name="CreationDateTime" type="xs:dateTime" />
+				<xs:element name="Parent" type="xs:int" />
+				<xs:element name="Event" type="xs:int" />
+				<xs:element name="Endpoint" type="xs:string" />
+				<xs:element name="Enabled" type="xs:boolean" />
+			</xs:all>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>
