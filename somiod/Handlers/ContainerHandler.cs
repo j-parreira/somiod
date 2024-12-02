@@ -175,6 +175,10 @@ namespace somiod.Handlers
         {
             if (ContainerExists(newContainer.Name))
             {
+                if (container == newContainer.Name)
+                {
+                    return newContainer;
+                }
                 int i = 1;
                 while (ContainerExists(newContainer.Name))
                 {

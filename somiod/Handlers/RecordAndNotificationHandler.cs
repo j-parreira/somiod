@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using uPLibrary.Networking.M2Mqtt;
+using uPLibrary.Networking.M2Mqtt.Messages;
 
 namespace somiod.Handlers
 {
@@ -56,9 +57,9 @@ namespace somiod.Handlers
                                 {
                                     Id = reader.GetInt32(0),
                                     Name = reader.GetString(1),
-                                    Content = reader.GetString(2),
-                                    CreationDateTime = reader.GetDateTime(3),
-                                    Parent = reader.GetInt32(4)
+                                    CreationDateTime = reader.GetDateTime(2),
+                                    Parent = reader.GetInt32(3),
+                                    Content = reader.GetString(4)
                                 });
                             }
                             reader.Close();
@@ -95,9 +96,9 @@ namespace somiod.Handlers
                                 {
                                     Id = reader.GetInt32(0),
                                     Name = reader.GetString(1),
-                                    Content = reader.GetString(2),
-                                    CreationDateTime = reader.GetDateTime(3),
-                                    Parent = reader.GetInt32(4)
+                                    CreationDateTime = reader.GetDateTime(2),
+                                    Parent = reader.GetInt32(3),
+                                    Content = reader.GetString(4)
                                 });
                             }
                             reader.Close();
@@ -135,9 +136,9 @@ namespace somiod.Handlers
                                 {
                                     Id = reader.GetInt32(0),
                                     Name = reader.GetString(1),
-                                    Content = reader.GetString(2),
-                                    CreationDateTime = reader.GetDateTime(3),
-                                    Parent = reader.GetInt32(4)
+                                    CreationDateTime = reader.GetDateTime(2),
+                                    Parent = reader.GetInt32(3),
+                                    Content = reader.GetString(4)
                                 };
                             }
                             reader.Close();
@@ -189,22 +190,28 @@ namespace somiod.Handlers
                 throw new Exception("Error adding record to database", e);
             }
 
-            record = FindRecordInDatabase(application, container, record.Name);
-
-            var channel = ContainerHandler.FindContainerInDatabase(application, container).Name;
-            var content = FindRecordInDatabase(application, container, record.Name).Content;
-            List<Notification> notificationsToSend = FindNotificationsToSend(application, container, 1);
-            PublishNotifications(notificationsToSend, channel, record, "creation");
+            List<Notification> notificationsToSend = FindNotificationsToSend(application, container, "1");
+            MqttMessage mqttMessage = new MqttMessage
+            {
+                Topic = ContainerHandler.FindContainerInDatabase(application, container).Name,
+                Event = "creation",
+                Record = FindRecordInDatabase(application, container, record.Name)
+            };
+            PublishNotifications(notificationsToSend, mqttMessage);
 
             return record;
         }
 
         internal static void DeleteRecordFromDatabase(string application, string container, string record)
         {
-            var channel = ContainerHandler.FindContainerInDatabase(application, container).Name;
-            var rec = FindRecordInDatabase(application, container, record);
-            List<Notification> notificationsToSend = FindNotificationsToSend(application, container, 2);
-            PublishNotifications(notificationsToSend, channel, rec, "deletion");
+            List<Notification> notificationsToSend = FindNotificationsToSend(application, container, "2");
+            MqttMessage mqttMessage = new MqttMessage
+            {
+                Topic = ContainerHandler.FindContainerInDatabase(application, container).Name,
+                Event = "deletion",
+                Record = FindRecordInDatabase(application, container, record)
+            };
+            PublishNotifications(notificationsToSend, mqttMessage);
 
             var cont = ContainerHandler.FindContainerInDatabase(application, container);
             try
@@ -274,7 +281,7 @@ namespace somiod.Handlers
                                     Name = reader.GetString(1),
                                     CreationDateTime = reader.GetDateTime(2),
                                     Parent = reader.GetInt32(3),
-                                    Event = reader.GetInt32(4),
+                                    Event = reader.GetString(4),
                                     Endpoint = reader.GetString(5),
                                     Enabled = reader.GetBoolean(6)
                                 });
@@ -315,7 +322,7 @@ namespace somiod.Handlers
                                     Name = reader.GetString(1),
                                     CreationDateTime = reader.GetDateTime(2),
                                     Parent = reader.GetInt32(3),
-                                    Event = reader.GetInt32(4),
+                                    Event = reader.GetString(4),
                                     Endpoint = reader.GetString(5),
                                     Enabled = reader.GetBoolean(6)
                                 });
@@ -357,7 +364,7 @@ namespace somiod.Handlers
                                     Name = reader.GetString(1),
                                     CreationDateTime = reader.GetDateTime(2),
                                     Parent = reader.GetInt32(3),
-                                    Event = reader.GetInt32(4),
+                                    Event = reader.GetString(4),
                                     Endpoint = reader.GetString(5),
                                     Enabled = reader.GetBoolean(6)
                                 };
@@ -442,7 +449,7 @@ namespace somiod.Handlers
 
         // ---------------------------- MQTT & HTTP ----------------------------
 
-        private static List<Notification> FindNotificationsToSend(string application, string container, int fireEvent)
+        private static List<Notification> FindNotificationsToSend(string application, string container, string evento)
         {
             var containerId = ContainerHandler.FindContainerInDatabase(application, container).Id;
             List<Notification> notifications = new List<Notification>();
@@ -451,10 +458,10 @@ namespace somiod.Handlers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Notifications WHERE Parent = @ContainerId AND Enabled = 1 AND (Event = 0 OR EVENT = @fireEvent", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Notifications WHERE Parent = @ContainerId AND Enabled = 1 AND (Event = 0 OR Event = @Event)", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@ContainerId", containerId);
-                        sqlCommand.Parameters.AddWithValue("@fireEvent", fireEvent);
+                        sqlCommand.Parameters.AddWithValue("@Event", evento);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         using (SqlDataReader reader = sqlCommand.ExecuteReader())
                         {
@@ -466,7 +473,7 @@ namespace somiod.Handlers
                                     Name = reader.GetString(1),
                                     CreationDateTime = reader.GetDateTime(2),
                                     Parent = reader.GetInt32(3),
-                                    Event = reader.GetInt32(4),
+                                    Event = reader.GetString(4),
                                     Endpoint = reader.GetString(5),
                                     Enabled = reader.GetBoolean(6)
                                 });
@@ -484,11 +491,11 @@ namespace somiod.Handlers
             return notifications;
         }
 
-        private static void PublishNotifications(List<Notification> notificationsToSend, string channel, Record record, string fireEvent)
+        private static void PublishNotifications(List<Notification> notificationsToSend, MqttMessage mqttMessage)
         {
             MqttClient mClient;
-            string message = XMLHandler.SerializeXml(fireEvent) + XMLHandler.SerializeXml(record);
-            byte qos = uPLibrary.Networking.M2Mqtt.Messages.MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE;
+            string message = XMLHandler.SerializeXml(mqttMessage);
+            byte qos = MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE;
 
             try
             {
@@ -501,10 +508,9 @@ namespace somiod.Handlers
                     {
                         throw new Exception("Error connecting to message broker...");
                     }
-                    mClient.Publish(channel, System.Text.Encoding.UTF8.GetBytes(message), qos, false);
+                    mClient.Publish(mqttMessage.Topic, System.Text.Encoding.UTF8.GetBytes(message), qos, false);
                     mClient.Disconnect();
                 }
-
             }
             catch (Exception e)
             {

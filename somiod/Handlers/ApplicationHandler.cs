@@ -169,6 +169,10 @@ namespace somiod.Handlers
 
             if (ApplicationExists(newApp.Name))
             {
+                if (app.Name == newApp.Name)
+                {
+                    return newApp;
+                }
                 int i = 1;
                 while (ApplicationExists(newApp.Name))
                 {

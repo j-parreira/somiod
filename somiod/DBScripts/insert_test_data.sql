@@ -13,20 +13,20 @@ VALUES
     ('camera', GETDATE(), 3),
     ('alarm', GETDATE(), 3);
 
-INSERT INTO Records ([Name], [Content], [CreationDateTime], [Parent]) 
+INSERT INTO Records ([Name], [CreationDateTime], [Parent], [Content]) 
 VALUES 
-    ('ON1', 'Light is turned on', GETDATE(), 1),
-    ('OFF1', 'Light is turned off', GETDATE(), 1),
-    ('ON2', 'Parking light is turned on', GETDATE(), 2),
-    ('OFF2', 'Parking light is turned off', GETDATE(), 2),
-    ('ON3', 'Heater is turned on', GETDATE(), 3),
-    ('OFF3', 'Heater is turned off', GETDATE(), 3),
-    ('ON4', 'AC is turned on', GETDATE(), 4),
-    ('OFF4', 'AC is turned off', GETDATE(), 4),
-    ('ON5', 'Camera is turned on', GETDATE(), 5),
-    ('OFF5', 'Camera is turned off', GETDATE(), 5),
-    ('ON6', 'Alarm is turned on', GETDATE(), 6),
-    ('OFF6', 'Alarm is turned off', GETDATE(), 6);
+    ('ON1', GETDATE(), 1, 'Light is turned on'),
+    ('OFF1', GETDATE(), 1, 'Light is turned off'),
+    ('ON2', GETDATE(), 2, 'Parking light is turned on'),
+    ('OFF2', GETDATE(), 2, 'Parking light is turned off'),
+    ('ON3', GETDATE(), 3, 'Heater is turned on'),
+    ('OFF3', GETDATE(), 3, 'Heater is turned off'),
+    ('ON4', GETDATE(), 4, 'AC is turned on'),
+    ('OFF4', GETDATE(), 4, 'AC is turned off'),
+    ('ON5', GETDATE(), 5, 'Camera is turned on'),
+    ('OFF5', GETDATE(), 5, 'Camera is turned off'),
+    ('ON6', GETDATE(), 6, 'Alarm is turned on'),
+    ('OFF6', GETDATE(), 6, 'Alarm is turned off');
 
 INSERT INTO Notifications ([Name], [CreationDateTime], [Parent], [Event], [Endpoint], [Enabled]) 
 VALUES 

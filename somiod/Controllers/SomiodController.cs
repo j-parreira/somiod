@@ -17,9 +17,6 @@ namespace somiod.Controllers
     [RoutePrefix("api/somiod")]
     public class SomiodController : ApiController
     {
-        // ---------------------------- XML Handler ----------------------------
-
-
         // ---------------------------- Applications ----------------------------
 
         // GET: api/somiod

@@ -5,11 +5,8 @@ using System.Web;
 
 namespace somiod.Models
 {
-    public class Container
+    public class Container : Application
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public DateTime CreationDateTime { get; set; }
         public int Parent { get; set; }
     }
 }
