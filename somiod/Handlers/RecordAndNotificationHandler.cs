@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Web;
+using uPLibrary.Networking.M2Mqtt;
 
 namespace somiod.Handlers
 {
@@ -186,14 +188,24 @@ namespace somiod.Handlers
             {
                 throw new Exception("Error adding record to database", e);
             }
+
             record = FindRecordInDatabase(application, container, record.Name);
+
+            var channel = ContainerHandler.FindContainerInDatabase(application, container).Name;
+            var content = FindRecordInDatabase(application, container, record.Name).Content;
+            List<Notification> notificationsToSend = FindNotificationsToSend(application, container, 1);
+            PublishNotifications(notificationsToSend, channel, record, "creation");
+
             return record;
         }
 
         internal static void DeleteRecordFromDatabase(string application, string container, string record)
         {
+            var channel = ContainerHandler.FindContainerInDatabase(application, container).Name;
+            var rec = FindRecordInDatabase(application, container, record);
+            List<Notification> notificationsToSend = FindNotificationsToSend(application, container, 2);
+            PublishNotifications(notificationsToSend, channel, rec, "deletion");
 
-            var content = FindRecordInDatabase(application, container, record).Content;
             var cont = ContainerHandler.FindContainerInDatabase(application, container);
             try
             {
@@ -429,5 +441,75 @@ namespace somiod.Handlers
         }
 
         // ---------------------------- MQTT & HTTP ----------------------------
+
+        private static List<Notification> FindNotificationsToSend(string application, string container, int fireEvent)
+        {
+            var containerId = ContainerHandler.FindContainerInDatabase(application, container).Id;
+            List<Notification> notifications = new List<Notification>();
+            try
+            {
+                using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
+                {
+                    sqlConnection.Open();
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Notifications WHERE Parent = @ContainerId AND Enabled = 1 AND (Event = 0 OR EVENT = @fireEvent", sqlConnection))
+                    {
+                        sqlCommand.Parameters.AddWithValue("@ContainerId", containerId);
+                        sqlCommand.Parameters.AddWithValue("@fireEvent", fireEvent);
+                        sqlCommand.CommandType = System.Data.CommandType.Text;
+                        using (SqlDataReader reader = sqlCommand.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                notifications.Add(new Notification
+                                {
+                                    Id = reader.GetInt32(0),
+                                    Name = reader.GetString(1),
+                                    CreationDateTime = reader.GetDateTime(2),
+                                    Parent = reader.GetInt32(3),
+                                    Event = reader.GetInt32(4),
+                                    Endpoint = reader.GetString(5),
+                                    Enabled = reader.GetBoolean(6)
+                                });
+                            }
+                            reader.Close();
+                        }
+                    }
+                    sqlConnection.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error finding notifications to send", e);
+            }
+            return notifications;
+        }
+
+        private static void PublishNotifications(List<Notification> notificationsToSend, string channel, Record record, string fireEvent)
+        {
+            MqttClient mClient;
+            string message = XMLHandler.SerializeXml(fireEvent) + XMLHandler.SerializeXml(record);
+            byte qos = uPLibrary.Networking.M2Mqtt.Messages.MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE;
+
+            try
+            {
+                var endpoints = notificationsToSend.Select(n => n.Endpoint).ToList();
+                foreach (var endpoint in endpoints)
+                {
+                    mClient = new MqttClient(endpoint);
+                    mClient.Connect(Guid.NewGuid().ToString());
+                    if (!mClient.IsConnected)
+                    {
+                        throw new Exception("Error connecting to message broker...");
+                    }
+                    mClient.Publish(channel, System.Text.Encoding.UTF8.GetBytes(message), qos, false);
+                    mClient.Disconnect();
+                }
+
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error publishing notifications", e);
+            }
+        }
     }
 }
