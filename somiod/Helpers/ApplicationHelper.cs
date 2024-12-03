@@ -7,9 +7,9 @@ using System.Drawing;
 using System.Linq;
 using System.Web;
 
-namespace somiod.Handlers
+namespace somiod.Helpers
 {
-    public class ApplicationHandler
+    public class ApplicationHelper
     {
         internal static bool ApplicationExists(string application)
         {
@@ -20,7 +20,7 @@ namespace somiod.Handlers
                     sqlConnection.Open();
                     using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM Applications WHERE Name = @ApplicationName", sqlConnection))
                     {
-                        sqlCommand.Parameters.AddWithValue("@ApplicationName", application);
+                        sqlCommand.Parameters.AddWithValue("@ApplicationName", application.ToLower());
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         int count = (int)sqlCommand.ExecuteScalar();
                         return count > 0;
@@ -78,7 +78,7 @@ namespace somiod.Handlers
                     sqlConnection.Open();
                     using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Applications WHERE Name = @ApplicationName", sqlConnection))
                     {
-                        sqlCommand.Parameters.AddWithValue("@ApplicationName", application);
+                        sqlCommand.Parameters.AddWithValue("@ApplicationName", application.ToLower());
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         using (SqlDataReader reader = sqlCommand.ExecuteReader())
                         {
@@ -124,7 +124,7 @@ namespace somiod.Handlers
                     sqlConnection.Open();
                     using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO Applications (Name, CreationDateTime) VALUES (@ApplicationName, @CreationDateTime)", sqlConnection))
                     {
-                        sqlCommand.Parameters.AddWithValue("@ApplicationName", application.Name);
+                        sqlCommand.Parameters.AddWithValue("@ApplicationName", application.Name.ToLower());
                         sqlCommand.Parameters.AddWithValue("@CreationDateTime", DateTime.Now);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         sqlCommand.ExecuteNonQuery();
@@ -169,10 +169,6 @@ namespace somiod.Handlers
 
             if (ApplicationExists(newApp.Name))
             {
-                if (app.Name == newApp.Name)
-                {
-                    return newApp;
-                }
                 int i = 1;
                 while (ApplicationExists(newApp.Name))
                 {
@@ -188,7 +184,7 @@ namespace somiod.Handlers
                     sqlConnection.Open();
                     using (SqlCommand sqlCommand = new SqlCommand("UPDATE Applications SET Name = @NewName WHERE Id = @ApplicationId", sqlConnection))
                     {
-                        sqlCommand.Parameters.AddWithValue("@NewName", newApp.Name);
+                        sqlCommand.Parameters.AddWithValue("@NewName", newApp.Name.ToLower());
                         sqlCommand.Parameters.AddWithValue("@ApplicationId", app.Id);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         sqlCommand.ExecuteNonQuery();

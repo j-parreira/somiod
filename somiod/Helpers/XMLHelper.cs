@@ -7,9 +7,9 @@ using System.Xml.Serialization;
 using System.Xml;
 using System.Xml.Schema;
 
-namespace somiod.Handlers
+namespace somiod.Helpers
 {
-    public class XMLHandler
+    public class XMLHelper
     {
         public static bool ValidateXml(string xmlContent, string xsdPath, out string validationError)
         {

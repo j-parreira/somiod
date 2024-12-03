@@ -103,10 +103,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Handlers\ApplicationHandler.cs" />
-    <Compile Include="Handlers\ContainerHandler.cs" />
-    <Compile Include="Handlers\RecordAndNotificationHandler.cs" />
-    <Compile Include="Handlers\XMLHandler.cs" />
+    <Compile Include="Helpers\ApplicationHelper.cs" />
+    <Compile Include="Helpers\ContainerHelper.cs" />
+    <Compile Include="Helpers\MqttHelper.cs" />
+    <Compile Include="Helpers\NotificationHelper.cs" />
+    <Compile Include="Helpers\RecordHelper.cs" />
+    <Compile Include="Helpers\XMLHelper.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Container.cs" />
     <Compile Include="Models\MqttMessage.cs" />

@@ -6,9 +6,9 @@ using System.Drawing;
 using System.Linq;
 using System.Web;
 
-namespace somiod.Handlers
+namespace somiod.Helpers
 {
-    public class ContainerHandler
+    public class ContainerHelper
     {
         internal static bool ContainerExists(string container)
         {
@@ -19,7 +19,7 @@ namespace somiod.Handlers
                     sqlConnection.Open();
                     using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM Containers WHERE Name = @ContainerName", sqlConnection))
                     {
-                        sqlCommand.Parameters.AddWithValue("@ContainerName", container);
+                        sqlCommand.Parameters.AddWithValue("@ContainerName", container.ToLower());
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         int count = (int)sqlCommand.ExecuteScalar();
                         return count > 0;
@@ -42,7 +42,7 @@ namespace somiod.Handlers
                     sqlConnection.Open();
                     using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Containers WHERE Parent = @ApplicationId", sqlConnection))
                     {
-                        int appId = ApplicationHandler.FindApplicationInDatabase(application).Id;
+                        int appId = ApplicationHelper.FindApplicationInDatabase(application).Id;
                         sqlCommand.Parameters.AddWithValue("@ApplicationId", appId);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         using (SqlDataReader reader = sqlCommand.ExecuteReader())
@@ -80,9 +80,9 @@ namespace somiod.Handlers
                     sqlConnection.Open();
                     using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Containers WHERE Name = @ContainerName AND Parent = @ApplicationId", sqlConnection))
                     {
-                        int appId = ApplicationHandler.FindApplicationInDatabase(application).Id;
+                        int appId = ApplicationHelper.FindApplicationInDatabase(application).Id;
                         sqlCommand.Parameters.AddWithValue("@ApplicationId", appId);
-                        sqlCommand.Parameters.AddWithValue("@ContainerName", container);
+                        sqlCommand.Parameters.AddWithValue("@ContainerName", container.ToLower());
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         using (SqlDataReader reader = sqlCommand.ExecuteReader())
                         {
@@ -121,7 +121,7 @@ namespace somiod.Handlers
                 }
             }
 
-            var app = ApplicationHandler.FindApplicationInDatabase(application);
+            var app = ApplicationHelper.FindApplicationInDatabase(application);
 
             try
             {
@@ -130,7 +130,7 @@ namespace somiod.Handlers
                     sqlConnection.Open();
                     using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO Containers (Name, CreationDateTime, Parent) VALUES (@ContainerName, @CreationDateTime, @ParentId)", sqlConnection))
                     {
-                        sqlCommand.Parameters.AddWithValue("@ContainerName", container.Name);
+                        sqlCommand.Parameters.AddWithValue("@ContainerName", container.Name.ToLower());
                         sqlCommand.Parameters.AddWithValue("@CreationDateTime", DateTime.Now);
                         sqlCommand.Parameters.AddWithValue("@ParentId", app.Id);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
@@ -149,7 +149,7 @@ namespace somiod.Handlers
 
         internal static void DeleteContainerFromDatabase(string application, string container)
         {
-            var app = ApplicationHandler.FindApplicationInDatabase(application);
+            var app = ApplicationHelper.FindApplicationInDatabase(application);
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
@@ -157,7 +157,7 @@ namespace somiod.Handlers
                     sqlConnection.Open();
                     using (SqlCommand sqlCommand = new SqlCommand("DELETE FROM Containers WHERE Name = @ContainerName AND Parent = @ApplicationId", sqlConnection))
                     {
-                        sqlCommand.Parameters.AddWithValue("@ContainerName", container);
+                        sqlCommand.Parameters.AddWithValue("@ContainerName", container.ToLower());
                         sqlCommand.Parameters.AddWithValue("@ApplicationId", app.Id);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         sqlCommand.ExecuteNonQuery();
@@ -175,10 +175,6 @@ namespace somiod.Handlers
         {
             if (ContainerExists(newContainer.Name))
             {
-                if (container == newContainer.Name)
-                {
-                    return newContainer;
-                }
                 int i = 1;
                 while (ContainerExists(newContainer.Name))
                 {
@@ -187,7 +183,7 @@ namespace somiod.Handlers
                 }
             }
 
-            var app = ApplicationHandler.FindApplicationInDatabase(application);
+            var app = ApplicationHelper.FindApplicationInDatabase(application);
             
             try
             {
@@ -196,7 +192,7 @@ namespace somiod.Handlers
                     sqlConnection.Open();
                     using (SqlCommand sqlCommand = new SqlCommand("UPDATE Containers SET Name = @NewContainerName WHERE Name = @ContainerName AND Parent = @ApplicationId", sqlConnection))
                     {
-                        sqlCommand.Parameters.AddWithValue("@NewContainerName", newContainer.Name);
+                        sqlCommand.Parameters.AddWithValue("@NewContainerName", newContainer.Name.ToLower());
                         sqlCommand.Parameters.AddWithValue("@ContainerName", container);
                         sqlCommand.Parameters.AddWithValue("@ApplicationId", app.Id);
                         sqlCommand.CommandType = System.Data.CommandType.Text;

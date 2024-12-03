@@ -1,4 +1,4 @@
-﻿using somiod.Handlers;
+﻿using somiod.Helpers;
 using somiod.Models;
 using System;
 using System.Collections.Generic;
@@ -40,7 +40,7 @@ namespace somiod.Controllers
                     switch (locateType.ToLower())
                     {
                         case "application":
-                            var applications = ApplicationHandler.FindApplicationsInDatabase();
+                            var applications = ApplicationHelper.FindApplicationsInDatabase();
 
                             if (applications == null || !applications.Any())
                             {
@@ -63,7 +63,7 @@ namespace somiod.Controllers
 
             try
             {
-                apps = ApplicationHandler.FindApplicationsInDatabase();
+                apps = ApplicationHelper.FindApplicationsInDatabase();
 
                 if (apps == null || !apps.Any())
                 {
@@ -104,7 +104,7 @@ namespace somiod.Controllers
                     switch (locateType.ToLower())
                     {
                         case "container":
-                            var containers = ContainerHandler.FindContainersByApplication(application);
+                            var containers = ContainerHelper.FindContainersByApplication(application);
 
                             if (containers == null || !containers.Any())
                             {
@@ -114,7 +114,7 @@ namespace somiod.Controllers
                             return Content(HttpStatusCode.OK, containers.Select(c => c.Name), new XmlMediaTypeFormatter());
 
                         case "record":
-                            var records = RecordAndNotificationHandler.FindRecordsByApplication(application);
+                            var records = RecordHelper.FindRecordsByApplication(application);
 
                             if (records == null || !records.Any())
                             {
@@ -124,7 +124,7 @@ namespace somiod.Controllers
                             return Content(HttpStatusCode.OK, records.Select(r => r.Name), new XmlMediaTypeFormatter());
 
                         case "notification":
-                            var notifications = RecordAndNotificationHandler.FindNotificationsByApplication(application);
+                            var notifications = NotificationHelper.FindNotificationsByApplication(application);
 
                             if (notifications == null || !notifications.Any())
                             {
@@ -147,7 +147,7 @@ namespace somiod.Controllers
 
             try
             {
-                app = ApplicationHandler.FindApplicationInDatabase(application);
+                app = ApplicationHelper.FindApplicationInDatabase(application);
             }
             catch (Exception ex)
             {
@@ -168,22 +168,17 @@ namespace somiod.Controllers
         [HttpPost]
         public IHttpActionResult PostApplication([FromBody] Application application)
         {
-            string xmlApp = XMLHandler.SerializeXml(application);
+            string xmlApp = XMLHelper.SerializeXml(application);
             string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Application.xsd");
 
-            if (!XMLHandler.ValidateXml(xmlApp, xsdPath, out string validationError))
+            if (!XMLHelper.ValidateXml(xmlApp, xsdPath, out string validationError))
             {
                 return BadRequest($"XML validation failed: {validationError}");
             }
 
-            if (application == null)
+            if (application == null || string.IsNullOrWhiteSpace(application.Name))
             {
                 return BadRequest("Application must be provided.");
-            }
-
-            if (string.IsNullOrWhiteSpace(application.Name))
-            {
-                return BadRequest("Application name must be provided.");
             }
 
             if (application.Name.ToLower() == "application")
@@ -195,7 +190,7 @@ namespace somiod.Controllers
 
             try
             {
-                createdApp = ApplicationHandler.AddApplicationToDatabase(application);
+                createdApp = ApplicationHelper.AddApplicationToDatabase(application);
             }
             catch (Exception ex)
             {
@@ -217,7 +212,7 @@ namespace somiod.Controllers
 
             try
             {
-                if (!ApplicationHandler.ApplicationExists(application))
+                if (!ApplicationHelper.ApplicationExists(application))
                 {
                     return NotFound();
                 }
@@ -229,7 +224,7 @@ namespace somiod.Controllers
 
             try
             {
-                ApplicationHandler.DeleteApplicationFromDatabase(application);
+                ApplicationHelper.DeleteApplicationFromDatabase(application);
             }
             catch (Exception ex)
             {
@@ -244,10 +239,10 @@ namespace somiod.Controllers
         [HttpPut]
         public IHttpActionResult PutApplication(string application, [FromBody] Application newApp)
         {
-            string xmlApp = XMLHandler.SerializeXml(newApp);
+            string xmlApp = XMLHelper.SerializeXml(newApp);
             string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Application.xsd");
 
-            if (!XMLHandler.ValidateXml(xmlApp, xsdPath, out string validationError))
+            if (!XMLHelper.ValidateXml(xmlApp, xsdPath, out string validationError))
             {
                 return BadRequest($"XML validation failed: {validationError}");
             }
@@ -259,7 +254,7 @@ namespace somiod.Controllers
 
             try
             {
-                if (!ApplicationHandler.ApplicationExists(application))
+                if (!ApplicationHelper.ApplicationExists(application))
                 {
                     return NotFound();
                 }
@@ -288,7 +283,7 @@ namespace somiod.Controllers
 
             try
             {
-                updatedApp = ApplicationHandler.UpdateApplicationInDatabase(application, newApp);
+                updatedApp = ApplicationHelper.UpdateApplicationInDatabase(application, newApp);
             }
             catch (Exception ex)
             {
@@ -312,7 +307,7 @@ namespace somiod.Controllers
 
             try
             {
-                if (!ApplicationHandler.ApplicationExists(application))
+                if (!ApplicationHelper.ApplicationExists(application))
                 {
                     return NotFound();
                 }
@@ -326,7 +321,7 @@ namespace somiod.Controllers
 
             try
             {
-                conts = ContainerHandler.FindContainersByApplication(application);
+                conts = ContainerHelper.FindContainersByApplication(application);
 
                 if (conts == null || !conts.Any())
                 {
@@ -358,12 +353,7 @@ namespace somiod.Controllers
 
             try
             {
-                if (!ApplicationHandler.ApplicationExists(application))
-                {
-                    return NotFound();
-                }
-
-                if (!ContainerHandler.ContainerExists(container))
+                if (!ApplicationHelper.ApplicationExists(application) || !ContainerHelper.ContainerExists(container))
                 {
                     return NotFound();
                 }
@@ -389,7 +379,7 @@ namespace somiod.Controllers
                     switch (locateType.ToLower())
                     {
                         case "record":
-                            var records = RecordAndNotificationHandler.FindRecordsByContainer(application, container);
+                            var records = RecordHelper.FindRecordsByContainer(application, container);
 
                             if (records == null || !records.Any())
                             {
@@ -399,7 +389,7 @@ namespace somiod.Controllers
                             return Content(HttpStatusCode.OK, records.Select(r => r.Name), new XmlMediaTypeFormatter());
 
                         case "notification":
-                            var notifications = RecordAndNotificationHandler.FindNotificationsByContainer(application, container);
+                            var notifications = NotificationHelper.FindNotificationsByContainer(application, container);
 
                             if (notifications == null || !notifications.Any())
                             {
@@ -422,7 +412,7 @@ namespace somiod.Controllers
 
             try
             {
-                cont = ContainerHandler.FindContainerInDatabase(application, container);
+                cont = ContainerHelper.FindContainerInDatabase(application, container);
 
                 if (cont == null)
                 {
@@ -442,10 +432,10 @@ namespace somiod.Controllers
         [HttpPost]
         public IHttpActionResult PostContainer(string application, [FromBody] Container container)
         {
-            string xmlCont = XMLHandler.SerializeXml(container);
+            string xmlCont = XMLHelper.SerializeXml(container);
             string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Container.xsd");
 
-            if (!XMLHandler.ValidateXml(xmlCont, xsdPath, out string validationError))
+            if (!XMLHelper.ValidateXml(xmlCont, xsdPath, out string validationError))
             {
                 return BadRequest($"XML validation failed: {validationError}");
             }
@@ -457,7 +447,7 @@ namespace somiod.Controllers
 
             try
             {
-                if (!ApplicationHandler.ApplicationExists(application))
+                if (!ApplicationHelper.ApplicationExists(application))
                 {
                     return NotFound();
                 }
@@ -486,7 +476,7 @@ namespace somiod.Controllers
 
             try
             {
-                createdCont = ContainerHandler.AddContainerToDatabase(application, container);
+                createdCont = ContainerHelper.AddContainerToDatabase(application, container);
             }
             catch (Exception ex)
             {
@@ -513,12 +503,12 @@ namespace somiod.Controllers
 
             try
             {
-                if (!ApplicationHandler.ApplicationExists(application))
+                if (!ApplicationHelper.ApplicationExists(application))
                 {
                     return NotFound();
                 }
 
-                if (!ContainerHandler.ContainerExists(container))
+                if (!ContainerHelper.ContainerExists(container))
                 {
                     return NotFound();
                 }
@@ -530,7 +520,7 @@ namespace somiod.Controllers
 
             try
             {
-                ContainerHandler.DeleteContainerFromDatabase(application, container);
+                ContainerHelper.DeleteContainerFromDatabase(application, container);
             }
             catch (Exception ex)
             {
@@ -545,10 +535,10 @@ namespace somiod.Controllers
         [HttpPut]
         public IHttpActionResult PutContainer(string application, string container, [FromBody] Container newContainer)
         {
-            string xmlCont = XMLHandler.SerializeXml(newContainer);
+            string xmlCont = XMLHelper.SerializeXml(newContainer);
             string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Container.xsd");
 
-            if (!XMLHandler.ValidateXml(xmlCont, xsdPath, out string validationError))
+            if (!XMLHelper.ValidateXml(xmlCont, xsdPath, out string validationError))
             {
                 return BadRequest($"XML validation failed: {validationError}");
             }
@@ -565,12 +555,7 @@ namespace somiod.Controllers
 
             try
             {
-                if (!ApplicationHandler.ApplicationExists(application))
-                {
-                    return NotFound();
-                }
-
-                if (!ContainerHandler.ContainerExists(container))
+                if (!ApplicationHelper.ApplicationExists(application) || !ContainerHelper.ContainerExists(container))
                 {
                     return NotFound();
                 }
@@ -599,7 +584,7 @@ namespace somiod.Controllers
 
             try
             {
-                updatedCont = ContainerHandler.UpdateContainerInDatabase(application, container, newContainer);
+                updatedCont = ContainerHelper.UpdateContainerInDatabase(application, container, newContainer);
             }
             catch (Exception ex)
             {
@@ -628,12 +613,7 @@ namespace somiod.Controllers
 
             try
             {
-                if (!ApplicationHandler.ApplicationExists(application))
-                {
-                    return NotFound();
-                }
-
-                if (!ContainerHandler.ContainerExists(container))
+                if (!ApplicationHelper.ApplicationExists(application) || !ContainerHelper.ContainerExists(container))
                 {
                     return NotFound();
                 }
@@ -647,7 +627,7 @@ namespace somiod.Controllers
 
             try
             {
-                records = RecordAndNotificationHandler.FindRecordsByContainer(application, container);
+                records = RecordHelper.FindRecordsByContainer(application, container);
 
                 if (records == null || !records.Any())
                 {
@@ -679,12 +659,7 @@ namespace somiod.Controllers
 
             try
             {
-                if (!ApplicationHandler.ApplicationExists(application))
-                {
-                    return NotFound();
-                }
-
-                if (!ContainerHandler.ContainerExists(container))
+                if (!ApplicationHelper.ApplicationExists(application) || !ContainerHelper.ContainerExists(container))
                 {
                     return NotFound();
                 }
@@ -698,7 +673,7 @@ namespace somiod.Controllers
 
             try
             {
-                notifications = RecordAndNotificationHandler.FindNotificationsByContainer(application, container);
+                notifications = NotificationHelper.FindNotificationsByContainer(application, container);
 
                 if (notifications == null || !notifications.Any())
                 {
@@ -735,17 +710,7 @@ namespace somiod.Controllers
 
             try
             {
-                if (!ApplicationHandler.ApplicationExists(application))
-                {
-                    return NotFound();
-                }
-
-                if (!ContainerHandler.ContainerExists(container))
-                {
-                    return NotFound();
-                }
-
-                if (!RecordAndNotificationHandler.RecordExists(record))
+                if (!ApplicationHelper.ApplicationExists(application) || !ContainerHelper.ContainerExists(container) || !RecordHelper.RecordExists(record))
                 {
                     return NotFound();
                 }
@@ -759,7 +724,7 @@ namespace somiod.Controllers
 
             try
             {
-                rec = RecordAndNotificationHandler.FindRecordInDatabase(application, container, record);
+                rec = RecordHelper.FindRecordInDatabase(application, container, record);
             }
             catch (Exception ex)
             {
@@ -791,17 +756,7 @@ namespace somiod.Controllers
 
             try
             {
-                if (!ApplicationHandler.ApplicationExists(application))
-                {
-                    return NotFound();
-                }
-
-                if (!ContainerHandler.ContainerExists(container))
-                {
-                    return NotFound();
-                }
-
-                if (!RecordAndNotificationHandler.NotificationExists(notification))
+                if (!ApplicationHelper.ApplicationExists(application) || !ContainerHelper.ContainerExists(container) || !NotificationHelper.NotificationExists(notification))
                 {
                     return NotFound();
                 }
@@ -815,7 +770,7 @@ namespace somiod.Controllers
 
             try
             {
-                not = RecordAndNotificationHandler.FindNotificationInDatabase(application, container, notification);
+                not = NotificationHelper.FindNotificationInDatabase(application, container, notification);
             }
             catch (Exception ex)
             {
@@ -842,12 +797,7 @@ namespace somiod.Controllers
 
             try
             {
-                if (!ApplicationHandler.ApplicationExists(application))
-                {
-                    return NotFound();
-                }
-
-                if (!ContainerHandler.ContainerExists(container))
+                if (!ApplicationHelper.ApplicationExists(application) || !ContainerHelper.ContainerExists(container))
                 {
                     return NotFound();
                 }
@@ -881,12 +831,12 @@ namespace somiod.Controllers
                     {
                         case "record":
 
-                            Record record = XMLHandler.DeserializeXml<Record>(recordOrNotification.ToString());
+                            Record record = XMLHelper.DeserializeXml<Record>(recordOrNotification.ToString());
 
-                            string xmlRec = XMLHandler.SerializeXml(record);
+                            string xmlRec = XMLHelper.SerializeXml(record);
                             string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Record.xsd");
 
-                            if (!XMLHandler.ValidateXml(xmlRec, xsdPath, out string validationError))
+                            if (!XMLHelper.ValidateXml(xmlRec, xsdPath, out string validationError))
                             {
                                 return BadRequest($"XML validation failed: {validationError}");
                             }
@@ -896,7 +846,7 @@ namespace somiod.Controllers
                                 return BadRequest("New Record name must be provided.");
                             }
 
-                            if (record.Name == "record")
+                            if (record.Name.ToLower() == "record")
                             {
                                 return BadRequest("The record name 'record' is reserved and cannot be used.");
                             }
@@ -905,7 +855,7 @@ namespace somiod.Controllers
 
                             try
                             {
-                                createdRecord = RecordAndNotificationHandler.AddRecordToDatabase(application, container, record);
+                                createdRecord = RecordHelper.AddRecordToDatabase(application, container, record);
                             }
                             catch (Exception ex)
                             {
@@ -915,12 +865,12 @@ namespace somiod.Controllers
                             return Content(HttpStatusCode.Created, createdRecord, new XmlMediaTypeFormatter());
 
                         case "notification":
-                            Notification notification = XMLHandler.DeserializeXml<Notification>(recordOrNotification.ToString());
+                            Notification notification = XMLHelper.DeserializeXml<Notification>(recordOrNotification.ToString());
 
-                            string xmlNot = XMLHandler.SerializeXml(notification);
+                            string xmlNot = XMLHelper.SerializeXml(notification);
                             xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Notification.xsd");
 
-                            if (!XMLHandler.ValidateXml(xmlNot, xsdPath, out validationError))
+                            if (!XMLHelper.ValidateXml(xmlNot, xsdPath, out validationError))
                             {
                                 return BadRequest($"XML validation failed: {validationError}");
                             }
@@ -930,16 +880,16 @@ namespace somiod.Controllers
                                 return BadRequest("New Notification name must be provided.");
                             }
 
-                            if (notification.Name == "notification")
+                            if (notification.Name.ToLower() == "notification")
                             {
-                                return BadRequest("The notification name 'Notification' is reserved and cannot be used.");
+                                return BadRequest("The notification name 'notification' is reserved and cannot be used.");
                             }
 
                             Notification createdNotification;
 
                             try
                             {
-                                createdNotification = RecordAndNotificationHandler.AddNotificationToDatabase(application, container, notification);
+                                createdNotification = NotificationHelper.AddNotificationToDatabase(application, container, notification);
                             }
                             catch (Exception ex)
                             {
@@ -983,17 +933,7 @@ namespace somiod.Controllers
 
             try
             {
-                if (!ApplicationHandler.ApplicationExists(application))
-                {
-                    return NotFound();
-                }
-
-                if (!ContainerHandler.ContainerExists(container))
-                {
-                    return NotFound();
-                }
-
-                if (!RecordAndNotificationHandler.RecordExists(record))
+                if (!ApplicationHelper.ApplicationExists(application) || !ContainerHelper.ContainerExists(container) || !RecordHelper.RecordExists(record))
                 {
                     return NotFound();
                 }
@@ -1005,7 +945,7 @@ namespace somiod.Controllers
 
             try
             {
-                RecordAndNotificationHandler.DeleteRecordFromDatabase(application, container, record);
+                RecordHelper.DeleteRecordFromDatabase(application, container, record);
             }
             catch (Exception ex)
             {
@@ -1037,17 +977,7 @@ namespace somiod.Controllers
 
             try
             {
-                if (!ApplicationHandler.ApplicationExists(application))
-                {
-                    return NotFound();
-                }
-
-                if (!ContainerHandler.ContainerExists(container))
-                {
-                    return NotFound();
-                }
-
-                if (!RecordAndNotificationHandler.NotificationExists(notification))
+                if (!ApplicationHelper.ApplicationExists(application) || !ContainerHelper.ContainerExists(container) || !NotificationHelper.NotificationExists(notification))
                 {
                     return NotFound();
                 }
@@ -1059,7 +989,7 @@ namespace somiod.Controllers
 
             try
             {
-                RecordAndNotificationHandler.DeleteNotificationFromDatabase(application, container, notification);
+                NotificationHelper.DeleteNotificationFromDatabase(application, container, notification);
             }
             catch (Exception ex)
             {
