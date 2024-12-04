@@ -2,6 +2,7 @@
 using somiod.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.Design.Serialization;
 using System.IO;
 using System.Linq;
@@ -11,6 +12,7 @@ using System.Runtime.Serialization;
 using System.Web.Http;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using Container = somiod.Models.Container;
 
 namespace somiod.Controllers
 {
@@ -57,6 +59,30 @@ namespace somiod.Controllers
 
                             return Content(HttpStatusCode.OK, applications.Select(a => a.Name), xmlFormatter);
 
+                        case "container":
+                            var containers = ContainerHelper.FindContainersInDatabase();
+                            if (containers == null || !containers.Any())
+                            {
+                                return Content(HttpStatusCode.OK, new List<string>(), xmlFormatter);
+                            }
+                            return Content(HttpStatusCode.OK, containers.Select(c => c.Name), xmlFormatter);
+
+                        case "record":
+                            var records = RecordHelper.FindRecordsInDatabase();
+                            if (records == null || !records.Any())
+                            {
+                                return Content(HttpStatusCode.OK, new List<string>(), xmlFormatter);
+                            }
+                            return Content(HttpStatusCode.OK, records.Select(r => r.Name), xmlFormatter);
+
+                        case "notification":
+                            var notifications = NotificationHelper.FindNotificationsInDatabase();
+                            if (notifications == null || !notifications.Any())
+                            {
+                                return Content(HttpStatusCode.OK, new List<string>(), xmlFormatter);
+                            }
+                            return Content(HttpStatusCode.OK, notifications.Select(n => n.Name), xmlFormatter);
+
                         default:
                             return BadRequest($"Unsupported locate type: {locateType}");
                     }
@@ -67,7 +93,7 @@ namespace somiod.Controllers
                 }
             }
 
-            List<Application> apps = new List<Application>();
+            var apps = new List<Application>();
 
             try
             {
@@ -94,6 +120,11 @@ namespace somiod.Controllers
             if (string.IsNullOrWhiteSpace(application))
             {
                 return BadRequest("Application name must be provided.");
+            }
+
+            if (!ApplicationHelper.ApplicationExists(application))
+            {
+                return NotFound();
             }
 
             var locateHeader = Request.Headers.FirstOrDefault(h => h.Key.Equals("somiod-locate", StringComparison.OrdinalIgnoreCase));
@@ -218,16 +249,9 @@ namespace somiod.Controllers
                 return BadRequest("Application name must be provided.");
             }
 
-            try
+            if (!ApplicationHelper.ApplicationExists(application))
             {
-                if (!ApplicationHelper.ApplicationExists(application))
-                {
-                    return NotFound();
-                }
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
+                return NotFound();
             }
 
             try
@@ -247,29 +271,23 @@ namespace somiod.Controllers
         [HttpPut]
         public IHttpActionResult PutApplication(string application, [FromBody] Application newApp)
         {
-            string xmlApp = XMLHelper.SerializeXml(newApp);
-            string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Application.xsd");
-
-            if (!XMLHelper.ValidateXml(xmlApp, xsdPath, out string validationError))
-            {
-                return BadRequest($"XML validation failed: {validationError}");
-            }
 
             if (string.IsNullOrWhiteSpace(application))
             {
                 return BadRequest("Application name must be provided.");
             }
 
-            try
+            if (!ApplicationHelper.ApplicationExists(application))
             {
-                if (!ApplicationHelper.ApplicationExists(application))
-                {
-                    return NotFound();
-                }
+                return NotFound();
             }
-            catch (Exception ex)
+
+            string xmlApp = XMLHelper.SerializeXml(newApp);
+            string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Application.xsd");
+
+            if (!XMLHelper.ValidateXml(xmlApp, xsdPath, out string validationError))
             {
-                return InternalServerError(ex);
+                return BadRequest($"XML validation failed: {validationError}");
             }
 
             if (newApp == null)
@@ -313,16 +331,9 @@ namespace somiod.Controllers
                 return BadRequest("Application name must be provided.");
             }
 
-            try
+            if (!ApplicationHelper.ApplicationExists(application))
             {
-                if (!ApplicationHelper.ApplicationExists(application))
-                {
-                    return NotFound();
-                }
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
+                return NotFound();
             }
 
             List<Container> conts;
@@ -359,18 +370,12 @@ namespace somiod.Controllers
                 return BadRequest("Container name must be provided.");
             }
 
-            try
+            if (!ApplicationHelper.ApplicationExists(application) ||
+                !ContainerHelper.ContainerExists(application, container))
             {
-                if (ContainerHelper.ContainerExists(application, container))
-                {
-                    return NotFound();
-                }
+                return NotFound();
             }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
-            }            
-
+          
             var locateHeader = Request.Headers.FirstOrDefault(h => h.Key.Equals("somiod-locate", StringComparison.OrdinalIgnoreCase));
 
             if (locateHeader.Key != null)
@@ -440,29 +445,22 @@ namespace somiod.Controllers
         [HttpPost]
         public IHttpActionResult PostContainer(string application, [FromBody] Container container)
         {
+            if (string.IsNullOrWhiteSpace(application))
+            {
+                return BadRequest("Application name must be provided.");
+            }
+
+            if (!ApplicationHelper.ApplicationExists(application))
+            {
+                return NotFound();
+            }
+
             string xmlCont = XMLHelper.SerializeXml(container);
             string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Container.xsd");
 
             if (!XMLHelper.ValidateXml(xmlCont, xsdPath, out string validationError))
             {
                 return BadRequest($"XML validation failed: {validationError}");
-            }
-
-            if (string.IsNullOrWhiteSpace(application))
-            {
-                return BadRequest("Application name must be provided.");
-            }
-
-            try
-            {
-                if (!ApplicationHelper.ApplicationExists(application))
-                {
-                    return NotFound();
-                }
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
             }
 
             if (container == null)
@@ -509,16 +507,10 @@ namespace somiod.Controllers
                 return BadRequest("Container name must be provided.");
             }
 
-            try
+            if (!ApplicationHelper.ApplicationExists(application) ||
+                !ContainerHelper.ContainerExists(application, container))
             {
-                if (!ContainerHelper.ContainerExists(application, container))
-                {
-                    return NotFound();
-                }
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
+                return NotFound();
             }
 
             try
@@ -538,14 +530,6 @@ namespace somiod.Controllers
         [HttpPut]
         public IHttpActionResult PutContainer(string application, string container, [FromBody] Container newContainer)
         {
-            string xmlCont = XMLHelper.SerializeXml(newContainer);
-            string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Container.xsd");
-
-            if (!XMLHelper.ValidateXml(xmlCont, xsdPath, out string validationError))
-            {
-                return BadRequest($"XML validation failed: {validationError}");
-            }
-
             if (string.IsNullOrWhiteSpace(application))
             {
                 return BadRequest("Application name must be provided.");
@@ -556,16 +540,18 @@ namespace somiod.Controllers
                 return BadRequest("Container name must be provided.");
             }
 
-            try
+            if (!ApplicationHelper.ApplicationExists(application) ||
+                !ContainerHelper.ContainerExists(application, container))
             {
-                if (!ContainerHelper.ContainerExists(application, container))
-                {
-                    return NotFound();
-                }
+                return NotFound();
             }
-            catch (Exception ex)
+
+            string xmlCont = XMLHelper.SerializeXml(newContainer);
+            string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Container.xsd");
+
+            if (!XMLHelper.ValidateXml(xmlCont, xsdPath, out string validationError))
             {
-                return InternalServerError(ex);
+                return BadRequest($"XML validation failed: {validationError}");
             }
 
             if (container == null)
@@ -614,16 +600,10 @@ namespace somiod.Controllers
                 return BadRequest("Container name must be provided.");
             }
 
-            try
+            if (!ApplicationHelper.ApplicationExists(application) ||
+                !ContainerHelper.ContainerExists(application, container))
             {
-                if (!ContainerHelper.ContainerExists(application, container))
-                {
-                    return NotFound();
-                }
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
+                return NotFound();
             }
 
             List<Record> records;
@@ -660,16 +640,10 @@ namespace somiod.Controllers
                 return BadRequest("Container name must be provided.");
             }
 
-            try
+            if (!ApplicationHelper.ApplicationExists(application) ||
+                !ContainerHelper.ContainerExists(application, container))
             {
-                if (!ContainerHelper.ContainerExists(application, container))
-                {
-                    return NotFound();
-                }
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
+                return NotFound();
             }
 
             List<Notification> notifications;
@@ -711,16 +685,11 @@ namespace somiod.Controllers
                 return BadRequest("Record name must be provided.");
             }
 
-            try
+            if (!ApplicationHelper.ApplicationExists(application) ||
+                !ContainerHelper.ContainerExists(application, container) ||
+                !RecordHelper.RecordExists(application, container, record))
             {
-                if (!RecordHelper.RecordExists(application, container, record))
-                {
-                    return NotFound();
-                }
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
+                return NotFound();
             }
 
             Record rec;
@@ -757,16 +726,11 @@ namespace somiod.Controllers
                 return BadRequest("Notification name must be provided.");
             }
 
-            try
+            if (!ApplicationHelper.ApplicationExists(application) ||
+                !ContainerHelper.ContainerExists(application, container) ||
+                !NotificationHelper.NotificationExists(application, container, notification))
             {
-                if (!NotificationHelper.NotificationExists(application, container, notification))
-                {
-                    return NotFound();
-                }
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
+                return NotFound();
             }
 
             Notification not;
@@ -798,16 +762,10 @@ namespace somiod.Controllers
                 return BadRequest("Container name must be provided.");
             }
 
-            try
+            if (!ApplicationHelper.ApplicationExists(application) ||
+                !ContainerHelper.ContainerExists(application, container))
             {
-                if (!ContainerHelper.ContainerExists(application, container))
-                {
-                    return NotFound();
-                }
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
+                return NotFound();
             }
 
             if (recordOrNotification == null)
@@ -933,16 +891,11 @@ namespace somiod.Controllers
                 return BadRequest("Record name must be provided.");
             }
 
-            try
+            if (!ApplicationHelper.ApplicationExists(application) ||
+                !ContainerHelper.ContainerExists(application, container) ||
+                !RecordHelper.RecordExists(application, container, record))
             {
-                if (!RecordHelper.RecordExists(application, container, record))
-                {
-                    return NotFound();
-                }
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
+                return NotFound();
             }
 
             try
@@ -977,16 +930,11 @@ namespace somiod.Controllers
                 return BadRequest("Notification name must be provided.");
             }
 
-            try
+            if (!ApplicationHelper.ApplicationExists(application) ||
+                !ContainerHelper.ContainerExists(application, container) ||
+                !NotificationHelper.NotificationExists(application, container, notification))
             {
-                if (!NotificationHelper.NotificationExists(application, container, notification))
-                {
-                    return NotFound();
-                }
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
+                return NotFound();
             }
 
             try

@@ -36,7 +36,7 @@ namespace somiod.Helpers
 
         internal static List<Application> FindApplicationsInDatabase()
         {
-            List<Application> applications = new List<Application>();
+            var apps = new List<Application>();
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
@@ -49,7 +49,7 @@ namespace somiod.Helpers
                         {
                             while (reader.Read())
                             {
-                                applications.Add(new Application
+                                apps.Add(new Application
                                 {
                                     Id = reader.GetInt32(0),
                                     Name = reader.GetString(1),
@@ -64,9 +64,9 @@ namespace somiod.Helpers
             }
             catch (Exception e)
             {
-                throw new Exception("Error finding applications in database", e);
+                throw new Exception("Error finding apps in database", e);
             }
-            return applications;
+            return apps;
         }
 
         internal static Application FindApplicationInDatabase(string application)
@@ -145,7 +145,7 @@ namespace somiod.Helpers
 
         internal static void DeleteApplicationFromDatabase(string application)
         {
-            Application app = FindApplicationInDatabase(application);
+            var app = FindApplicationInDatabase(application);
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))

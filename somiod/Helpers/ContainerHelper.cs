@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Web;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace somiod.Helpers
 {
@@ -12,7 +13,7 @@ namespace somiod.Helpers
     {
         internal static bool ContainerExists(string application, string container)
         {
-            Application app = ApplicationHelper.FindApplicationInDatabase(application); 
+            var app = ApplicationHelper.FindApplicationInDatabase(application); 
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
@@ -34,10 +35,45 @@ namespace somiod.Helpers
                 throw new Exception("Error checking if container exists", ex);
             }
         }
+        internal static List<Container> FindContainersInDatabase()
+        {
+            var containers = new List<Container>();
+            try
+            {
+                using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
+                {
+                    sqlConnection.Open();
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Containers", sqlConnection))
+                    {
+                        sqlCommand.CommandType = System.Data.CommandType.Text;
+                        using (SqlDataReader reader = sqlCommand.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                containers.Add(new Container
+                                {
+                                    Id = reader.GetInt32(0),
+                                    Name = reader.GetString(1),
+                                    CreationDateTime = reader.GetDateTime(2),
+                                    Parent = reader.GetInt32(3)
+                                });
+                            }
+                            reader.Close();
+                        }
+                    }
+                    sqlConnection.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error finding containers by application", e);
+            }
+            return containers;
+        }
 
         internal static List<Container> FindContainersByApplication(string application)
         {
-            List<Container> containers = new List<Container>();
+            var containers = new List<Container>();
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))

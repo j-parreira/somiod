@@ -15,7 +15,7 @@ namespace somiod.Helpers
         internal static List<Notification> FindNotificationsToSend(string application, string container, string evento)
         {
             var containerId = ContainerHelper.FindContainerInDatabase(application, container).Id;
-            List<Notification> notifications = new List<Notification>();
+            var notifications = new List<Notification>();
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))

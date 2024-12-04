@@ -9,6 +9,7 @@ using System.Net;
 using System.Web;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace somiod.Helpers
 {
@@ -16,8 +17,8 @@ namespace somiod.Helpers
     {
         internal static bool RecordExists(string application, string container, string record)
         {
-            Application app = ApplicationHelper.FindApplicationInDatabase(application);
-            Container cont = ContainerHelper.FindContainerInDatabase(application, container);
+            var app = ApplicationHelper.FindApplicationInDatabase(application);
+            var cont = ContainerHelper.FindContainerInDatabase(application, container);
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
@@ -44,10 +45,47 @@ namespace somiod.Helpers
             }
         }
 
+        internal static List<Record> FindRecordsInDatabase()
+        {
+            var records = new List<Record>();
+            try
+            {
+                using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
+                {
+                    sqlConnection.Open();
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Records", sqlConnection))
+                    {
+                        sqlCommand.CommandType = System.Data.CommandType.Text;
+                        using (SqlDataReader reader = sqlCommand.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                records.Add(new Record
+                                {
+                                    Id = reader.GetInt32(0),
+                                    Name = reader.GetString(1),
+                                    CreationDateTime = reader.GetDateTime(2),
+                                    Parent = reader.GetInt32(3),
+                                    Content = reader.GetString(4)
+                                });
+                            }
+                            reader.Close();
+                        }
+                    }
+                    sqlConnection.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error finding records by application", e);
+            }
+            return records;
+        }
+
         internal static List<Record> FindRecordsByApplication(string application)
         {
-            Application app = ApplicationHelper.FindApplicationInDatabase(application);
-            List<Record> records = new List<Record>();
+            var app = ApplicationHelper.FindApplicationInDatabase(application);
+            var records = new List<Record>();
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
@@ -86,8 +124,8 @@ namespace somiod.Helpers
 
         internal static List<Record> FindRecordsByContainer(string application, string container)
         {
-            Container cont = ContainerHelper.FindContainerInDatabase(application, container);
-            List<Record> records = new List<Record>();
+            var cont = ContainerHelper.FindContainerInDatabase(application, container);
+            var records = new List<Record>();
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
@@ -205,7 +243,7 @@ namespace somiod.Helpers
                 throw new Exception("Error adding record to database", e);
             }
 
-            List<Notification> notificationsToSend = MqttHelper.FindNotificationsToSend(application, container, "1");
+            var notificationsToSend = MqttHelper.FindNotificationsToSend(application, container, "1");
             MqttMessage mqttMessage = new MqttMessage
             {
                 Topic = ContainerHelper.FindContainerInDatabase(application, container).Name,
@@ -219,7 +257,7 @@ namespace somiod.Helpers
 
         internal static void DeleteRecordFromDatabase(string application, string container, string record)
         {
-            List<Notification> notificationsToSend = MqttHelper.FindNotificationsToSend(application, container, "2");
+            var notificationsToSend = MqttHelper.FindNotificationsToSend(application, container, "2");
             MqttMessage mqttMessage = new MqttMessage
             {
                 Topic = ContainerHelper.FindContainerInDatabase(application, container).Name,
