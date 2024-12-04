@@ -42,4 +42,6 @@ CREATE TABLE [dbo].[Notifications]
 	CONSTRAINT [PK_Notification_Id] PRIMARY KEY CLUSTERED ([Id] ASC),
 	CONSTRAINT [FK_Notification_Parent] FOREIGN KEY (Parent) REFERENCES Containers(Id) ON DELETE CASCADE,
 	CONSTRAINT [UC_Notification_Name] UNIQUE NONCLUSTERED ([Name] ASC),
+	CONSTRAINT [CHK_Notification_Event] CHECK ([Event] IN ('0', '1', '2')),
+	CONSTRAINT [CHK_Notification_Enabled] CHECK ([Enabled] IN (0, 1)),
 )

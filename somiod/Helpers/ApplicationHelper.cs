@@ -29,7 +29,7 @@ namespace somiod.Helpers
             }
             catch (Exception ex)
             {
-                throw new Exception("Error checking if container exists", ex);
+                throw new Exception("Error checking if application exists", ex);
             }
         }
 

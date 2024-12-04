@@ -10,16 +10,18 @@ namespace somiod.Helpers
 {
     public class ContainerHelper
     {
-        internal static bool ContainerExists(string container)
+        internal static bool ContainerExists(string application, string container)
         {
+            Application app = ApplicationHelper.FindApplicationInDatabase(application); 
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM Containers WHERE Name = @ContainerName", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM Containers WHERE Name = @ContainerName AND Parent = @ParentId", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@ContainerName", container.ToLower());
+                        sqlCommand.Parameters.AddWithValue("@ParentId", app.Id);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         int count = (int)sqlCommand.ExecuteScalar();
                         return count > 0;
@@ -111,10 +113,10 @@ namespace somiod.Helpers
 
         internal static Container AddContainerToDatabase(string application, Container container)
         {
-            if (ContainerExists(container.Name))
+            if (ContainerExists(application, container.Name))
             {
                 int i = 1;
-                while (ContainerExists(container.Name))
+                while (ContainerExists(application, container.Name))
                 {
                     container.Name += i.ToString();
                     i++;
@@ -173,10 +175,10 @@ namespace somiod.Helpers
 
         internal static Container UpdateContainerInDatabase(string application, string container, Container newContainer)
         {
-            if (ContainerExists(newContainer.Name))
+            if (ContainerExists(application, newContainer.Name))
             {
                 int i = 1;
-                while (ContainerExists(newContainer.Name))
+                while (ContainerExists(application, newContainer.Name))
                 {
                     newContainer.Name += i.ToString();
                     i++;

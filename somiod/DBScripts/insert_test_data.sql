@@ -30,9 +30,9 @@ VALUES
 
 INSERT INTO Notifications ([Name], [CreationDateTime], [Parent], [Event], [Endpoint], [Enabled]) 
 VALUES 
-    ('notification_1', GETDATE(), 1, '1', '127.0.0.1', 1),
-    ('notification_2', GETDATE(), 2, '2', '127.0.0.1', 1),
-    ('notification_3', GETDATE(), 3, '3', '127.0.0.1', 0),
-    ('notification_4', GETDATE(), 4, '4', '127.0.0.1', 0),
-    ('notification_5', GETDATE(), 5, '5', '127.0.0.1', 1),
-    ('notification_6', GETDATE(), 6, '6', '127.0.0.1', 1);
+    ('notification_1', GETDATE(), 1, '0', '127.0.0.1', 1),
+    ('notification_2', GETDATE(), 2, '0', '127.0.0.1', 1),
+    ('notification_3', GETDATE(), 3, '1', '127.0.0.1', 1),
+    ('notification_4', GETDATE(), 4, '1', '127.0.0.1', 0),
+    ('notification_5', GETDATE(), 5, '2', '127.0.0.1', 0),
+    ('notification_6', GETDATE(), 6, '2', '127.0.0.1', 0);

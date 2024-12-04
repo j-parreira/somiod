@@ -10,11 +10,11 @@ namespace somiod
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
+            var xmlFormatter = config.Formatters.XmlFormatter;
+            xmlFormatter.UseXmlSerializer = true;
 
             // Web API routes
             config.MapHttpAttributeRoutes();
-
-            //config.Formatters.XmlFormatter.UseXmlSerializer = true;
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",

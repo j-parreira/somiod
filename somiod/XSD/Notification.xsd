@@ -9,7 +9,7 @@
 				<xs:element name="Parent" type="xs:int" />
 				<xs:element name="Event" type="xs:int" />
 				<xs:element name="Endpoint" type="xs:string" />
-				<xs:element name="Enabled" type="xs:boolean" />
+				<xs:element name="Enabled" type="xs:boolean" minOccurs="1" />
 			</xs:all>
 		</xs:complexType>
 	</xs:element>

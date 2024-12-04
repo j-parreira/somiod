@@ -10,16 +10,24 @@ namespace somiod.Helpers
 {
     public class NotificationHelper
     {
-        internal static bool NotificationExists(string notification)
-        {
+        internal static bool NotificationExists(string application, string container, string notification)
+        {   
+            Application app = ApplicationHelper.FindApplicationInDatabase(application);
+            Container cont = ContainerHelper.FindContainerInDatabase(application, container);
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM Notifications WHERE Name = @NotificationName", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1)" +
+                        "FROM Notifications n " +
+                        "INNER JOIN Containers c ON n.Parent = c.Id " +
+                        "WHERE n.Name = @NotificationName AND n.Parent = @NotificationParent " +
+                        "AND c.Parent = @ContainerParent", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@NotificationName", notification.ToLower());
+                        sqlCommand.Parameters.AddWithValue("@NotificationParent", cont.Id);
+                        sqlCommand.Parameters.AddWithValue("@ContainerParent", app.Id);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         int count = (int)sqlCommand.ExecuteScalar();
                         return count > 0;
@@ -163,10 +171,10 @@ namespace somiod.Helpers
                 throw new Exception("Invalid event type");
             }
 
-            if (NotificationExists(notification.Name))
+            if (NotificationExists(application, container, notification.Name))
             {
                 int i = 1;
-                while (NotificationExists(notification.Name))
+                while (NotificationExists(application, container, notification.Name))
                 {
                     notification.Name += i.ToString();
                     i++;

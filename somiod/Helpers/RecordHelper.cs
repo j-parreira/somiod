@@ -14,16 +14,24 @@ namespace somiod.Helpers
 {
     public class RecordHelper
     {
-        internal static bool RecordExists(string record)
+        internal static bool RecordExists(string application, string container, string record)
         {
+            Application app = ApplicationHelper.FindApplicationInDatabase(application);
+            Container cont = ContainerHelper.FindContainerInDatabase(application, container);
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM Records WHERE Name = @RecordName", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1)" +
+                        "FROM Records r " +
+                        "INNER JOIN Containers c ON r.Parent = c.Id " +
+                        "WHERE r.Name = @RecordName AND r.Parent = @RecordParent " +
+                        "AND c.Parent = @ContainerParent", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@RecordName", record.ToLower());
+                        sqlCommand.Parameters.AddWithValue("@RecordParent", cont.Id);
+                        sqlCommand.Parameters.AddWithValue("@ContainerParent", app.Id);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         int count = (int)sqlCommand.ExecuteScalar();
                         return count > 0;
@@ -156,10 +164,10 @@ namespace somiod.Helpers
 
         internal static Record AddRecordToDatabase(string application, string container, Record record)
         {
-            if (RecordExists(record.Name))
+            if (RecordExists(application, container, record.Name))
             {
                 int i = 1;
-                while (RecordExists(record.Name))
+                while (RecordExists(application, container, record.Name))
                 {
                     record.Name += i.ToString();
                     i++;
