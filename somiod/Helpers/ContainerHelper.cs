@@ -18,7 +18,8 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM Containers WHERE Name = @ContainerName AND Parent = @ParentId", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) " +
+                        "FROM Containers WHERE Name = @ContainerName AND Parent = @ParentId", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@ContainerName", container.ToLower());
                         sqlCommand.Parameters.AddWithValue("@ParentId", app.Id);
@@ -42,7 +43,8 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Containers WHERE Parent = @ApplicationId", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Containers " +
+                        "WHERE Parent = @ApplicationId", sqlConnection))
                     {
                         int appId = ApplicationHelper.FindApplicationInDatabase(application).Id;
                         sqlCommand.Parameters.AddWithValue("@ApplicationId", appId);
@@ -80,7 +82,8 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Containers WHERE Name = @ContainerName AND Parent = @ApplicationId", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Containers " +
+                        "WHERE Name = @ContainerName AND Parent = @ApplicationId", sqlConnection))
                     {
                         int appId = ApplicationHelper.FindApplicationInDatabase(application).Id;
                         sqlCommand.Parameters.AddWithValue("@ApplicationId", appId);
@@ -130,7 +133,9 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO Containers (Name, CreationDateTime, Parent) VALUES (@ContainerName, @CreationDateTime, @ParentId)", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO Containers " +
+                        "(Name, CreationDateTime, Parent) " +
+                        "VALUES (@ContainerName, @CreationDateTime, @ParentId)", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@ContainerName", container.Name.ToLower());
                         sqlCommand.Parameters.AddWithValue("@CreationDateTime", DateTime.Now);
@@ -157,7 +162,8 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("DELETE FROM Containers WHERE Name = @ContainerName AND Parent = @ApplicationId", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("DELETE FROM Containers " +
+                        "WHERE Name = @ContainerName AND Parent = @ApplicationId", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@ContainerName", container.ToLower());
                         sqlCommand.Parameters.AddWithValue("@ApplicationId", app.Id);
@@ -192,7 +198,9 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("UPDATE Containers SET Name = @NewContainerName WHERE Name = @ContainerName AND Parent = @ApplicationId", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("UPDATE Containers " +
+                        "SET Name = @NewContainerName " +
+                        "WHERE Name = @ContainerName AND Parent = @ApplicationId", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@NewContainerName", newContainer.Name.ToLower());
                         sqlCommand.Parameters.AddWithValue("@ContainerName", container);

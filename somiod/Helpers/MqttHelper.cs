@@ -21,7 +21,9 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Notifications WHERE Parent = @ContainerId AND Enabled = 1 AND (Event = 0 OR Event = @Event)", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Notifications " +
+                        "WHERE Parent = @ContainerId AND Enabled = 1 " +
+                        "AND (Event = 0 OR Event = @Event)", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@ContainerId", containerId);
                         sqlCommand.Parameters.AddWithValue("@Event", evento);

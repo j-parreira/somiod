@@ -49,7 +49,9 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Notifications WHERE Parent IN (SELECT Id FROM Containers WHERE Parent = @ParentId)", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * " +
+                        "FROM Notifications WHERE Parent IN " +
+                        "(SELECT Id FROM Containers WHERE Parent = @ParentId)", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@ParentId", app.Id);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
@@ -90,7 +92,8 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Notifications WHERE Parent = @ParentId", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Notifications " +
+                        "WHERE Parent = @ParentId", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@ParentId", cont.Id);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
@@ -130,7 +133,8 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Notifications WHERE Name = @NotificationName AND Parent = @ContainerId", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Notifications " +
+                        "WHERE Name = @NotificationName AND Parent = @ContainerId", sqlConnection))
                     {
                         int contId = ContainerHelper.FindContainerInDatabase(application, container).Id;
                         sqlCommand.Parameters.AddWithValue("@ContainerId", contId);
@@ -188,7 +192,10 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO Notifications (Name, CreationDateTime, Parent, Event, Endpoint, Enabled) VALUES (@NotificationName, @NotificationCreationDateTime, @NotificationParent, @NotificationEvent, @NotificationEndpoint, @NotificationEnabled)", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO Notifications " +
+                        "(Name, CreationDateTime, Parent, Event, Endpoint, Enabled) " +
+                        "VALUES (@NotificationName, @NotificationCreationDateTime, @NotificationParent, " +
+                        "@NotificationEvent, @NotificationEndpoint, @NotificationEnabled)", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@NotificationName", notification.Name.ToLower());
                         sqlCommand.Parameters.AddWithValue("@NotificationCreationDateTime", DateTime.Now);
@@ -218,7 +225,8 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("DELETE FROM Notifications WHERE Name = @NotificationName AND Parent = @ContainerId", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("DELETE FROM Notifications " +
+                        "WHERE Name = @NotificationName AND Parent = @ContainerId", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@NotificationName", notification.ToLower());
                         sqlCommand.Parameters.AddWithValue("@ContainerId", cont.Id);

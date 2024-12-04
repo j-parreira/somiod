@@ -18,7 +18,8 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM Applications WHERE Name = @ApplicationName", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM Applications " +
+                        "WHERE Name = @ApplicationName", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@ApplicationName", application.ToLower());
                         sqlCommand.CommandType = System.Data.CommandType.Text;
@@ -76,7 +77,8 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Applications WHERE Name = @ApplicationName", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Applications " +
+                        "WHERE Name = @ApplicationName", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@ApplicationName", application.ToLower());
                         sqlCommand.CommandType = System.Data.CommandType.Text;
@@ -122,7 +124,8 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO Applications (Name, CreationDateTime) VALUES (@ApplicationName, @CreationDateTime)", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO Applications " +
+                        "(Name, CreationDateTime) VALUES (@ApplicationName, @CreationDateTime)", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@ApplicationName", application.Name.ToLower());
                         sqlCommand.Parameters.AddWithValue("@CreationDateTime", DateTime.Now);
@@ -148,7 +151,8 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("DELETE FROM Applications WHERE Id = @ApplicationId", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("DELETE FROM Applications " +
+                        "WHERE Id = @ApplicationId", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@ApplicationId", app.Id);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
@@ -182,7 +186,8 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("UPDATE Applications SET Name = @NewName WHERE Id = @ApplicationId", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("UPDATE Applications " +
+                        "SET Name = @NewName WHERE Id = @ApplicationId", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@NewName", newApp.Name.ToLower());
                         sqlCommand.Parameters.AddWithValue("@ApplicationId", app.Id);
