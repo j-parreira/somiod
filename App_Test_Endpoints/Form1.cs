@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace App_Test_Endpoints
 {
@@ -25,8 +26,6 @@ namespace App_Test_Endpoints
             textBoxHeader.Text = "";
             textBoxHttpCode.Text = "";
             textBoxHttpCodeText.Text = "";
-            richTextBoxRequestBody.Text = "";
-            richTextBoxResponseBody.Text = "";
             textBoxHttpCode.BackColor = SystemColors.Control;
             textBoxHttpCodeText.BackColor = SystemColors.Control;
         }
@@ -84,7 +83,7 @@ namespace App_Test_Endpoints
                     textBoxURI.Text = fullURI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
-                    richTextBoxResponseBody.Text = responseBody;
+                    textBoxResponseBody.Text = responseBody;
                 }
                 catch (Exception ex)
                 {
@@ -118,7 +117,7 @@ namespace App_Test_Endpoints
                     textBoxURI.Text = fullURI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
-                    richTextBoxResponseBody.Text = responseBody;
+                    textBoxResponseBody.Text = responseBody;
                 }
                 catch (Exception ex)
                 {
@@ -152,7 +151,7 @@ namespace App_Test_Endpoints
                     textBoxURI.Text = fullURI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
-                    richTextBoxResponseBody.Text = responseBody;
+                    textBoxResponseBody.Text = responseBody;
                 }
                 catch (Exception ex)
                 {
@@ -197,7 +196,7 @@ namespace App_Test_Endpoints
                     textBoxURI.Text = fullURI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
-                    richTextBoxResponseBody.Text = responseBody;
+                    textBoxResponseBody.Text = responseBody;
                 }
                 catch (Exception ex)
                 {
@@ -242,7 +241,7 @@ namespace App_Test_Endpoints
                     textBoxURI.Text = fullURI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
-                    richTextBoxResponseBody.Text = responseBody;
+                    textBoxResponseBody.Text = responseBody;
                 }
                 catch (Exception ex)
                 {
@@ -298,7 +297,7 @@ namespace App_Test_Endpoints
                     textBoxURI.Text = fullURI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
-                    richTextBoxResponseBody.Text = responseBody;
+                    textBoxResponseBody.Text = responseBody;
                 }
                 catch (Exception ex)
                 {
@@ -343,7 +342,7 @@ namespace App_Test_Endpoints
                     textBoxURI.Text = fullURI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
-                    richTextBoxResponseBody.Text = responseBody;
+                    textBoxResponseBody.Text = responseBody;
                 }
                 catch (Exception ex)
                 {
@@ -399,7 +398,7 @@ namespace App_Test_Endpoints
                     textBoxURI.Text = fullURI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
-                    richTextBoxResponseBody.Text = responseBody;
+                    textBoxResponseBody.Text = responseBody;
                 }
                 catch (Exception ex)
                 {
@@ -410,22 +409,176 @@ namespace App_Test_Endpoints
 
         private void buttonPostOneApp_Click(object sender, EventArgs e)
         {
-
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    string fullURI = baseURI;
+                    string requestBody = textBoxRequestBody.Text.Trim();
+                    HttpContent content = new StringContent(requestBody, Encoding.UTF8, "application/xml");
+                    HttpResponseMessage response = client.PostAsync(fullURI, content).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    textBoxResponseBody.Text = responseBody;
+                }
+                catch (XmlException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
+
 
         private void buttonPostOneContainerInOneApp_Click(object sender, EventArgs e)
         {
-
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    if (textBoxApplication.Text == "")
+                    {
+                        MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    if (textBoxApplication.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Application name cannot contain a forward slash.");
+                        return;
+                    }
+                    string application = textBoxApplication.Text;
+                    string fullURI = baseURI + "/" + application;
+                    string requestBody = textBoxRequestBody.Text.Trim();
+                    HttpContent content = new StringContent(requestBody, Encoding.UTF8, "application/xml");
+                    HttpResponseMessage response = client.PostAsync(fullURI, content).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    textBoxResponseBody.Text = responseBody;
+                }
+                catch (XmlException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonPostOneNotifInOneContainer_Click(object sender, EventArgs e)
         {
-
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    if (textBoxApplication.Text == "")
+                    {
+                        MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    if (textBoxApplication.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Application name cannot contain a forward slash.");
+                        return;
+                    }
+                    if (textBoxContainer.Text == "")
+                    {
+                        MessageBox.Show("Please enter a container name.");
+                        return;
+                    }
+                    if (textBoxContainer.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Container name cannot contain a forward slash.");
+                        return;
+                    }
+                    if (textBoxRecord.Text == "")
+                    {
+                        MessageBox.Show("Please enter a record name.");
+                        return;
+                    }
+                    if (textBoxRecord.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Record name cannot contain a forward slash.");
+                        return;
+                    }
+                    string application = textBoxApplication.Text;
+                    string container = textBoxContainer.Text;
+                    string record = textBoxRecord.Text;
+                    string fullURI = baseURI + application + "/" + container + "/record/" + record;
+                    HttpResponseMessage response = client.GetAsync(fullURI).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    textBoxResponseBody.Text = responseBody;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonPostOneRecordInOneContainer_Click(object sender, EventArgs e)
         {
-
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    if (textBoxApplication.Text == "")
+                    {
+                        MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    if (textBoxApplication.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Application name cannot contain a forward slash.");
+                        return;
+                    }
+                    if (textBoxContainer.Text == "")
+                    {
+                        MessageBox.Show("Please enter a container name.");
+                        return;
+                    }
+                    if (textBoxContainer.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Container name cannot contain a forward slash.");
+                        return;
+                    }
+                    if (textBoxRecord.Text == "")
+                    {
+                        MessageBox.Show("Please enter a record name.");
+                        return;
+                    }
+                    if (textBoxRecord.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Record name cannot contain a forward slash.");
+                        return;
+                    }
+                    string application = textBoxApplication.Text;
+                    string container = textBoxContainer.Text;
+                    string record = textBoxRecord.Text;
+                    string fullURI = baseURI + application + "/" + container + "/record/" + record;
+                    HttpResponseMessage response = client.GetAsync(fullURI).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    textBoxResponseBody.Text = responseBody;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonDeleteOneApp_Click(object sender, EventArgs e)
@@ -476,7 +629,7 @@ namespace App_Test_Endpoints
                     textBoxHeader.Text = header + ": " + headerValue;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
-                    richTextBoxResponseBody.Text = responseBody;
+                    textBoxResponseBody.Text = responseBody;
                 }
                 catch (Exception ex)
                 {
@@ -503,7 +656,7 @@ namespace App_Test_Endpoints
                     textBoxHeader.Text = header + ": " + headerValue;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
-                    richTextBoxResponseBody.Text = responseBody;
+                    textBoxResponseBody.Text = responseBody;
                 }
                 catch (Exception ex)
                 {
@@ -530,7 +683,7 @@ namespace App_Test_Endpoints
                     textBoxHeader.Text = header + ": " + headerValue;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
-                    richTextBoxResponseBody.Text = responseBody;
+                    textBoxResponseBody.Text = responseBody;
                 }
                 catch (Exception ex)
                 {
@@ -557,7 +710,7 @@ namespace App_Test_Endpoints
                     textBoxHeader.Text = header + ": " + headerValue;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
-                    richTextBoxResponseBody.Text = responseBody;
+                    textBoxResponseBody.Text = responseBody;
                 }
                 catch (Exception ex)
                 {
@@ -595,7 +748,7 @@ namespace App_Test_Endpoints
                     textBoxHeader.Text = header + ": " + headerValue;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
-                    richTextBoxResponseBody.Text = responseBody;
+                    textBoxResponseBody.Text = responseBody;
                 }
                 catch (Exception ex)
                 {
@@ -633,7 +786,7 @@ namespace App_Test_Endpoints
                     textBoxHeader.Text = header + ": " + headerValue;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
-                    richTextBoxResponseBody.Text = responseBody;
+                    textBoxResponseBody.Text = responseBody;
                 }
                 catch (Exception ex)
                 {
@@ -671,7 +824,7 @@ namespace App_Test_Endpoints
                     textBoxHeader.Text = header + ": " + headerValue;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
-                    richTextBoxResponseBody.Text = responseBody;
+                    textBoxResponseBody.Text = responseBody;
                 }
                 catch (Exception ex)
                 {
@@ -719,7 +872,7 @@ namespace App_Test_Endpoints
                     textBoxURI.Text = fullURI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
-                    richTextBoxResponseBody.Text = responseBody;
+                    textBoxResponseBody.Text = responseBody;
                 }
                 catch (Exception ex)
                 {
@@ -767,7 +920,7 @@ namespace App_Test_Endpoints
                     textBoxURI.Text = fullURI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
-                    richTextBoxResponseBody.Text = responseBody;
+                    textBoxResponseBody.Text = responseBody;
                 }
                 catch (Exception ex)
                 {

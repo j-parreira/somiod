@@ -44,8 +44,6 @@
             this.textBoxNotification = new System.Windows.Forms.TextBox();
             this.textBoxRecord = new System.Windows.Forms.TextBox();
             this.textBoxHttpCode = new System.Windows.Forms.TextBox();
-            this.richTextBoxRequestBody = new System.Windows.Forms.RichTextBox();
-            this.richTextBoxResponseBody = new System.Windows.Forms.RichTextBox();
             this.buttonLocateAllApps = new System.Windows.Forms.Button();
             this.buttonLocateAllRecordsInOneApp = new System.Windows.Forms.Button();
             this.buttonLocateAllContainers = new System.Windows.Forms.Button();
@@ -74,6 +72,8 @@
             this.buttonPostOneRecordInOneContainer = new System.Windows.Forms.Button();
             this.buttonDeleteOneRecordInOneContainer = new System.Windows.Forms.Button();
             this.textBoxHttpCodeText = new System.Windows.Forms.TextBox();
+            this.textBoxRequestBody = new System.Windows.Forms.TextBox();
+            this.textBoxResponseBody = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // labelURI
@@ -152,9 +152,9 @@
             this.labelRequestBody.Font = new System.Drawing.Font("Microsoft Tai Le", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelRequestBody.Location = new System.Drawing.Point(12, 358);
             this.labelRequestBody.Name = "labelRequestBody";
-            this.labelRequestBody.Size = new System.Drawing.Size(83, 16);
+            this.labelRequestBody.Size = new System.Drawing.Size(121, 16);
             this.labelRequestBody.TabIndex = 7;
-            this.labelRequestBody.Text = "RequestBody";
+            this.labelRequestBody.Text = "RequestBody (XML)";
             // 
             // labelResponseBody
             // 
@@ -162,9 +162,9 @@
             this.labelResponseBody.Font = new System.Drawing.Font("Microsoft Tai Le", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelResponseBody.Location = new System.Drawing.Point(653, 358);
             this.labelResponseBody.Name = "labelResponseBody";
-            this.labelResponseBody.Size = new System.Drawing.Size(93, 16);
+            this.labelResponseBody.Size = new System.Drawing.Size(131, 16);
             this.labelResponseBody.TabIndex = 8;
-            this.labelResponseBody.Text = "ResponseBody";
+            this.labelResponseBody.Text = "ResponseBody (XML)";
             // 
             // textBoxURI
             // 
@@ -224,24 +224,6 @@
             this.textBoxHttpCode.ReadOnly = true;
             this.textBoxHttpCode.Size = new System.Drawing.Size(71, 24);
             this.textBoxHttpCode.TabIndex = 15;
-            // 
-            // richTextBoxRequestBody
-            // 
-            this.richTextBoxRequestBody.Font = new System.Drawing.Font("Microsoft Tai Le", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.richTextBoxRequestBody.Location = new System.Drawing.Point(11, 377);
-            this.richTextBoxRequestBody.Name = "richTextBoxRequestBody";
-            this.richTextBoxRequestBody.Size = new System.Drawing.Size(625, 360);
-            this.richTextBoxRequestBody.TabIndex = 16;
-            this.richTextBoxRequestBody.Text = "";
-            // 
-            // richTextBoxResponseBody
-            // 
-            this.richTextBoxResponseBody.Font = new System.Drawing.Font("Microsoft Tai Le", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.richTextBoxResponseBody.Location = new System.Drawing.Point(656, 377);
-            this.richTextBoxResponseBody.Name = "richTextBoxResponseBody";
-            this.richTextBoxResponseBody.Size = new System.Drawing.Size(625, 360);
-            this.richTextBoxResponseBody.TabIndex = 17;
-            this.richTextBoxResponseBody.Text = "";
             // 
             // buttonLocateAllApps
             // 
@@ -603,11 +585,29 @@
             this.textBoxHttpCodeText.Size = new System.Drawing.Size(214, 24);
             this.textBoxHttpCodeText.TabIndex = 45;
             // 
+            // textBoxRequestBody
+            // 
+            this.textBoxRequestBody.Location = new System.Drawing.Point(11, 377);
+            this.textBoxRequestBody.Multiline = true;
+            this.textBoxRequestBody.Name = "textBoxRequestBody";
+            this.textBoxRequestBody.Size = new System.Drawing.Size(625, 360);
+            this.textBoxRequestBody.TabIndex = 46;
+            // 
+            // textBoxResponseBody
+            // 
+            this.textBoxResponseBody.Location = new System.Drawing.Point(656, 377);
+            this.textBoxResponseBody.Multiline = true;
+            this.textBoxResponseBody.Name = "textBoxResponseBody";
+            this.textBoxResponseBody.Size = new System.Drawing.Size(625, 360);
+            this.textBoxResponseBody.TabIndex = 47;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1293, 746);
+            this.Controls.Add(this.textBoxResponseBody);
+            this.Controls.Add(this.textBoxRequestBody);
             this.Controls.Add(this.textBoxHttpCodeText);
             this.Controls.Add(this.buttonDeleteOneRecordInOneContainer);
             this.Controls.Add(this.buttonPostOneRecordInOneContainer);
@@ -636,8 +636,6 @@
             this.Controls.Add(this.buttonLocateAllContainers);
             this.Controls.Add(this.buttonLocateAllRecordsInOneApp);
             this.Controls.Add(this.buttonLocateAllApps);
-            this.Controls.Add(this.richTextBoxResponseBody);
-            this.Controls.Add(this.richTextBoxRequestBody);
             this.Controls.Add(this.textBoxHttpCode);
             this.Controls.Add(this.textBoxRecord);
             this.Controls.Add(this.textBoxNotification);
@@ -679,8 +677,6 @@
         private System.Windows.Forms.TextBox textBoxNotification;
         private System.Windows.Forms.TextBox textBoxRecord;
         private System.Windows.Forms.TextBox textBoxHttpCode;
-        private System.Windows.Forms.RichTextBox richTextBoxRequestBody;
-        private System.Windows.Forms.RichTextBox richTextBoxResponseBody;
         private System.Windows.Forms.Button buttonLocateAllApps;
         private System.Windows.Forms.Button buttonLocateAllRecordsInOneApp;
         private System.Windows.Forms.Button buttonLocateAllContainers;
@@ -709,6 +705,8 @@
         private System.Windows.Forms.Button buttonPostOneRecordInOneContainer;
         private System.Windows.Forms.Button buttonDeleteOneRecordInOneContainer;
         private System.Windows.Forms.TextBox textBoxHttpCodeText;
+        private System.Windows.Forms.TextBox textBoxRequestBody;
+        private System.Windows.Forms.TextBox textBoxResponseBody;
     }
 }
 
