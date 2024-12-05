@@ -265,7 +265,7 @@
             this.buttonLocateAllRecordsInOneApp.Name = "buttonLocateAllRecordsInOneApp";
             this.buttonLocateAllRecordsInOneApp.Size = new System.Drawing.Size(150, 50);
             this.buttonLocateAllRecordsInOneApp.TabIndex = 19;
-            this.buttonLocateAllRecordsInOneApp.Text = "LOCATE All Records in One App";
+            this.buttonLocateAllRecordsInOneApp.Text = "LOCATE All Recs in One App";
             this.buttonLocateAllRecordsInOneApp.UseVisualStyleBackColor = false;
             this.buttonLocateAllRecordsInOneApp.Click += new System.EventHandler(this.buttonLocateAllRecordsInOneApp_Click);
             // 
@@ -278,7 +278,7 @@
             this.buttonLocateAllContainers.Name = "buttonLocateAllContainers";
             this.buttonLocateAllContainers.Size = new System.Drawing.Size(150, 50);
             this.buttonLocateAllContainers.TabIndex = 20;
-            this.buttonLocateAllContainers.Text = "LOCATE All Containers";
+            this.buttonLocateAllContainers.Text = "LOCATE All Conts";
             this.buttonLocateAllContainers.UseVisualStyleBackColor = false;
             this.buttonLocateAllContainers.Click += new System.EventHandler(this.buttonLocateAllContainers_Click);
             // 
@@ -304,7 +304,7 @@
             this.buttonLocateAllRecords.Name = "buttonLocateAllRecords";
             this.buttonLocateAllRecords.Size = new System.Drawing.Size(150, 50);
             this.buttonLocateAllRecords.TabIndex = 22;
-            this.buttonLocateAllRecords.Text = "LOCATE All Records";
+            this.buttonLocateAllRecords.Text = "LOCATE All Recs";
             this.buttonLocateAllRecords.UseVisualStyleBackColor = false;
             this.buttonLocateAllRecords.Click += new System.EventHandler(this.buttonLocateAllRecords_Click);
             // 
@@ -317,7 +317,7 @@
             this.buttonLocateAllContainersInOneApp.Name = "buttonLocateAllContainersInOneApp";
             this.buttonLocateAllContainersInOneApp.Size = new System.Drawing.Size(150, 50);
             this.buttonLocateAllContainersInOneApp.TabIndex = 23;
-            this.buttonLocateAllContainersInOneApp.Text = "LOCATE All Containers in One App";
+            this.buttonLocateAllContainersInOneApp.Text = "LOCATE All Conts in One App";
             this.buttonLocateAllContainersInOneApp.UseVisualStyleBackColor = false;
             this.buttonLocateAllContainersInOneApp.Click += new System.EventHandler(this.buttonLocateAllContainersInOneApp_Click);
             // 
@@ -343,7 +343,7 @@
             this.buttonLocateAllRecordsInOneContainer.Name = "buttonLocateAllRecordsInOneContainer";
             this.buttonLocateAllRecordsInOneContainer.Size = new System.Drawing.Size(150, 50);
             this.buttonLocateAllRecordsInOneContainer.TabIndex = 25;
-            this.buttonLocateAllRecordsInOneContainer.Text = "LOCATE All Records in One Container";
+            this.buttonLocateAllRecordsInOneContainer.Text = "LOCATE All Recs in One Cont";
             this.buttonLocateAllRecordsInOneContainer.UseVisualStyleBackColor = false;
             this.buttonLocateAllRecordsInOneContainer.Click += new System.EventHandler(this.buttonLocateAllRecordsInOneContainer_Click);
             // 
@@ -382,7 +382,7 @@
             this.buttonPostOneContainerInOneApp.Name = "buttonPostOneContainerInOneApp";
             this.buttonPostOneContainerInOneApp.Size = new System.Drawing.Size(150, 50);
             this.buttonPostOneContainerInOneApp.TabIndex = 28;
-            this.buttonPostOneContainerInOneApp.Text = "POST One Container in One App\r\n";
+            this.buttonPostOneContainerInOneApp.Text = "POST One Cont in One App\r\n";
             this.buttonPostOneContainerInOneApp.UseVisualStyleBackColor = false;
             this.buttonPostOneContainerInOneApp.Click += new System.EventHandler(this.buttonPostOneContainerInOneApp_Click);
             // 
@@ -395,7 +395,7 @@
             this.buttonGetAllNotifsInOneContainer.Name = "buttonGetAllNotifsInOneContainer";
             this.buttonGetAllNotifsInOneContainer.Size = new System.Drawing.Size(150, 50);
             this.buttonGetAllNotifsInOneContainer.TabIndex = 29;
-            this.buttonGetAllNotifsInOneContainer.Text = "GET All Notifs in One Container";
+            this.buttonGetAllNotifsInOneContainer.Text = "GET All Notifs in One Cont";
             this.buttonGetAllNotifsInOneContainer.UseVisualStyleBackColor = false;
             this.buttonGetAllNotifsInOneContainer.Click += new System.EventHandler(this.buttonGetAllNotifsInOneContainer_Click);
             // 
@@ -408,7 +408,7 @@
             this.buttonGetAllRecordsInOneContainer.Name = "buttonGetAllRecordsInOneContainer";
             this.buttonGetAllRecordsInOneContainer.Size = new System.Drawing.Size(150, 50);
             this.buttonGetAllRecordsInOneContainer.TabIndex = 30;
-            this.buttonGetAllRecordsInOneContainer.Text = "GET All Records in One Container\r\n";
+            this.buttonGetAllRecordsInOneContainer.Text = "GET All Recs in One Cont";
             this.buttonGetAllRecordsInOneContainer.UseVisualStyleBackColor = false;
             this.buttonGetAllRecordsInOneContainer.Click += new System.EventHandler(this.buttonGetAllRecordsInOneContainer_Click);
             // 
@@ -421,7 +421,7 @@
             this.buttonLocateAllNotifsInOneContainer.Name = "buttonLocateAllNotifsInOneContainer";
             this.buttonLocateAllNotifsInOneContainer.Size = new System.Drawing.Size(150, 50);
             this.buttonLocateAllNotifsInOneContainer.TabIndex = 31;
-            this.buttonLocateAllNotifsInOneContainer.Text = "LOCATE All Notifs in One Container";
+            this.buttonLocateAllNotifsInOneContainer.Text = "LOCATE All Notifs in One Cont";
             this.buttonLocateAllNotifsInOneContainer.UseVisualStyleBackColor = false;
             this.buttonLocateAllNotifsInOneContainer.Click += new System.EventHandler(this.buttonLocateAllNotifsInOneContainer_Click);
             // 
@@ -473,7 +473,7 @@
             this.buttonGetAllContainersInOneApp.Name = "buttonGetAllContainersInOneApp";
             this.buttonGetAllContainersInOneApp.Size = new System.Drawing.Size(150, 50);
             this.buttonGetAllContainersInOneApp.TabIndex = 35;
-            this.buttonGetAllContainersInOneApp.Text = "GET All Containers in One App";
+            this.buttonGetAllContainersInOneApp.Text = "GET All Conts in One App";
             this.buttonGetAllContainersInOneApp.UseVisualStyleBackColor = false;
             this.buttonGetAllContainersInOneApp.Click += new System.EventHandler(this.buttonGetAllContainersInOneApp_Click);
             // 
@@ -486,7 +486,7 @@
             this.buttonGetOneContainerInOneApp.Name = "buttonGetOneContainerInOneApp";
             this.buttonGetOneContainerInOneApp.Size = new System.Drawing.Size(150, 50);
             this.buttonGetOneContainerInOneApp.TabIndex = 36;
-            this.buttonGetOneContainerInOneApp.Text = "GET One Container in One App";
+            this.buttonGetOneContainerInOneApp.Text = "GET One Cont in One App";
             this.buttonGetOneContainerInOneApp.UseVisualStyleBackColor = false;
             this.buttonGetOneContainerInOneApp.Click += new System.EventHandler(this.buttonGetOneContainerInOneApp_Click);
             // 
@@ -499,7 +499,7 @@
             this.buttonDeleteOneContainerInOneApp.Name = "buttonDeleteOneContainerInOneApp";
             this.buttonDeleteOneContainerInOneApp.Size = new System.Drawing.Size(150, 50);
             this.buttonDeleteOneContainerInOneApp.TabIndex = 37;
-            this.buttonDeleteOneContainerInOneApp.Text = "DELETE One Container in One App\r\n";
+            this.buttonDeleteOneContainerInOneApp.Text = "DELETE One Cont in One App\r\n";
             this.buttonDeleteOneContainerInOneApp.UseVisualStyleBackColor = false;
             this.buttonDeleteOneContainerInOneApp.Click += new System.EventHandler(this.buttonDeleteOneContainerInOneApp_Click);
             // 
@@ -512,7 +512,7 @@
             this.buttonPutOneContainerInOneApp.Name = "buttonPutOneContainerInOneApp";
             this.buttonPutOneContainerInOneApp.Size = new System.Drawing.Size(150, 50);
             this.buttonPutOneContainerInOneApp.TabIndex = 38;
-            this.buttonPutOneContainerInOneApp.Text = "PUT One Container in One App\r\n";
+            this.buttonPutOneContainerInOneApp.Text = "PUT One Cont in One App\r\n";
             this.buttonPutOneContainerInOneApp.UseVisualStyleBackColor = false;
             this.buttonPutOneContainerInOneApp.Click += new System.EventHandler(this.buttonPutOneContainerInOneApp_Click);
             // 
@@ -525,7 +525,7 @@
             this.buttonOneNotifInOneContainer.Name = "buttonOneNotifInOneContainer";
             this.buttonOneNotifInOneContainer.Size = new System.Drawing.Size(150, 50);
             this.buttonOneNotifInOneContainer.TabIndex = 39;
-            this.buttonOneNotifInOneContainer.Text = "GET One Notif in One Container";
+            this.buttonOneNotifInOneContainer.Text = "GET One Notif in One Cont";
             this.buttonOneNotifInOneContainer.UseVisualStyleBackColor = false;
             this.buttonOneNotifInOneContainer.Click += new System.EventHandler(this.buttonOneNotifInOneContainer_Click);
             // 
@@ -538,7 +538,7 @@
             this.buttonPostOneNotifInOneContainer.Name = "buttonPostOneNotifInOneContainer";
             this.buttonPostOneNotifInOneContainer.Size = new System.Drawing.Size(150, 50);
             this.buttonPostOneNotifInOneContainer.TabIndex = 40;
-            this.buttonPostOneNotifInOneContainer.Text = "POST One Notif in One Container";
+            this.buttonPostOneNotifInOneContainer.Text = "POST One Notif in One Cont";
             this.buttonPostOneNotifInOneContainer.UseVisualStyleBackColor = false;
             this.buttonPostOneNotifInOneContainer.Click += new System.EventHandler(this.buttonPostOneNotifInOneContainer_Click);
             // 
@@ -551,7 +551,7 @@
             this.buttonDeleteOneNotifInOneContainer.Name = "buttonDeleteOneNotifInOneContainer";
             this.buttonDeleteOneNotifInOneContainer.Size = new System.Drawing.Size(150, 50);
             this.buttonDeleteOneNotifInOneContainer.TabIndex = 41;
-            this.buttonDeleteOneNotifInOneContainer.Text = "DELETE One Notif in One Container";
+            this.buttonDeleteOneNotifInOneContainer.Text = "DELETE One Notif in One Cont";
             this.buttonDeleteOneNotifInOneContainer.UseVisualStyleBackColor = false;
             this.buttonDeleteOneNotifInOneContainer.Click += new System.EventHandler(this.buttonDeleteOneNotifInOneContainer_Click);
             // 
@@ -564,7 +564,7 @@
             this.buttonGetOneRecordInOneContainer.Name = "buttonGetOneRecordInOneContainer";
             this.buttonGetOneRecordInOneContainer.Size = new System.Drawing.Size(150, 50);
             this.buttonGetOneRecordInOneContainer.TabIndex = 42;
-            this.buttonGetOneRecordInOneContainer.Text = "GET One Record in One Container";
+            this.buttonGetOneRecordInOneContainer.Text = "GET One Rec in One Cont";
             this.buttonGetOneRecordInOneContainer.UseVisualStyleBackColor = false;
             this.buttonGetOneRecordInOneContainer.Click += new System.EventHandler(this.buttonGetOneRecordInOneContainer_Click);
             // 
@@ -577,7 +577,7 @@
             this.buttonPostOneRecordInOneContainer.Name = "buttonPostOneRecordInOneContainer";
             this.buttonPostOneRecordInOneContainer.Size = new System.Drawing.Size(150, 50);
             this.buttonPostOneRecordInOneContainer.TabIndex = 43;
-            this.buttonPostOneRecordInOneContainer.Text = "POST One Record in One Container";
+            this.buttonPostOneRecordInOneContainer.Text = "POST One Rec in One Cont";
             this.buttonPostOneRecordInOneContainer.UseVisualStyleBackColor = false;
             this.buttonPostOneRecordInOneContainer.Click += new System.EventHandler(this.buttonPostOneRecordInOneContainer_Click);
             // 
@@ -590,7 +590,7 @@
             this.buttonDeleteOneRecordInOneContainer.Name = "buttonDeleteOneRecordInOneContainer";
             this.buttonDeleteOneRecordInOneContainer.Size = new System.Drawing.Size(150, 50);
             this.buttonDeleteOneRecordInOneContainer.TabIndex = 44;
-            this.buttonDeleteOneRecordInOneContainer.Text = "DELETE One Record in One Container";
+            this.buttonDeleteOneRecordInOneContainer.Text = "DELETE One Rec in One Cont";
             this.buttonDeleteOneRecordInOneContainer.UseVisualStyleBackColor = false;
             this.buttonDeleteOneRecordInOneContainer.Click += new System.EventHandler(this.buttonDeleteOneRecordInOneContainer_Click);
             // 

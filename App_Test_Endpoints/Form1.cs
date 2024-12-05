@@ -23,10 +23,6 @@ namespace App_Test_Endpoints
         {
             textBoxURI.Text = "";
             textBoxHeader.Text = "";
-            textBoxApplication.Text = "";
-            textBoxContainer.Text = "";
-            textBoxNotification.Text = "";
-            textBoxRecord.Text = "";
             textBoxHttpCode.Text = "";
             textBoxHttpCodeText.Text = "";
             richTextBoxRequestBody.Text = "";
@@ -69,10 +65,11 @@ namespace App_Test_Endpoints
                 try
                 {
                     resetFields();
-                    HttpResponseMessage response = client.GetAsync(baseURI).Result;
+                    string fullURI = baseURI;
+                    HttpResponseMessage response = client.GetAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = baseURI;
+                    textBoxURI.Text = fullURI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
                     richTextBoxResponseBody.Text = responseBody;
@@ -86,7 +83,31 @@ namespace App_Test_Endpoints
 
         private void buttonGetOneApp_Click(object sender, EventArgs e)
         {
-            
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    if (textBoxApplication.Text == "")
+                    {
+                        MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    string application = textBoxApplication.Text;
+                    string fullURI = baseURI + application + "/";
+                    HttpResponseMessage response = client.GetAsync(fullURI).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    richTextBoxResponseBody.Text = responseBody;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonGetAllContainersInOneApp_Click(object sender, EventArgs e)
@@ -176,13 +197,14 @@ namespace App_Test_Endpoints
                 try
                 {
                     resetFields();
+                    string fullURI = baseURI;
                     string header = "somiod-locate";
                     string headerValue = "application";
                     client.DefaultRequestHeaders.Add(header, headerValue);
-                    HttpResponseMessage response = client.GetAsync(baseURI).Result;
+                    HttpResponseMessage response = client.GetAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = baseURI;
+                    textBoxURI.Text = fullURI;
                     textBoxHeader.Text = header + ": " + headerValue;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
@@ -202,13 +224,14 @@ namespace App_Test_Endpoints
                 try
                 {
                     resetFields();
+                    string fullURI = baseURI;
                     string header = "somiod-locate";
                     string headerValue = "container";
                     client.DefaultRequestHeaders.Add(header, headerValue);
-                    HttpResponseMessage response = client.GetAsync(baseURI).Result;
+                    HttpResponseMessage response = client.GetAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = baseURI;
+                    textBoxURI.Text = fullURI;
                     textBoxHeader.Text = header + ": " + headerValue;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
@@ -228,13 +251,14 @@ namespace App_Test_Endpoints
                 try
                 {
                     resetFields();
+                    string fullURI = baseURI;
                     string header = "somiod-locate";
                     string headerValue = "notification";
                     client.DefaultRequestHeaders.Add(header, headerValue);
-                    HttpResponseMessage response = client.GetAsync(baseURI).Result;
+                    HttpResponseMessage response = client.GetAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = baseURI;
+                    textBoxURI.Text = fullURI;
                     textBoxHeader.Text = header + ": " + headerValue;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
@@ -254,13 +278,14 @@ namespace App_Test_Endpoints
                 try
                 {
                     resetFields();
+                    string fullURI = baseURI;
                     string header = "somiod-locate";
                     string headerValue = "record";
                     client.DefaultRequestHeaders.Add(header, headerValue);
-                    HttpResponseMessage response = client.GetAsync(baseURI).Result;
+                    HttpResponseMessage response = client.GetAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = baseURI;
+                    textBoxURI.Text = fullURI;
                     textBoxHeader.Text = header + ": " + headerValue;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
@@ -275,17 +300,101 @@ namespace App_Test_Endpoints
 
         private void buttonLocateAllContainersInOneApp_Click(object sender, EventArgs e)
         {
-
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    if (textBoxApplication.Text == "")
+                    {
+                        MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    string application = textBoxApplication.Text;
+                    string fullURI = baseURI + application + "/";
+                    string header = "somiod-locate";
+                    string headerValue = "container";
+                    client.DefaultRequestHeaders.Add(header, headerValue);
+                    HttpResponseMessage response = client.GetAsync(fullURI).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHeader.Text = header + ": " + headerValue;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    richTextBoxResponseBody.Text = responseBody;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonLocateAllNotifsInOneApp_Click(object sender, EventArgs e)
         {
-
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    if (textBoxApplication.Text == "")
+                    {
+                        MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    string application = textBoxApplication.Text;
+                    string fullURI = baseURI + application + "/";
+                    string header = "somiod-locate";
+                    string headerValue = "notification";
+                    client.DefaultRequestHeaders.Add(header, headerValue);
+                    HttpResponseMessage response = client.GetAsync(fullURI).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHeader.Text = header + ": " + headerValue;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    richTextBoxResponseBody.Text = responseBody;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonLocateAllRecordsInOneApp_Click(object sender, EventArgs e)
         {
-
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    if (textBoxApplication.Text == "")
+                    {
+                        MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    string application = textBoxApplication.Text;
+                    string fullURI = baseURI + application + "/";
+                    string header = "somiod-locate";
+                    string headerValue = "record";
+                    client.DefaultRequestHeaders.Add(header, headerValue);
+                    HttpResponseMessage response = client.GetAsync(fullURI).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHeader.Text = header + ": " + headerValue;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    richTextBoxResponseBody.Text = responseBody;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonLocateAllNotifsInOneContainer_Click(object sender, EventArgs e)
