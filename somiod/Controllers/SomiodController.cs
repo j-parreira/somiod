@@ -205,22 +205,23 @@ namespace somiod.Controllers
         // POST: api/somiod
         [Route("")]
         [HttpPost]
-        public IHttpActionResult PostApplication([FromBody] Application application)
+        public IHttpActionResult PostApplication([FromBody] XElement application)
         {
-            string xmlApp = XMLHelper.SerializeXml(application);
             string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Application.xsd");
 
-            if (!XMLHelper.ValidateXml(xmlApp, xsdPath, out string validationError))
+            if (!XMLHelper.ValidateXml(application.ToString(), xsdPath, out string validationError))
             {
                 return BadRequest($"XML validation failed: {validationError}");
             }
 
-            if (application == null || string.IsNullOrWhiteSpace(application.Name))
+            Application app = XMLHelper.DeserializeXml<Application>(application.ToString());
+
+            if (application == null || string.IsNullOrWhiteSpace(app.Name))
             {
                 return BadRequest("Application must be provided.");
             }
 
-            if (application.Name.ToLower() == "application")
+            if (app.Name.ToLower() == "application")
             {
                 return Content(HttpStatusCode.Forbidden,"The application name 'application' is reserved and cannot be used.");
             }
@@ -229,7 +230,7 @@ namespace somiod.Controllers
 
             try
             {
-                createdApp = ApplicationHelper.AddApplicationToDatabase(application);
+                createdApp = ApplicationHelper.AddApplicationToDatabase(app);
             }
             catch (Exception ex)
             {
@@ -269,9 +270,8 @@ namespace somiod.Controllers
         // PUT: api/somiod/{application}
         [Route("{application}")]
         [HttpPut]
-        public IHttpActionResult PutApplication(string application, [FromBody] Application newApp)
+        public IHttpActionResult PutApplication(string application, [FromBody] XElement newApp)
         {
-
             if (string.IsNullOrWhiteSpace(application))
             {
                 return BadRequest("Application name must be provided.");
@@ -282,25 +282,26 @@ namespace somiod.Controllers
                 return NotFound();
             }
 
-            string xmlApp = XMLHelper.SerializeXml(newApp);
             string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Application.xsd");
 
-            if (!XMLHelper.ValidateXml(xmlApp, xsdPath, out string validationError))
+            if (!XMLHelper.ValidateXml(newApp.ToString(), xsdPath, out string validationError))
             {
                 return BadRequest($"XML validation failed: {validationError}");
             }
 
-            if (newApp == null)
+            Application app = XMLHelper.DeserializeXml<Application>(newApp.ToString());
+
+            if (app == null)
             {
                 return BadRequest("Application must be provided.");
             }
 
-            if (string.IsNullOrWhiteSpace(newApp.Name))
+            if (string.IsNullOrWhiteSpace(app.Name))
             {
                 return BadRequest("New Application name must be provided.");
             }
 
-            if (newApp.Name.ToLower() == "application")
+            if (app.Name.ToLower() == "application")
             {
                 return Content(HttpStatusCode.Forbidden, "The application name 'application' is reserved and cannot be used.");
             }
@@ -309,7 +310,7 @@ namespace somiod.Controllers
 
             try
             {
-                updatedApp = ApplicationHelper.UpdateApplicationInDatabase(application, newApp);
+                updatedApp = ApplicationHelper.UpdateApplicationInDatabase(application, app);
             }
             catch (Exception ex)
             {
@@ -443,7 +444,7 @@ namespace somiod.Controllers
         // POST: api/somiod/{application}
         [Route("{application}")]
         [HttpPost]
-        public IHttpActionResult PostContainer(string application, [FromBody] Container container)
+        public IHttpActionResult PostContainer(string application, [FromBody] XElement container)
         {
             if (string.IsNullOrWhiteSpace(application))
             {
@@ -455,25 +456,26 @@ namespace somiod.Controllers
                 return NotFound();
             }
 
-            string xmlCont = XMLHelper.SerializeXml(container);
             string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Container.xsd");
 
-            if (!XMLHelper.ValidateXml(xmlCont, xsdPath, out string validationError))
+            if (!XMLHelper.ValidateXml(container.ToString(), xsdPath, out string validationError))
             {
                 return BadRequest($"XML validation failed: {validationError}");
             }
 
-            if (container == null)
+            Container cont = XMLHelper.DeserializeXml<Container>(container.ToString());
+
+            if (cont == null)
             {
                 return BadRequest("Container must be provided.");
             }
 
-            if (string.IsNullOrWhiteSpace(container.Name))
+            if (string.IsNullOrWhiteSpace(cont.Name))
             {
                 return BadRequest("New Container name must be provided.");
             }
 
-            if (container.Name.ToLower() == "container")
+            if (cont.Name.ToLower() == "container")
             {
                 return Content(HttpStatusCode.Forbidden, "The container name 'container' is reserved and cannot be used.");
             }
@@ -482,7 +484,7 @@ namespace somiod.Controllers
 
             try
             {
-                createdCont = ContainerHelper.AddContainerToDatabase(application, container);
+                createdCont = ContainerHelper.AddContainerToDatabase(application, cont);
             }
             catch (Exception ex)
             {
@@ -528,7 +530,7 @@ namespace somiod.Controllers
         // PUT: api/somiod/{application}/{container}
         [Route("{application}/{container}")]
         [HttpPut]
-        public IHttpActionResult PutContainer(string application, string container, [FromBody] Container newContainer)
+        public IHttpActionResult PutContainer(string application, string container, [FromBody] XElement newContainer)
         {
             if (string.IsNullOrWhiteSpace(application))
             {
@@ -546,25 +548,26 @@ namespace somiod.Controllers
                 return NotFound();
             }
 
-            string xmlCont = XMLHelper.SerializeXml(newContainer);
             string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Container.xsd");
 
-            if (!XMLHelper.ValidateXml(xmlCont, xsdPath, out string validationError))
+            if (!XMLHelper.ValidateXml(newContainer.ToString(), xsdPath, out string validationError))
             {
                 return BadRequest($"XML validation failed: {validationError}");
             }
 
-            if (container == null)
+            Container cont = XMLHelper.DeserializeXml<Container>(newContainer.ToString());
+
+            if (cont == null)
             {
                 return BadRequest("Container must be provided.");
             }
 
-            if (string.IsNullOrWhiteSpace(newContainer.Name))
+            if (string.IsNullOrWhiteSpace(cont.Name))
             {
                 return BadRequest("New Container name must be provided.");
             }
 
-            if (newContainer.Name.ToLower() == "container")
+            if (cont.Name.ToLower() == "container")
             {
                 return Content(HttpStatusCode.Forbidden, "The container name 'container' is reserved and cannot be used.");
             }
@@ -573,7 +576,7 @@ namespace somiod.Controllers
 
             try
             {
-                updatedCont = ContainerHelper.UpdateContainerInDatabase(application, container, newContainer);
+                updatedCont = ContainerHelper.UpdateContainerInDatabase(application, container, cont);
             }
             catch (Exception ex)
             {
