@@ -590,6 +590,7 @@
             this.textBoxRequestBody.Location = new System.Drawing.Point(11, 377);
             this.textBoxRequestBody.Multiline = true;
             this.textBoxRequestBody.Name = "textBoxRequestBody";
+            this.textBoxRequestBody.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxRequestBody.Size = new System.Drawing.Size(625, 360);
             this.textBoxRequestBody.TabIndex = 46;
             // 
@@ -598,6 +599,7 @@
             this.textBoxResponseBody.Location = new System.Drawing.Point(656, 377);
             this.textBoxResponseBody.Multiline = true;
             this.textBoxResponseBody.Name = "textBoxResponseBody";
+            this.textBoxResponseBody.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxResponseBody.Size = new System.Drawing.Size(625, 360);
             this.textBoxResponseBody.TabIndex = 47;
             // 
