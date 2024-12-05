@@ -27,6 +27,8 @@ namespace App_Test_Endpoints
             textBoxHttpCodeText.Text = "";
             richTextBoxRequestBody.Text = "";
             richTextBoxResponseBody.Text = "";
+            textBoxHttpCode.BackColor = SystemColors.Control;
+            textBoxHttpCodeText.BackColor = SystemColors.Control;
         }
 
         private string getHttpResponseCodeText(int statusCode)
@@ -34,26 +36,36 @@ namespace App_Test_Endpoints
             switch (statusCode)
             {
                 case 200:
+                    textBoxHttpCode.BackColor = Color.PaleGreen;
+                    textBoxHttpCodeText.BackColor = Color.PaleGreen;
                     return "OK";
                 case 201:
+                    textBoxHttpCode.BackColor = Color.PaleGreen;
+                    textBoxHttpCodeText.BackColor = Color.PaleGreen;
                     return "Created";
                 case 204:
+                    textBoxHttpCode.BackColor = Color.PaleGreen;
+                    textBoxHttpCodeText.BackColor = Color.PaleGreen;
                     return "No Content";
                 case 400:
+                    textBoxHttpCode.BackColor = Color.LightSalmon;
+                    textBoxHttpCodeText.BackColor = Color.LightSalmon;
                     return "Bad Request";
-                case 401:
-                    return "Unauthorized";
                 case 403:
+                    textBoxHttpCode.BackColor = Color.LightSalmon;
+                    textBoxHttpCodeText.BackColor = Color.LightSalmon;
                     return "Forbidden";
                 case 404:
+                    textBoxHttpCode.BackColor = Color.LightSalmon;
+                    textBoxHttpCodeText.BackColor = Color.LightSalmon;
                     return "Not Found";
-                case 405:
-                    return "Method Not Allowed";
-                case 409:
-                    return "Conflict";
                 case 500:
+                    textBoxHttpCode.BackColor = Color.LightCoral;
+                    textBoxHttpCodeText.BackColor = Color.LightCoral;
                     return "Internal Server Error";
                 default:
+                    textBoxHttpCode.BackColor = SystemColors.Control;
+                    textBoxHttpCodeText.BackColor = SystemColors.Control;
                     return "Unknown";
             }
         }
@@ -91,6 +103,11 @@ namespace App_Test_Endpoints
                     if (textBoxApplication.Text == "")
                     {
                         MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    if (textBoxApplication.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Application name cannot contain a forward slash.");
                         return;
                     }
                     string application = textBoxApplication.Text;
@@ -310,6 +327,11 @@ namespace App_Test_Endpoints
                         MessageBox.Show("Please enter an application name.");
                         return;
                     }
+                    if (textBoxApplication.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Application name cannot contain a forward slash.");
+                        return;
+                    }
                     string application = textBoxApplication.Text;
                     string fullURI = baseURI + application + "/";
                     string header = "somiod-locate";
@@ -343,6 +365,11 @@ namespace App_Test_Endpoints
                         MessageBox.Show("Please enter an application name.");
                         return;
                     }
+                    if (textBoxApplication.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Application name cannot contain a forward slash.");
+                        return;
+                    }
                     string application = textBoxApplication.Text;
                     string fullURI = baseURI + application + "/";
                     string header = "somiod-locate";
@@ -374,6 +401,11 @@ namespace App_Test_Endpoints
                     if (textBoxApplication.Text == "")
                     {
                         MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    if (textBoxApplication.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Application name cannot contain a forward slash.");
                         return;
                     }
                     string application = textBoxApplication.Text;

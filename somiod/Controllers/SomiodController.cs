@@ -122,6 +122,11 @@ namespace somiod.Controllers
                 return BadRequest("Application name must be provided.");
             }
 
+            if (application.ToLower() == "application")
+            {
+                return Content(HttpStatusCode.Forbidden, "The application name 'application' is reserved and cannot be used.");
+            }
+
             if (!ApplicationHelper.ApplicationExists(application))
             {
                 return NotFound();
@@ -222,7 +227,7 @@ namespace somiod.Controllers
 
             if (application.Name.ToLower() == "application")
             {
-                return BadRequest("The application name 'application' is reserved and cannot be used.");
+                return Content(HttpStatusCode.Forbidden,"The application name 'application' is reserved and cannot be used.");
             }
 
             Application createdApp;
@@ -302,7 +307,7 @@ namespace somiod.Controllers
 
             if (newApp.Name.ToLower() == "application")
             {
-                return BadRequest("The application name 'application' is reserved and cannot be used.");
+                return Content(HttpStatusCode.Forbidden, "The application name 'application' is reserved and cannot be used.");
             }
 
             Application updatedApp;
