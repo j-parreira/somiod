@@ -222,7 +222,7 @@ namespace somiod.Controllers
 
             if (application.Name.ToLower() == "application")
             {
-                return BadRequest("The application name 'application' is reserved and cannot be used.");
+                return Content(HttpStatusCode.Forbidden,"The application name 'application' is reserved and cannot be used.");
             }
 
             Application createdApp;
@@ -302,7 +302,7 @@ namespace somiod.Controllers
 
             if (newApp.Name.ToLower() == "application")
             {
-                return BadRequest("The application name 'application' is reserved and cannot be used.");
+                return Content(HttpStatusCode.Forbidden, "The application name 'application' is reserved and cannot be used.");
             }
 
             Application updatedApp;
@@ -475,7 +475,7 @@ namespace somiod.Controllers
 
             if (container.Name.ToLower() == "container")
             {
-                return BadRequest("The container name 'container' is reserved and cannot be used.");
+                return Content(HttpStatusCode.Forbidden, "The container name 'container' is reserved and cannot be used.");
             }
 
             Container createdCont;
@@ -566,7 +566,7 @@ namespace somiod.Controllers
 
             if (newContainer.Name.ToLower() == "container")
             {
-                return BadRequest("The container name 'container' is reserved and cannot be used.");
+                return Content(HttpStatusCode.Forbidden, "The container name 'container' is reserved and cannot be used.");
             }
 
             Container updatedCont;
@@ -807,7 +807,7 @@ namespace somiod.Controllers
 
                             if (record.Name.ToLower() == "record")
                             {
-                                return BadRequest("The record name 'record' is reserved and cannot be used.");
+                                return Content(HttpStatusCode.Forbidden, "The record name 'record' is reserved and cannot be used.");
                             }
 
                             Record createdRecord;
@@ -842,7 +842,7 @@ namespace somiod.Controllers
 
                             if (notification.Name.ToLower() == "notification")
                             {
-                                return BadRequest("The notification name 'notification' is reserved and cannot be used.");
+                                return Content(HttpStatusCode.Forbidden, "The notification name 'notification' is reserved and cannot be used.");
                             }
 
                             Notification createdNotification;

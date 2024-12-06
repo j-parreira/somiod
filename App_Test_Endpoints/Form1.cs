@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace App_Test_Endpoints
 {
@@ -23,14 +24,10 @@ namespace App_Test_Endpoints
         {
             textBoxURI.Text = "";
             textBoxHeader.Text = "";
-            textBoxApplication.Text = "";
-            textBoxContainer.Text = "";
-            textBoxNotification.Text = "";
-            textBoxRecord.Text = "";
             textBoxHttpCode.Text = "";
             textBoxHttpCodeText.Text = "";
-            richTextBoxRequestBody.Text = "";
-            richTextBoxResponseBody.Text = "";
+            textBoxHttpCode.BackColor = SystemColors.Control;
+            textBoxHttpCodeText.BackColor = SystemColors.Control;
         }
 
         private string getHttpResponseCodeText(int statusCode)
@@ -38,26 +35,36 @@ namespace App_Test_Endpoints
             switch (statusCode)
             {
                 case 200:
+                    textBoxHttpCode.BackColor = Color.PaleGreen;
+                    textBoxHttpCodeText.BackColor = Color.PaleGreen;
                     return "OK";
                 case 201:
+                    textBoxHttpCode.BackColor = Color.PaleGreen;
+                    textBoxHttpCodeText.BackColor = Color.PaleGreen;
                     return "Created";
                 case 204:
+                    textBoxHttpCode.BackColor = Color.PaleGreen;
+                    textBoxHttpCodeText.BackColor = Color.PaleGreen;
                     return "No Content";
                 case 400:
+                    textBoxHttpCode.BackColor = Color.LightSalmon;
+                    textBoxHttpCodeText.BackColor = Color.LightSalmon;
                     return "Bad Request";
-                case 401:
-                    return "Unauthorized";
                 case 403:
+                    textBoxHttpCode.BackColor = Color.LightSalmon;
+                    textBoxHttpCodeText.BackColor = Color.LightSalmon;
                     return "Forbidden";
                 case 404:
+                    textBoxHttpCode.BackColor = Color.LightSalmon;
+                    textBoxHttpCodeText.BackColor = Color.LightSalmon;
                     return "Not Found";
-                case 405:
-                    return "Method Not Allowed";
-                case 409:
-                    return "Conflict";
                 case 500:
+                    textBoxHttpCode.BackColor = Color.LightCoral;
+                    textBoxHttpCodeText.BackColor = Color.LightCoral;
                     return "Internal Server Error";
                 default:
+                    textBoxHttpCode.BackColor = SystemColors.Control;
+                    textBoxHttpCodeText.BackColor = SystemColors.Control;
                     return "Unknown";
             }
         }
@@ -69,13 +76,14 @@ namespace App_Test_Endpoints
                 try
                 {
                     resetFields();
-                    HttpResponseMessage response = client.GetAsync(baseURI).Result;
+                    string fullURI = baseURI;
+                    HttpResponseMessage response = client.GetAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = baseURI;
+                    textBoxURI.Text = fullURI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
-                    richTextBoxResponseBody.Text = responseBody;
+                    textBoxResponseBody.Text = responseBody;
                 }
                 catch (Exception ex)
                 {
@@ -86,87 +94,753 @@ namespace App_Test_Endpoints
 
         private void buttonGetOneApp_Click(object sender, EventArgs e)
         {
-            
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    if (textBoxApplication.Text == "")
+                    {
+                        MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    if (textBoxApplication.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Application name cannot contain a forward slash.");
+                        return;
+                    }
+                    string application = textBoxApplication.Text;
+                    string fullURI = baseURI + application + "/";
+                    HttpResponseMessage response = client.GetAsync(fullURI).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    textBoxResponseBody.Text = responseBody;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonGetAllContainersInOneApp_Click(object sender, EventArgs e)
         {
-
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    if (textBoxApplication.Text == "")
+                    {
+                        MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    if (textBoxApplication.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Application name cannot contain a forward slash.");
+                        return;
+                    }
+                    string application = textBoxApplication.Text;
+                    string fullURI = baseURI + application + "/" + "container";
+                    HttpResponseMessage response = client.GetAsync(fullURI).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    textBoxResponseBody.Text = responseBody;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonGetOneContainerInOneApp_Click(object sender, EventArgs e)
         {
-
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    if (textBoxApplication.Text == "")
+                    {
+                        MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    if (textBoxApplication.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Application name cannot contain a forward slash.");
+                        return;
+                    }
+                    if (textBoxContainer.Text == "")
+                    {
+                        MessageBox.Show("Please enter a container name.");
+                        return;
+                    }
+                    if (textBoxContainer.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Container name cannot contain a forward slash.");
+                        return;
+                    }
+                    string application = textBoxApplication.Text;
+                    string container = textBoxContainer.Text;
+                    string fullURI = baseURI + application + "/" + container;
+                    HttpResponseMessage response = client.GetAsync(fullURI).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    textBoxResponseBody.Text = responseBody;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonGetAllNotifsInOneContainer_Click(object sender, EventArgs e)
         {
-
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    if (textBoxApplication.Text == "")
+                    {
+                        MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    if (textBoxApplication.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Application name cannot contain a forward slash.");
+                        return;
+                    }
+                    if (textBoxContainer.Text == "")
+                    {
+                        MessageBox.Show("Please enter a container name.");
+                        return;
+                    }
+                    if (textBoxContainer.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Container name cannot contain a forward slash.");
+                        return;
+                    }
+                    string application = textBoxApplication.Text;
+                    string container = textBoxContainer.Text;
+                    string fullURI = baseURI + application + "/" + container + "/notif/";
+                    HttpResponseMessage response = client.GetAsync(fullURI).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    textBoxResponseBody.Text = responseBody;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonOneNotifInOneContainer_Click(object sender, EventArgs e)
         {
-
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    if (textBoxApplication.Text == "")
+                    {
+                        MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    if (textBoxApplication.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Application name cannot contain a forward slash.");
+                        return;
+                    }
+                    if (textBoxContainer.Text == "")
+                    {
+                        MessageBox.Show("Please enter a container name.");
+                        return;
+                    }
+                    if (textBoxContainer.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Container name cannot contain a forward slash.");
+                        return;
+                    }
+                    if (textBoxNotification.Text == "")
+                    {
+                        MessageBox.Show("Please enter a notification name.");
+                        return;
+                    }
+                    if (textBoxNotification.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Notification name cannot contain a forward slash.");
+                        return;
+                    }
+                    string application = textBoxApplication.Text;
+                    string container = textBoxContainer.Text;
+                    string notification = textBoxNotification.Text;
+                    string fullURI = baseURI + application + "/" + container + "/notif/" + notification;
+                    HttpResponseMessage response = client.GetAsync(fullURI).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    textBoxResponseBody.Text = responseBody;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonGetAllRecordsInOneContainer_Click(object sender, EventArgs e)
         {
-
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    if (textBoxApplication.Text == "")
+                    {
+                        MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    if (textBoxApplication.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Application name cannot contain a forward slash.");
+                        return;
+                    }
+                    if (textBoxContainer.Text == "")
+                    {
+                        MessageBox.Show("Please enter a container name.");
+                        return;
+                    }
+                    if (textBoxContainer.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Container name cannot contain a forward slash.");
+                        return;
+                    }
+                    string application = textBoxApplication.Text;
+                    string container = textBoxContainer.Text;
+                    string fullURI = baseURI + application + "/" + container + "/record/";
+                    HttpResponseMessage response = client.GetAsync(fullURI).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    textBoxResponseBody.Text = responseBody;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonGetOneRecordInOneContainer_Click(object sender, EventArgs e)
         {
-
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    if (textBoxApplication.Text == "")
+                    {
+                        MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    if (textBoxApplication.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Application name cannot contain a forward slash.");
+                        return;
+                    }
+                    if (textBoxContainer.Text == "")
+                    {
+                        MessageBox.Show("Please enter a container name.");
+                        return;
+                    }
+                    if (textBoxContainer.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Container name cannot contain a forward slash.");
+                        return;
+                    }
+                    if (textBoxRecord.Text == "")
+                    {
+                        MessageBox.Show("Please enter a record name.");
+                        return;
+                    }
+                    if (textBoxRecord.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Record name cannot contain a forward slash.");
+                        return;
+                    }
+                    string application = textBoxApplication.Text;
+                    string container = textBoxContainer.Text;
+                    string record = textBoxRecord.Text;
+                    string fullURI = baseURI + application + "/" + container + "/record/" + record;
+                    HttpResponseMessage response = client.GetAsync(fullURI).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    textBoxResponseBody.Text = responseBody;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonPostOneApp_Click(object sender, EventArgs e)
         {
-
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    string fullURI = baseURI;
+                    string requestBody = textBoxRequestBody.Text.Trim();
+                    HttpContent content = new StringContent(requestBody, Encoding.UTF8, "application/xml");
+                    HttpResponseMessage response = client.PostAsync(fullURI, content).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    textBoxResponseBody.Text = responseBody;
+                }
+                catch (XmlException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
+
 
         private void buttonPostOneContainerInOneApp_Click(object sender, EventArgs e)
         {
-
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    if (textBoxApplication.Text == "")
+                    {
+                        MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    if (textBoxApplication.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Application name cannot contain a forward slash.");
+                        return;
+                    }
+                    string application = textBoxApplication.Text;
+                    string fullURI = baseURI + "/" + application;
+                    string requestBody = textBoxRequestBody.Text.Trim();
+                    HttpContent content = new StringContent(requestBody, Encoding.UTF8, "application/xml");
+                    HttpResponseMessage response = client.PostAsync(fullURI, content).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    textBoxResponseBody.Text = responseBody;
+                }
+                catch (XmlException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonPostOneNotifInOneContainer_Click(object sender, EventArgs e)
         {
-
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    if (textBoxApplication.Text == "")
+                    {
+                        MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    if (textBoxApplication.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Application name cannot contain a forward slash.");
+                        return;
+                    }
+                    if (textBoxContainer.Text == "")
+                    {
+                        MessageBox.Show("Please enter a container name.");
+                        return;
+                    }
+                    if (textBoxContainer.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Container name cannot contain a forward slash.");
+                        return;
+                    }
+                    string application = textBoxApplication.Text;
+                    string container = textBoxContainer.Text;
+                    string fullURI = baseURI + "/" + application + "/" + container;
+                    string header = "res_type";
+                    string headerValue = "notification";
+                    client.DefaultRequestHeaders.Add(header, headerValue);
+                    string requestBody = textBoxRequestBody.Text.Trim();
+                    HttpContent content = new StringContent(requestBody, Encoding.UTF8, "application/xml");
+                    HttpResponseMessage response = client.PostAsync(fullURI, content).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    textBoxResponseBody.Text = responseBody;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonPostOneRecordInOneContainer_Click(object sender, EventArgs e)
         {
-
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    if (textBoxApplication.Text == "")
+                    {
+                        MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    if (textBoxApplication.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Application name cannot contain a forward slash.");
+                        return;
+                    }
+                    if (textBoxContainer.Text == "")
+                    {
+                        MessageBox.Show("Please enter a container name.");
+                        return;
+                    }
+                    if (textBoxContainer.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Container name cannot contain a forward slash.");
+                        return;
+                    }
+                    string application = textBoxApplication.Text;
+                    string container = textBoxContainer.Text;
+                    string fullURI = baseURI + "/" + application + "/" + container;
+                    string header = "res_type";
+                    string headerValue = "record";
+                    client.DefaultRequestHeaders.Add(header, headerValue);
+                    string requestBody = textBoxRequestBody.Text.Trim();
+                    HttpContent content = new StringContent(requestBody, Encoding.UTF8, "application/xml");
+                    HttpResponseMessage response = client.PostAsync(fullURI, content).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    textBoxResponseBody.Text = responseBody;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonDeleteOneApp_Click(object sender, EventArgs e)
         {
-
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    if (textBoxApplication.Text == "")
+                    {
+                        MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    if (textBoxApplication.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Application name cannot contain a forward slash.");
+                        return;
+                    }
+                    string application = textBoxApplication.Text;
+                    string fullURI = baseURI + "/" + application;
+                    HttpResponseMessage response = client.DeleteAsync(fullURI).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    textBoxResponseBody.Text = responseBody;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonDeleteOneContainerInOneApp_Click(object sender, EventArgs e)
         {
-
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    if (textBoxApplication.Text == "")
+                    {
+                        MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    if (textBoxApplication.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Application name cannot contain a forward slash.");
+                        return;
+                    }
+                    if (textBoxContainer.Text == "")
+                    {
+                        MessageBox.Show("Please enter a container name.");
+                        return;
+                    }
+                    if (textBoxContainer.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Container name cannot contain a forward slash.");
+                        return;
+                    }
+                    string application = textBoxApplication.Text;
+                    string container = textBoxContainer.Text;
+                    string fullURI = baseURI + "/" + application + "/" + container;
+                    HttpResponseMessage response = client.DeleteAsync(fullURI).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    textBoxResponseBody.Text = responseBody;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonDeleteOneNotifInOneContainer_Click(object sender, EventArgs e)
         {
-
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    if (textBoxApplication.Text == "")
+                    {
+                        MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    if (textBoxApplication.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Application name cannot contain a forward slash.");
+                        return;
+                    }
+                    if (textBoxContainer.Text == "")
+                    {
+                        MessageBox.Show("Please enter a container name.");
+                        return;
+                    }
+                    if (textBoxContainer.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Container name cannot contain a forward slash.");
+                        return;
+                    }
+                    if (textBoxNotification.Text == "")
+                    {
+                        MessageBox.Show("Please enter a notification name.");
+                        return;
+                    }
+                    if (textBoxNotification.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Notification name cannot contain a forward slash.");
+                        return;
+                    }
+                    string application = textBoxApplication.Text;
+                    string container = textBoxContainer.Text;
+                    string notification = textBoxNotification.Text;
+                    string fullURI = baseURI + "/" + application + "/" + container + "/notif/" + notification;
+                    HttpResponseMessage response = client.DeleteAsync(fullURI).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    textBoxResponseBody.Text = responseBody;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonDeleteOneRecordInOneContainer_Click(object sender, EventArgs e)
         {
-
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    if (textBoxApplication.Text == "")
+                    {
+                        MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    if (textBoxApplication.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Application name cannot contain a forward slash.");
+                        return;
+                    }
+                    if (textBoxContainer.Text == "")
+                    {
+                        MessageBox.Show("Please enter a container name.");
+                        return;
+                    }
+                    if (textBoxContainer.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Container name cannot contain a forward slash.");
+                        return;
+                    }
+                    if (textBoxRecord.Text == "")
+                    {
+                        MessageBox.Show("Please enter a record name.");
+                        return;
+                    }
+                    if (textBoxRecord.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Record name cannot contain a forward slash.");
+                        return;
+                    }
+                    string application = textBoxApplication.Text;
+                    string container = textBoxContainer.Text;
+                    string record = textBoxRecord.Text;
+                    string fullURI = baseURI + "/" + application + "/" + container + "/record/" + record;
+                    HttpResponseMessage response = client.DeleteAsync(fullURI).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    textBoxResponseBody.Text = responseBody;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonPutOneApp_Click(object sender, EventArgs e)
         {
-
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    if (textBoxApplication.Text == "")
+                    {
+                        MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    if (textBoxApplication.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Application name cannot contain a forward slash.");
+                        return;
+                    }
+                    string application = textBoxApplication.Text;
+                    string fullURI = baseURI + "/" + application;
+                    string requestBody = textBoxRequestBody.Text.Trim();
+                    HttpContent content = new StringContent(requestBody, Encoding.UTF8, "application/xml");
+                    HttpResponseMessage response = client.PutAsync(fullURI, content).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    textBoxResponseBody.Text = responseBody;
+                }
+                catch (XmlException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonPutOneContainerInOneApp_Click(object sender, EventArgs e)
         {
-
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    if (textBoxApplication.Text == "")
+                    {
+                        MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    if (textBoxApplication.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Application name cannot contain a forward slash.");
+                        return;
+                    }
+                    if (textBoxContainer.Text == "")
+                    {
+                        MessageBox.Show("Please enter a container name.");
+                        return;
+                    }
+                    if (textBoxContainer.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Container name cannot contain a forward slash.");
+                        return;
+                    }
+                    string application = textBoxApplication.Text;
+                    string container = textBoxContainer.Text;
+                    string fullURI = baseURI + "/" + application + "/" + container;
+                    string requestBody = textBoxRequestBody.Text.Trim();
+                    HttpContent content = new StringContent(requestBody, Encoding.UTF8, "application/xml");
+                    HttpResponseMessage response = client.PutAsync(fullURI, content).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    textBoxResponseBody.Text = responseBody;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonLocateAllApps_Click(object sender, EventArgs e)
@@ -176,17 +850,18 @@ namespace App_Test_Endpoints
                 try
                 {
                     resetFields();
+                    string fullURI = baseURI;
                     string header = "somiod-locate";
                     string headerValue = "application";
                     client.DefaultRequestHeaders.Add(header, headerValue);
-                    HttpResponseMessage response = client.GetAsync(baseURI).Result;
+                    HttpResponseMessage response = client.GetAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = baseURI;
+                    textBoxURI.Text = fullURI;
                     textBoxHeader.Text = header + ": " + headerValue;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
-                    richTextBoxResponseBody.Text = responseBody;
+                    textBoxResponseBody.Text = responseBody;
                 }
                 catch (Exception ex)
                 {
@@ -202,17 +877,18 @@ namespace App_Test_Endpoints
                 try
                 {
                     resetFields();
+                    string fullURI = baseURI;
                     string header = "somiod-locate";
                     string headerValue = "container";
                     client.DefaultRequestHeaders.Add(header, headerValue);
-                    HttpResponseMessage response = client.GetAsync(baseURI).Result;
+                    HttpResponseMessage response = client.GetAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = baseURI;
+                    textBoxURI.Text = fullURI;
                     textBoxHeader.Text = header + ": " + headerValue;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
-                    richTextBoxResponseBody.Text = responseBody;
+                    textBoxResponseBody.Text = responseBody;
                 }
                 catch (Exception ex)
                 {
@@ -228,17 +904,18 @@ namespace App_Test_Endpoints
                 try
                 {
                     resetFields();
+                    string fullURI = baseURI;
                     string header = "somiod-locate";
                     string headerValue = "notification";
                     client.DefaultRequestHeaders.Add(header, headerValue);
-                    HttpResponseMessage response = client.GetAsync(baseURI).Result;
+                    HttpResponseMessage response = client.GetAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = baseURI;
+                    textBoxURI.Text = fullURI;
                     textBoxHeader.Text = header + ": " + headerValue;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
-                    richTextBoxResponseBody.Text = responseBody;
+                    textBoxResponseBody.Text = responseBody;
                 }
                 catch (Exception ex)
                 {
@@ -254,17 +931,18 @@ namespace App_Test_Endpoints
                 try
                 {
                     resetFields();
+                    string fullURI = baseURI;
                     string header = "somiod-locate";
                     string headerValue = "record";
                     client.DefaultRequestHeaders.Add(header, headerValue);
-                    HttpResponseMessage response = client.GetAsync(baseURI).Result;
+                    HttpResponseMessage response = client.GetAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = baseURI;
+                    textBoxURI.Text = fullURI;
                     textBoxHeader.Text = header + ": " + headerValue;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
-                    richTextBoxResponseBody.Text = responseBody;
+                    textBoxResponseBody.Text = responseBody;
                 }
                 catch (Exception ex)
                 {
@@ -275,27 +953,212 @@ namespace App_Test_Endpoints
 
         private void buttonLocateAllContainersInOneApp_Click(object sender, EventArgs e)
         {
-
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    if (textBoxApplication.Text == "")
+                    {
+                        MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    if (textBoxApplication.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Application name cannot contain a forward slash.");
+                        return;
+                    }
+                    string application = textBoxApplication.Text;
+                    string fullURI = baseURI + application + "/";
+                    string header = "somiod-locate";
+                    string headerValue = "container";
+                    client.DefaultRequestHeaders.Add(header, headerValue);
+                    HttpResponseMessage response = client.GetAsync(fullURI).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHeader.Text = header + ": " + headerValue;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    textBoxResponseBody.Text = responseBody;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonLocateAllNotifsInOneApp_Click(object sender, EventArgs e)
         {
-
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    if (textBoxApplication.Text == "")
+                    {
+                        MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    if (textBoxApplication.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Application name cannot contain a forward slash.");
+                        return;
+                    }
+                    string application = textBoxApplication.Text;
+                    string fullURI = baseURI + application + "/";
+                    string header = "somiod-locate";
+                    string headerValue = "notification";
+                    client.DefaultRequestHeaders.Add(header, headerValue);
+                    HttpResponseMessage response = client.GetAsync(fullURI).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHeader.Text = header + ": " + headerValue;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    textBoxResponseBody.Text = responseBody;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonLocateAllRecordsInOneApp_Click(object sender, EventArgs e)
         {
-
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    if (textBoxApplication.Text == "")
+                    {
+                        MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    if (textBoxApplication.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Application name cannot contain a forward slash.");
+                        return;
+                    }
+                    string application = textBoxApplication.Text;
+                    string fullURI = baseURI + application + "/";
+                    string header = "somiod-locate";
+                    string headerValue = "record";
+                    client.DefaultRequestHeaders.Add(header, headerValue);
+                    HttpResponseMessage response = client.GetAsync(fullURI).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHeader.Text = header + ": " + headerValue;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    textBoxResponseBody.Text = responseBody;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonLocateAllNotifsInOneContainer_Click(object sender, EventArgs e)
         {
-
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    if (textBoxApplication.Text == "")
+                    {
+                        MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    if (textBoxApplication.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Application name cannot contain a forward slash.");
+                        return;
+                    }
+                    if (textBoxContainer.Text == "")
+                    {
+                        MessageBox.Show("Please enter a container name.");
+                        return;
+                    }
+                    if (textBoxContainer.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Container name cannot contain a forward slash.");
+                        return;
+                    }
+                    string application = textBoxApplication.Text;
+                    string container = textBoxContainer.Text;
+                    string fullURI = baseURI + application + "/" + container;
+                    string header = "somiod-locate";
+                    string headerValue = "notification";
+                    client.DefaultRequestHeaders.Add(header, headerValue);
+                    HttpResponseMessage response = client.GetAsync(fullURI).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    textBoxResponseBody.Text = responseBody;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonLocateAllRecordsInOneContainer_Click(object sender, EventArgs e)
         {
-
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    resetFields();
+                    if (textBoxApplication.Text == "")
+                    {
+                        MessageBox.Show("Please enter an application name.");
+                        return;
+                    }
+                    if (textBoxApplication.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Application name cannot contain a forward slash.");
+                        return;
+                    }
+                    if (textBoxContainer.Text == "")
+                    {
+                        MessageBox.Show("Please enter a container name.");
+                        return;
+                    }
+                    if (textBoxContainer.Text.Contains("/"))
+                    {
+                        MessageBox.Show("Container name cannot contain a forward slash.");
+                        return;
+                    }
+                    string application = textBoxApplication.Text;
+                    string container = textBoxContainer.Text;
+                    string fullURI = baseURI + application + "/" + container;
+                    string header = "somiod-locate";
+                    string headerValue = "record";
+                    client.DefaultRequestHeaders.Add(header, headerValue);
+                    HttpResponseMessage response = client.GetAsync(fullURI).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxURI.Text = fullURI;
+                    textBoxHttpCode.Text = statusCode.ToString();
+                    textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
+                    textBoxResponseBody.Text = responseBody;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
     }
 }

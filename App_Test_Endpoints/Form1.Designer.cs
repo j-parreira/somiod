@@ -44,8 +44,6 @@
             this.textBoxNotification = new System.Windows.Forms.TextBox();
             this.textBoxRecord = new System.Windows.Forms.TextBox();
             this.textBoxHttpCode = new System.Windows.Forms.TextBox();
-            this.richTextBoxRequestBody = new System.Windows.Forms.RichTextBox();
-            this.richTextBoxResponseBody = new System.Windows.Forms.RichTextBox();
             this.buttonLocateAllApps = new System.Windows.Forms.Button();
             this.buttonLocateAllRecordsInOneApp = new System.Windows.Forms.Button();
             this.buttonLocateAllContainers = new System.Windows.Forms.Button();
@@ -74,6 +72,8 @@
             this.buttonPostOneRecordInOneContainer = new System.Windows.Forms.Button();
             this.buttonDeleteOneRecordInOneContainer = new System.Windows.Forms.Button();
             this.textBoxHttpCodeText = new System.Windows.Forms.TextBox();
+            this.textBoxRequestBody = new System.Windows.Forms.TextBox();
+            this.textBoxResponseBody = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // labelURI
@@ -152,9 +152,9 @@
             this.labelRequestBody.Font = new System.Drawing.Font("Microsoft Tai Le", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelRequestBody.Location = new System.Drawing.Point(12, 358);
             this.labelRequestBody.Name = "labelRequestBody";
-            this.labelRequestBody.Size = new System.Drawing.Size(83, 16);
+            this.labelRequestBody.Size = new System.Drawing.Size(121, 16);
             this.labelRequestBody.TabIndex = 7;
-            this.labelRequestBody.Text = "RequestBody";
+            this.labelRequestBody.Text = "RequestBody (XML)";
             // 
             // labelResponseBody
             // 
@@ -162,9 +162,9 @@
             this.labelResponseBody.Font = new System.Drawing.Font("Microsoft Tai Le", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelResponseBody.Location = new System.Drawing.Point(653, 358);
             this.labelResponseBody.Name = "labelResponseBody";
-            this.labelResponseBody.Size = new System.Drawing.Size(93, 16);
+            this.labelResponseBody.Size = new System.Drawing.Size(131, 16);
             this.labelResponseBody.TabIndex = 8;
-            this.labelResponseBody.Text = "ResponseBody";
+            this.labelResponseBody.Text = "ResponseBody (XML)";
             // 
             // textBoxURI
             // 
@@ -225,24 +225,6 @@
             this.textBoxHttpCode.Size = new System.Drawing.Size(71, 24);
             this.textBoxHttpCode.TabIndex = 15;
             // 
-            // richTextBoxRequestBody
-            // 
-            this.richTextBoxRequestBody.Font = new System.Drawing.Font("Microsoft Tai Le", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.richTextBoxRequestBody.Location = new System.Drawing.Point(11, 377);
-            this.richTextBoxRequestBody.Name = "richTextBoxRequestBody";
-            this.richTextBoxRequestBody.Size = new System.Drawing.Size(625, 360);
-            this.richTextBoxRequestBody.TabIndex = 16;
-            this.richTextBoxRequestBody.Text = "";
-            // 
-            // richTextBoxResponseBody
-            // 
-            this.richTextBoxResponseBody.Font = new System.Drawing.Font("Microsoft Tai Le", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.richTextBoxResponseBody.Location = new System.Drawing.Point(656, 377);
-            this.richTextBoxResponseBody.Name = "richTextBoxResponseBody";
-            this.richTextBoxResponseBody.Size = new System.Drawing.Size(625, 360);
-            this.richTextBoxResponseBody.TabIndex = 17;
-            this.richTextBoxResponseBody.Text = "";
-            // 
             // buttonLocateAllApps
             // 
             this.buttonLocateAllApps.BackColor = System.Drawing.Color.Thistle;
@@ -265,7 +247,7 @@
             this.buttonLocateAllRecordsInOneApp.Name = "buttonLocateAllRecordsInOneApp";
             this.buttonLocateAllRecordsInOneApp.Size = new System.Drawing.Size(150, 50);
             this.buttonLocateAllRecordsInOneApp.TabIndex = 19;
-            this.buttonLocateAllRecordsInOneApp.Text = "LOCATE All Records in One App";
+            this.buttonLocateAllRecordsInOneApp.Text = "LOCATE All Recs in One App";
             this.buttonLocateAllRecordsInOneApp.UseVisualStyleBackColor = false;
             this.buttonLocateAllRecordsInOneApp.Click += new System.EventHandler(this.buttonLocateAllRecordsInOneApp_Click);
             // 
@@ -278,7 +260,7 @@
             this.buttonLocateAllContainers.Name = "buttonLocateAllContainers";
             this.buttonLocateAllContainers.Size = new System.Drawing.Size(150, 50);
             this.buttonLocateAllContainers.TabIndex = 20;
-            this.buttonLocateAllContainers.Text = "LOCATE All Containers";
+            this.buttonLocateAllContainers.Text = "LOCATE All Conts";
             this.buttonLocateAllContainers.UseVisualStyleBackColor = false;
             this.buttonLocateAllContainers.Click += new System.EventHandler(this.buttonLocateAllContainers_Click);
             // 
@@ -304,7 +286,7 @@
             this.buttonLocateAllRecords.Name = "buttonLocateAllRecords";
             this.buttonLocateAllRecords.Size = new System.Drawing.Size(150, 50);
             this.buttonLocateAllRecords.TabIndex = 22;
-            this.buttonLocateAllRecords.Text = "LOCATE All Records";
+            this.buttonLocateAllRecords.Text = "LOCATE All Recs";
             this.buttonLocateAllRecords.UseVisualStyleBackColor = false;
             this.buttonLocateAllRecords.Click += new System.EventHandler(this.buttonLocateAllRecords_Click);
             // 
@@ -317,7 +299,7 @@
             this.buttonLocateAllContainersInOneApp.Name = "buttonLocateAllContainersInOneApp";
             this.buttonLocateAllContainersInOneApp.Size = new System.Drawing.Size(150, 50);
             this.buttonLocateAllContainersInOneApp.TabIndex = 23;
-            this.buttonLocateAllContainersInOneApp.Text = "LOCATE All Containers in One App";
+            this.buttonLocateAllContainersInOneApp.Text = "LOCATE All Conts in One App";
             this.buttonLocateAllContainersInOneApp.UseVisualStyleBackColor = false;
             this.buttonLocateAllContainersInOneApp.Click += new System.EventHandler(this.buttonLocateAllContainersInOneApp_Click);
             // 
@@ -343,7 +325,7 @@
             this.buttonLocateAllRecordsInOneContainer.Name = "buttonLocateAllRecordsInOneContainer";
             this.buttonLocateAllRecordsInOneContainer.Size = new System.Drawing.Size(150, 50);
             this.buttonLocateAllRecordsInOneContainer.TabIndex = 25;
-            this.buttonLocateAllRecordsInOneContainer.Text = "LOCATE All Records in One Container";
+            this.buttonLocateAllRecordsInOneContainer.Text = "LOCATE All Recs in One Cont";
             this.buttonLocateAllRecordsInOneContainer.UseVisualStyleBackColor = false;
             this.buttonLocateAllRecordsInOneContainer.Click += new System.EventHandler(this.buttonLocateAllRecordsInOneContainer_Click);
             // 
@@ -382,7 +364,7 @@
             this.buttonPostOneContainerInOneApp.Name = "buttonPostOneContainerInOneApp";
             this.buttonPostOneContainerInOneApp.Size = new System.Drawing.Size(150, 50);
             this.buttonPostOneContainerInOneApp.TabIndex = 28;
-            this.buttonPostOneContainerInOneApp.Text = "POST One Container in One App\r\n";
+            this.buttonPostOneContainerInOneApp.Text = "POST One Cont in One App\r\n";
             this.buttonPostOneContainerInOneApp.UseVisualStyleBackColor = false;
             this.buttonPostOneContainerInOneApp.Click += new System.EventHandler(this.buttonPostOneContainerInOneApp_Click);
             // 
@@ -395,7 +377,7 @@
             this.buttonGetAllNotifsInOneContainer.Name = "buttonGetAllNotifsInOneContainer";
             this.buttonGetAllNotifsInOneContainer.Size = new System.Drawing.Size(150, 50);
             this.buttonGetAllNotifsInOneContainer.TabIndex = 29;
-            this.buttonGetAllNotifsInOneContainer.Text = "GET All Notifs in One Container";
+            this.buttonGetAllNotifsInOneContainer.Text = "GET All Notifs in One Cont";
             this.buttonGetAllNotifsInOneContainer.UseVisualStyleBackColor = false;
             this.buttonGetAllNotifsInOneContainer.Click += new System.EventHandler(this.buttonGetAllNotifsInOneContainer_Click);
             // 
@@ -408,7 +390,7 @@
             this.buttonGetAllRecordsInOneContainer.Name = "buttonGetAllRecordsInOneContainer";
             this.buttonGetAllRecordsInOneContainer.Size = new System.Drawing.Size(150, 50);
             this.buttonGetAllRecordsInOneContainer.TabIndex = 30;
-            this.buttonGetAllRecordsInOneContainer.Text = "GET All Records in One Container\r\n";
+            this.buttonGetAllRecordsInOneContainer.Text = "GET All Recs in One Cont";
             this.buttonGetAllRecordsInOneContainer.UseVisualStyleBackColor = false;
             this.buttonGetAllRecordsInOneContainer.Click += new System.EventHandler(this.buttonGetAllRecordsInOneContainer_Click);
             // 
@@ -421,7 +403,7 @@
             this.buttonLocateAllNotifsInOneContainer.Name = "buttonLocateAllNotifsInOneContainer";
             this.buttonLocateAllNotifsInOneContainer.Size = new System.Drawing.Size(150, 50);
             this.buttonLocateAllNotifsInOneContainer.TabIndex = 31;
-            this.buttonLocateAllNotifsInOneContainer.Text = "LOCATE All Notifs in One Container";
+            this.buttonLocateAllNotifsInOneContainer.Text = "LOCATE All Notifs in One Cont";
             this.buttonLocateAllNotifsInOneContainer.UseVisualStyleBackColor = false;
             this.buttonLocateAllNotifsInOneContainer.Click += new System.EventHandler(this.buttonLocateAllNotifsInOneContainer_Click);
             // 
@@ -473,7 +455,7 @@
             this.buttonGetAllContainersInOneApp.Name = "buttonGetAllContainersInOneApp";
             this.buttonGetAllContainersInOneApp.Size = new System.Drawing.Size(150, 50);
             this.buttonGetAllContainersInOneApp.TabIndex = 35;
-            this.buttonGetAllContainersInOneApp.Text = "GET All Containers in One App";
+            this.buttonGetAllContainersInOneApp.Text = "GET All Conts in One App";
             this.buttonGetAllContainersInOneApp.UseVisualStyleBackColor = false;
             this.buttonGetAllContainersInOneApp.Click += new System.EventHandler(this.buttonGetAllContainersInOneApp_Click);
             // 
@@ -486,7 +468,7 @@
             this.buttonGetOneContainerInOneApp.Name = "buttonGetOneContainerInOneApp";
             this.buttonGetOneContainerInOneApp.Size = new System.Drawing.Size(150, 50);
             this.buttonGetOneContainerInOneApp.TabIndex = 36;
-            this.buttonGetOneContainerInOneApp.Text = "GET One Container in One App";
+            this.buttonGetOneContainerInOneApp.Text = "GET One Cont in One App";
             this.buttonGetOneContainerInOneApp.UseVisualStyleBackColor = false;
             this.buttonGetOneContainerInOneApp.Click += new System.EventHandler(this.buttonGetOneContainerInOneApp_Click);
             // 
@@ -499,7 +481,7 @@
             this.buttonDeleteOneContainerInOneApp.Name = "buttonDeleteOneContainerInOneApp";
             this.buttonDeleteOneContainerInOneApp.Size = new System.Drawing.Size(150, 50);
             this.buttonDeleteOneContainerInOneApp.TabIndex = 37;
-            this.buttonDeleteOneContainerInOneApp.Text = "DELETE One Container in One App\r\n";
+            this.buttonDeleteOneContainerInOneApp.Text = "DELETE One Cont in One App\r\n";
             this.buttonDeleteOneContainerInOneApp.UseVisualStyleBackColor = false;
             this.buttonDeleteOneContainerInOneApp.Click += new System.EventHandler(this.buttonDeleteOneContainerInOneApp_Click);
             // 
@@ -512,7 +494,7 @@
             this.buttonPutOneContainerInOneApp.Name = "buttonPutOneContainerInOneApp";
             this.buttonPutOneContainerInOneApp.Size = new System.Drawing.Size(150, 50);
             this.buttonPutOneContainerInOneApp.TabIndex = 38;
-            this.buttonPutOneContainerInOneApp.Text = "PUT One Container in One App\r\n";
+            this.buttonPutOneContainerInOneApp.Text = "PUT One Cont in One App\r\n";
             this.buttonPutOneContainerInOneApp.UseVisualStyleBackColor = false;
             this.buttonPutOneContainerInOneApp.Click += new System.EventHandler(this.buttonPutOneContainerInOneApp_Click);
             // 
@@ -525,7 +507,7 @@
             this.buttonOneNotifInOneContainer.Name = "buttonOneNotifInOneContainer";
             this.buttonOneNotifInOneContainer.Size = new System.Drawing.Size(150, 50);
             this.buttonOneNotifInOneContainer.TabIndex = 39;
-            this.buttonOneNotifInOneContainer.Text = "GET One Notif in One Container";
+            this.buttonOneNotifInOneContainer.Text = "GET One Notif in One Cont";
             this.buttonOneNotifInOneContainer.UseVisualStyleBackColor = false;
             this.buttonOneNotifInOneContainer.Click += new System.EventHandler(this.buttonOneNotifInOneContainer_Click);
             // 
@@ -538,7 +520,7 @@
             this.buttonPostOneNotifInOneContainer.Name = "buttonPostOneNotifInOneContainer";
             this.buttonPostOneNotifInOneContainer.Size = new System.Drawing.Size(150, 50);
             this.buttonPostOneNotifInOneContainer.TabIndex = 40;
-            this.buttonPostOneNotifInOneContainer.Text = "POST One Notif in One Container";
+            this.buttonPostOneNotifInOneContainer.Text = "POST One Notif in One Cont";
             this.buttonPostOneNotifInOneContainer.UseVisualStyleBackColor = false;
             this.buttonPostOneNotifInOneContainer.Click += new System.EventHandler(this.buttonPostOneNotifInOneContainer_Click);
             // 
@@ -551,7 +533,7 @@
             this.buttonDeleteOneNotifInOneContainer.Name = "buttonDeleteOneNotifInOneContainer";
             this.buttonDeleteOneNotifInOneContainer.Size = new System.Drawing.Size(150, 50);
             this.buttonDeleteOneNotifInOneContainer.TabIndex = 41;
-            this.buttonDeleteOneNotifInOneContainer.Text = "DELETE One Notif in One Container";
+            this.buttonDeleteOneNotifInOneContainer.Text = "DELETE One Notif in One Cont";
             this.buttonDeleteOneNotifInOneContainer.UseVisualStyleBackColor = false;
             this.buttonDeleteOneNotifInOneContainer.Click += new System.EventHandler(this.buttonDeleteOneNotifInOneContainer_Click);
             // 
@@ -564,7 +546,7 @@
             this.buttonGetOneRecordInOneContainer.Name = "buttonGetOneRecordInOneContainer";
             this.buttonGetOneRecordInOneContainer.Size = new System.Drawing.Size(150, 50);
             this.buttonGetOneRecordInOneContainer.TabIndex = 42;
-            this.buttonGetOneRecordInOneContainer.Text = "GET One Record in One Container";
+            this.buttonGetOneRecordInOneContainer.Text = "GET One Rec in One Cont";
             this.buttonGetOneRecordInOneContainer.UseVisualStyleBackColor = false;
             this.buttonGetOneRecordInOneContainer.Click += new System.EventHandler(this.buttonGetOneRecordInOneContainer_Click);
             // 
@@ -577,7 +559,7 @@
             this.buttonPostOneRecordInOneContainer.Name = "buttonPostOneRecordInOneContainer";
             this.buttonPostOneRecordInOneContainer.Size = new System.Drawing.Size(150, 50);
             this.buttonPostOneRecordInOneContainer.TabIndex = 43;
-            this.buttonPostOneRecordInOneContainer.Text = "POST One Record in One Container";
+            this.buttonPostOneRecordInOneContainer.Text = "POST One Rec in One Cont";
             this.buttonPostOneRecordInOneContainer.UseVisualStyleBackColor = false;
             this.buttonPostOneRecordInOneContainer.Click += new System.EventHandler(this.buttonPostOneRecordInOneContainer_Click);
             // 
@@ -590,7 +572,7 @@
             this.buttonDeleteOneRecordInOneContainer.Name = "buttonDeleteOneRecordInOneContainer";
             this.buttonDeleteOneRecordInOneContainer.Size = new System.Drawing.Size(150, 50);
             this.buttonDeleteOneRecordInOneContainer.TabIndex = 44;
-            this.buttonDeleteOneRecordInOneContainer.Text = "DELETE One Record in One Container";
+            this.buttonDeleteOneRecordInOneContainer.Text = "DELETE One Rec in One Cont";
             this.buttonDeleteOneRecordInOneContainer.UseVisualStyleBackColor = false;
             this.buttonDeleteOneRecordInOneContainer.Click += new System.EventHandler(this.buttonDeleteOneRecordInOneContainer_Click);
             // 
@@ -603,11 +585,31 @@
             this.textBoxHttpCodeText.Size = new System.Drawing.Size(214, 24);
             this.textBoxHttpCodeText.TabIndex = 45;
             // 
+            // textBoxRequestBody
+            // 
+            this.textBoxRequestBody.Location = new System.Drawing.Point(11, 377);
+            this.textBoxRequestBody.Multiline = true;
+            this.textBoxRequestBody.Name = "textBoxRequestBody";
+            this.textBoxRequestBody.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxRequestBody.Size = new System.Drawing.Size(625, 360);
+            this.textBoxRequestBody.TabIndex = 46;
+            // 
+            // textBoxResponseBody
+            // 
+            this.textBoxResponseBody.Location = new System.Drawing.Point(656, 377);
+            this.textBoxResponseBody.Multiline = true;
+            this.textBoxResponseBody.Name = "textBoxResponseBody";
+            this.textBoxResponseBody.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxResponseBody.Size = new System.Drawing.Size(625, 360);
+            this.textBoxResponseBody.TabIndex = 47;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1293, 746);
+            this.Controls.Add(this.textBoxResponseBody);
+            this.Controls.Add(this.textBoxRequestBody);
             this.Controls.Add(this.textBoxHttpCodeText);
             this.Controls.Add(this.buttonDeleteOneRecordInOneContainer);
             this.Controls.Add(this.buttonPostOneRecordInOneContainer);
@@ -636,8 +638,6 @@
             this.Controls.Add(this.buttonLocateAllContainers);
             this.Controls.Add(this.buttonLocateAllRecordsInOneApp);
             this.Controls.Add(this.buttonLocateAllApps);
-            this.Controls.Add(this.richTextBoxResponseBody);
-            this.Controls.Add(this.richTextBoxRequestBody);
             this.Controls.Add(this.textBoxHttpCode);
             this.Controls.Add(this.textBoxRecord);
             this.Controls.Add(this.textBoxNotification);
@@ -679,8 +679,6 @@
         private System.Windows.Forms.TextBox textBoxNotification;
         private System.Windows.Forms.TextBox textBoxRecord;
         private System.Windows.Forms.TextBox textBoxHttpCode;
-        private System.Windows.Forms.RichTextBox richTextBoxRequestBody;
-        private System.Windows.Forms.RichTextBox richTextBoxResponseBody;
         private System.Windows.Forms.Button buttonLocateAllApps;
         private System.Windows.Forms.Button buttonLocateAllRecordsInOneApp;
         private System.Windows.Forms.Button buttonLocateAllContainers;
@@ -709,6 +707,8 @@
         private System.Windows.Forms.Button buttonPostOneRecordInOneContainer;
         private System.Windows.Forms.Button buttonDeleteOneRecordInOneContainer;
         private System.Windows.Forms.TextBox textBoxHttpCodeText;
+        private System.Windows.Forms.TextBox textBoxRequestBody;
+        private System.Windows.Forms.TextBox textBoxResponseBody;
     }
 }
 
