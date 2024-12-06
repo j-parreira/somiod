@@ -507,6 +507,7 @@ namespace App_Test_Endpoints
                     HttpResponseMessage response = client.PostAsync(fullURI, content).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxHeader.Text = header + ": " + headerValue;
                     textBoxURI.Text = fullURI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
@@ -557,6 +558,7 @@ namespace App_Test_Endpoints
                     HttpResponseMessage response = client.PostAsync(fullURI, content).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
+                    textBoxHeader.Text = header + ": " + headerValue;
                     textBoxURI.Text = fullURI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
