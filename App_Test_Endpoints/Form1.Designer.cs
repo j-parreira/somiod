@@ -171,7 +171,6 @@
             this.textBoxURI.Font = new System.Drawing.Font("Microsoft Tai Le", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxURI.Location = new System.Drawing.Point(55, 20);
             this.textBoxURI.Name = "textBoxURI";
-            this.textBoxURI.ReadOnly = true;
             this.textBoxURI.Size = new System.Drawing.Size(683, 24);
             this.textBoxURI.TabIndex = 9;
             // 

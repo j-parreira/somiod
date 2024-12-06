@@ -136,7 +136,41 @@ namespace CellPhoneApp
 
         private void buttonOff_Click(object sender, EventArgs e)
         {
-
+            if (comboBoxApplication.SelectedIndex == 0)
+            {
+                return;
+            }
+            if (comboBoxContainer.SelectedIndex == 0)
+            {
+                return;
+            }
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    Record record = new Record
+                    {
+                        Id = 0,
+                        Name = "notif",
+                        CreationDateTime = DateTime.Now,
+                        Parent = 0,
+                        Content = "OFF"
+                    };
+                    string applicationName = comboBoxApplication.SelectedItem.ToString();
+                    string containerName = comboBoxContainer.SelectedItem.ToString();
+                    string fullURI = baseURI + "/" + applicationName + "/" + containerName;
+                    string header = "res_type";
+                    string headerValue = "record";
+                    client.DefaultRequestHeaders.Add(header, headerValue);
+                    string requestBody = XMLHelper.SerializeXml(record).Trim();
+                    HttpContent httpContent = new StringContent(requestBody, Encoding.UTF8, "application/xml");
+                    HttpResponseMessage response = client.PostAsync(fullURI, httpContent).Result;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
     }
 }
