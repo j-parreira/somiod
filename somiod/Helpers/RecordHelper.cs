@@ -246,7 +246,7 @@ namespace somiod.Helpers
             var notificationsToSend = MqttHelper.FindNotificationsToSend(application, container, "1");
             MqttMessage mqttMessage = new MqttMessage
             {
-                Topic = ContainerHelper.FindContainerInDatabase(application, container).Name,
+                Topic = application + "/" + container,
                 Event = "creation",
                 Record = FindRecordInDatabase(application, container, record.Name)
             };
@@ -260,7 +260,7 @@ namespace somiod.Helpers
             var notificationsToSend = MqttHelper.FindNotificationsToSend(application, container, "2");
             MqttMessage mqttMessage = new MqttMessage
             {
-                Topic = ContainerHelper.FindContainerInDatabase(application, container).Name,
+                Topic = application + "/" + container,
                 Event = "deletion",
                 Record = FindRecordInDatabase(application, container, record)
             };
