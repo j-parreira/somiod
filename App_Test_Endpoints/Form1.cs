@@ -18,10 +18,12 @@ namespace App_Test_Endpoints
         public Form1()
         {
             InitializeComponent();
+            textBoxBaseURI.Text = baseURI;
         }
 
         private void resetFields()
         {
+            textBoxBaseURI.Text = "";
             textBoxURI.Text = "";
             textBoxHeader.Text = "";
             textBoxHttpCode.Text = "";
@@ -80,7 +82,8 @@ namespace App_Test_Endpoints
                     HttpResponseMessage response = client.GetAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = fullURI;
+                    textBoxBaseURI.Text = baseURI;
+                    textBoxURI.Text = "";
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
                     textBoxResponseBody.Text = responseBody;
@@ -110,11 +113,13 @@ namespace App_Test_Endpoints
                         return;
                     }
                     string application = textBoxApplication.Text;
-                    string fullURI = baseURI + application + "/";
+                    string URI = application;
+                    string fullURI = baseURI + URI;
                     HttpResponseMessage response = client.GetAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = fullURI;
+                    textBoxBaseURI.Text = baseURI;
+                    textBoxURI.Text = URI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
                     textBoxResponseBody.Text = responseBody;
@@ -144,11 +149,13 @@ namespace App_Test_Endpoints
                         return;
                     }
                     string application = textBoxApplication.Text;
-                    string fullURI = baseURI + application + "/" + "container";
+                    string URI = application + "/" + "container";
+                    string fullURI = baseURI + URI;
                     HttpResponseMessage response = client.GetAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = fullURI;
+                    textBoxBaseURI.Text = baseURI;
+                    textBoxURI.Text = URI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
                     textBoxResponseBody.Text = responseBody;
@@ -189,11 +196,13 @@ namespace App_Test_Endpoints
                     }
                     string application = textBoxApplication.Text;
                     string container = textBoxContainer.Text;
-                    string fullURI = baseURI + application + "/" + container;
+                    string URI = application + "/" + container;
+                    string fullURI = baseURI + URI;
                     HttpResponseMessage response = client.GetAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = fullURI;
+                    textBoxBaseURI.Text = baseURI;
+                    textBoxURI.Text = URI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
                     textBoxResponseBody.Text = responseBody;
@@ -234,11 +243,13 @@ namespace App_Test_Endpoints
                     }
                     string application = textBoxApplication.Text;
                     string container = textBoxContainer.Text;
-                    string fullURI = baseURI + application + "/" + container + "/notif/";
+                    string URI = application + "/" + container + "/notif";
+                    string fullURI = baseURI + URI;
                     HttpResponseMessage response = client.GetAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = fullURI;
+                    textBoxBaseURI.Text = baseURI;
+                    textBoxURI.Text = URI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
                     textBoxResponseBody.Text = responseBody;
@@ -290,11 +301,13 @@ namespace App_Test_Endpoints
                     string application = textBoxApplication.Text;
                     string container = textBoxContainer.Text;
                     string notification = textBoxNotification.Text;
-                    string fullURI = baseURI + application + "/" + container + "/notif/" + notification;
+                    string URI = application + "/" + container + "/notif/" + notification;
+                    string fullURI = baseURI + URI;
                     HttpResponseMessage response = client.GetAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = fullURI;
+                    textBoxBaseURI.Text = baseURI;
+                    textBoxURI.Text = URI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
                     textBoxResponseBody.Text = responseBody;
@@ -335,11 +348,13 @@ namespace App_Test_Endpoints
                     }
                     string application = textBoxApplication.Text;
                     string container = textBoxContainer.Text;
-                    string fullURI = baseURI + application + "/" + container + "/record/";
+                    string URI = application + "/" + container + "/record";
+                    string fullURI = baseURI + URI;
                     HttpResponseMessage response = client.GetAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = fullURI;
+                    textBoxBaseURI.Text = baseURI;
+                    textBoxURI.Text = URI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
                     textBoxResponseBody.Text = responseBody;
@@ -391,11 +406,13 @@ namespace App_Test_Endpoints
                     string application = textBoxApplication.Text;
                     string container = textBoxContainer.Text;
                     string record = textBoxRecord.Text;
-                    string fullURI = baseURI + application + "/" + container + "/record/" + record;
+                    string URI = application + "/" + container + "/record/" + record;
+                    string fullURI = baseURI + URI;
                     HttpResponseMessage response = client.GetAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = fullURI;
+                    textBoxBaseURI.Text = baseURI;
+                    textBoxURI.Text = URI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
                     textBoxResponseBody.Text = responseBody;
@@ -420,7 +437,8 @@ namespace App_Test_Endpoints
                     HttpResponseMessage response = client.PostAsync(fullURI, content).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = fullURI;
+                    textBoxBaseURI.Text = baseURI;
+                    textBoxURI.Text = "";
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
                     textBoxResponseBody.Text = responseBody;
@@ -451,13 +469,15 @@ namespace App_Test_Endpoints
                         return;
                     }
                     string application = textBoxApplication.Text;
-                    string fullURI = baseURI + "/" + application;
+                    string URI = application;
+                    string fullURI = baseURI + URI;
                     string requestBody = textBoxRequestBody.Text.Trim();
                     HttpContent content = new StringContent(requestBody, Encoding.UTF8, "application/xml");
                     HttpResponseMessage response = client.PostAsync(fullURI, content).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = fullURI;
+                    textBoxBaseURI.Text = baseURI;
+                    textBoxURI.Text = URI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
                     textBoxResponseBody.Text = responseBody;
@@ -498,7 +518,8 @@ namespace App_Test_Endpoints
                     }
                     string application = textBoxApplication.Text;
                     string container = textBoxContainer.Text;
-                    string fullURI = baseURI + "/" + application + "/" + container;
+                    string URI = application + "/" + container;
+                    string fullURI = baseURI + URI;
                     string header = "res_type";
                     string headerValue = "notification";
                     client.DefaultRequestHeaders.Add(header, headerValue);
@@ -508,7 +529,8 @@ namespace App_Test_Endpoints
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
                     textBoxHeader.Text = header + ": " + headerValue;
-                    textBoxURI.Text = fullURI;
+                    textBoxBaseURI.Text = baseURI;
+                    textBoxURI.Text = URI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
                     textBoxResponseBody.Text = responseBody;
@@ -549,7 +571,8 @@ namespace App_Test_Endpoints
                     }
                     string application = textBoxApplication.Text;
                     string container = textBoxContainer.Text;
-                    string fullURI = baseURI + "/" + application + "/" + container;
+                    string URI = application + "/" + container;
+                    string fullURI = baseURI + URI;
                     string header = "res_type";
                     string headerValue = "record";
                     client.DefaultRequestHeaders.Add(header, headerValue);
@@ -559,7 +582,8 @@ namespace App_Test_Endpoints
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
                     textBoxHeader.Text = header + ": " + headerValue;
-                    textBoxURI.Text = fullURI;
+                    textBoxBaseURI.Text = baseURI;
+                    textBoxURI.Text = URI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
                     textBoxResponseBody.Text = responseBody;
@@ -589,11 +613,13 @@ namespace App_Test_Endpoints
                         return;
                     }
                     string application = textBoxApplication.Text;
-                    string fullURI = baseURI + "/" + application;
+                    string URI = application;
+                    string fullURI = baseURI + URI;
                     HttpResponseMessage response = client.DeleteAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = fullURI;
+                    textBoxBaseURI.Text = baseURI;
+                    textBoxURI.Text = URI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
                     textBoxResponseBody.Text = responseBody;
@@ -634,11 +660,13 @@ namespace App_Test_Endpoints
                     }
                     string application = textBoxApplication.Text;
                     string container = textBoxContainer.Text;
-                    string fullURI = baseURI + "/" + application + "/" + container;
+                    string URI = application + "/" + container;
+                    string fullURI = baseURI + URI;
                     HttpResponseMessage response = client.DeleteAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = fullURI;
+                    textBoxBaseURI.Text = baseURI;
+                    textBoxURI.Text = URI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
                     textBoxResponseBody.Text = responseBody;
@@ -690,11 +718,13 @@ namespace App_Test_Endpoints
                     string application = textBoxApplication.Text;
                     string container = textBoxContainer.Text;
                     string notification = textBoxNotification.Text;
-                    string fullURI = baseURI + "/" + application + "/" + container + "/notif/" + notification;
+                    string URI = application + "/" + container + "/notif/" + notification;
+                    string fullURI = baseURI + URI;
                     HttpResponseMessage response = client.DeleteAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = fullURI;
+                    textBoxBaseURI.Text = baseURI;
+                    textBoxURI.Text = URI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
                     textBoxResponseBody.Text = responseBody;
@@ -746,11 +776,13 @@ namespace App_Test_Endpoints
                     string application = textBoxApplication.Text;
                     string container = textBoxContainer.Text;
                     string record = textBoxRecord.Text;
-                    string fullURI = baseURI + "/" + application + "/" + container + "/record/" + record;
+                    string URI = application + "/" + container + "/record/" + record;
+                    string fullURI = baseURI + URI;
                     HttpResponseMessage response = client.DeleteAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = fullURI;
+                    textBoxBaseURI.Text = baseURI;
+                    textBoxURI.Text = URI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
                     textBoxResponseBody.Text = responseBody;
@@ -780,13 +812,15 @@ namespace App_Test_Endpoints
                         return;
                     }
                     string application = textBoxApplication.Text;
-                    string fullURI = baseURI + "/" + application;
+                    string URI = application;
+                    string fullURI = baseURI + URI;
                     string requestBody = textBoxRequestBody.Text.Trim();
                     HttpContent content = new StringContent(requestBody, Encoding.UTF8, "application/xml");
                     HttpResponseMessage response = client.PutAsync(fullURI, content).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = fullURI;
+                    textBoxBaseURI.Text = baseURI;
+                    textBoxURI.Text = URI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
                     textBoxResponseBody.Text = responseBody;
@@ -827,13 +861,15 @@ namespace App_Test_Endpoints
                     }
                     string application = textBoxApplication.Text;
                     string container = textBoxContainer.Text;
-                    string fullURI = baseURI + "/" + application + "/" + container;
+                    string URI = application + "/" + container;
+                    string fullURI = baseURI + URI;
                     string requestBody = textBoxRequestBody.Text.Trim();
                     HttpContent content = new StringContent(requestBody, Encoding.UTF8, "application/xml");
                     HttpResponseMessage response = client.PutAsync(fullURI, content).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = fullURI;
+                    textBoxBaseURI.Text = baseURI;
+                    textBoxURI.Text = URI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
                     textBoxResponseBody.Text = responseBody;
@@ -859,7 +895,8 @@ namespace App_Test_Endpoints
                     HttpResponseMessage response = client.GetAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = fullURI;
+                    textBoxBaseURI.Text = baseURI;
+                    textBoxURI.Text = "";
                     textBoxHeader.Text = header + ": " + headerValue;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
@@ -886,7 +923,8 @@ namespace App_Test_Endpoints
                     HttpResponseMessage response = client.GetAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = fullURI;
+                    textBoxBaseURI.Text = baseURI;
+                    textBoxURI.Text = "";
                     textBoxHeader.Text = header + ": " + headerValue;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
@@ -913,7 +951,8 @@ namespace App_Test_Endpoints
                     HttpResponseMessage response = client.GetAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = fullURI;
+                    textBoxBaseURI.Text = baseURI;
+                    textBoxURI.Text = "";
                     textBoxHeader.Text = header + ": " + headerValue;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
@@ -940,7 +979,8 @@ namespace App_Test_Endpoints
                     HttpResponseMessage response = client.GetAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = fullURI;
+                    textBoxBaseURI.Text = baseURI;
+                    textBoxURI.Text = "";
                     textBoxHeader.Text = header + ": " + headerValue;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
@@ -971,14 +1011,16 @@ namespace App_Test_Endpoints
                         return;
                     }
                     string application = textBoxApplication.Text;
-                    string fullURI = baseURI + application + "/";
+                    string URI = application;
+                    string fullURI = baseURI + URI;
                     string header = "somiod-locate";
                     string headerValue = "container";
                     client.DefaultRequestHeaders.Add(header, headerValue);
                     HttpResponseMessage response = client.GetAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = fullURI;
+                    textBoxBaseURI.Text = baseURI;
+                    textBoxURI.Text = URI;
                     textBoxHeader.Text = header + ": " + headerValue;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
@@ -1009,14 +1051,16 @@ namespace App_Test_Endpoints
                         return;
                     }
                     string application = textBoxApplication.Text;
-                    string fullURI = baseURI + application + "/";
+                    string URI = application;
+                    string fullURI = baseURI + URI;
                     string header = "somiod-locate";
                     string headerValue = "notification";
                     client.DefaultRequestHeaders.Add(header, headerValue);
                     HttpResponseMessage response = client.GetAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = fullURI;
+                    textBoxBaseURI.Text = baseURI;
+                    textBoxURI.Text = URI;
                     textBoxHeader.Text = header + ": " + headerValue;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
@@ -1047,14 +1091,16 @@ namespace App_Test_Endpoints
                         return;
                     }
                     string application = textBoxApplication.Text;
-                    string fullURI = baseURI + application + "/";
+                    string URI = application;
+                    string fullURI = baseURI + URI;
                     string header = "somiod-locate";
                     string headerValue = "record";
                     client.DefaultRequestHeaders.Add(header, headerValue);
                     HttpResponseMessage response = client.GetAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = fullURI;
+                    textBoxBaseURI.Text = baseURI;
+                    textBoxURI.Text = URI;
                     textBoxHeader.Text = header + ": " + headerValue;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
@@ -1096,14 +1142,16 @@ namespace App_Test_Endpoints
                     }
                     string application = textBoxApplication.Text;
                     string container = textBoxContainer.Text;
-                    string fullURI = baseURI + application + "/" + container;
+                    string URI = application + "/" + container;
+                    string fullURI = baseURI + URI;
                     string header = "somiod-locate";
                     string headerValue = "notification";
                     client.DefaultRequestHeaders.Add(header, headerValue);
                     HttpResponseMessage response = client.GetAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = fullURI;
+                    textBoxBaseURI.Text = baseURI;
+                    textBoxURI.Text = URI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
                     textBoxResponseBody.Text = responseBody;
@@ -1144,14 +1192,16 @@ namespace App_Test_Endpoints
                     }
                     string application = textBoxApplication.Text;
                     string container = textBoxContainer.Text;
-                    string fullURI = baseURI + application + "/" + container;
+                    string URI = application + "/" + container;
+                    string fullURI = baseURI + URI;
                     string header = "somiod-locate";
                     string headerValue = "record";
                     client.DefaultRequestHeaders.Add(header, headerValue);
                     HttpResponseMessage response = client.GetAsync(fullURI).Result;
                     int statusCode = (int)response.StatusCode;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    textBoxURI.Text = fullURI;
+                    textBoxBaseURI.Text = baseURI;
+                    textBoxURI.Text = URI;
                     textBoxHttpCode.Text = statusCode.ToString();
                     textBoxHttpCodeText.Text = getHttpResponseCodeText(statusCode);
                     textBoxResponseBody.Text = responseBody;
@@ -1161,6 +1211,11 @@ namespace App_Test_Endpoints
                     MessageBox.Show(ex.Message);
                 }
             }
+        }
+
+        private void buttonSaveBaseURI_Click(object sender, EventArgs e)
+        {
+            baseURI = textBoxBaseURI.Text;
         }
     }
 }

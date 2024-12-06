@@ -207,6 +207,11 @@ namespace somiod.Controllers
         [HttpPost]
         public IHttpActionResult PostApplication([FromBody] XElement application)
         {
+            if (application == null)
+            {
+                return BadRequest("Application must be provided.");
+            }
+
             string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Application.xsd");
 
             if (!XMLHelper.ValidateXml(application.ToString(), xsdPath, out string validationError))
@@ -216,9 +221,9 @@ namespace somiod.Controllers
 
             Application app = XMLHelper.DeserializeXml<Application>(application.ToString());
 
-            if (application == null || string.IsNullOrWhiteSpace(app.Name))
+            if (string.IsNullOrWhiteSpace(app.Name))
             {
-                return BadRequest("Application must be provided.");
+                return BadRequest("Application name must be provided.");
             }
 
             if (app.Name.ToLower() == "application")
@@ -272,6 +277,11 @@ namespace somiod.Controllers
         [HttpPut]
         public IHttpActionResult PutApplication(string application, [FromBody] XElement newApp)
         {
+            if (newApp == null)
+            {
+                return BadRequest("Application must be provided.");
+            }
+
             if (string.IsNullOrWhiteSpace(application))
             {
                 return BadRequest("Application name must be provided.");
@@ -290,11 +300,6 @@ namespace somiod.Controllers
             }
 
             Application app = XMLHelper.DeserializeXml<Application>(newApp.ToString());
-
-            if (app == null)
-            {
-                return BadRequest("Application must be provided.");
-            }
 
             if (string.IsNullOrWhiteSpace(app.Name))
             {
@@ -456,6 +461,11 @@ namespace somiod.Controllers
                 return NotFound();
             }
 
+            if (container == null)
+            {
+                return BadRequest("Container must be provided.");
+            }
+
             string xsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XSD", "Container.xsd");
 
             if (!XMLHelper.ValidateXml(container.ToString(), xsdPath, out string validationError))
@@ -532,6 +542,11 @@ namespace somiod.Controllers
         [HttpPut]
         public IHttpActionResult PutContainer(string application, string container, [FromBody] XElement newContainer)
         {
+            if (newContainer == null)
+            {
+                return BadRequest("Container must be provided.");
+            }
+
             if (string.IsNullOrWhiteSpace(application))
             {
                 return BadRequest("Application name must be provided.");

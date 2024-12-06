@@ -37,7 +37,7 @@
             this.labelHttpCode = new System.Windows.Forms.Label();
             this.labelRequestBody = new System.Windows.Forms.Label();
             this.labelResponseBody = new System.Windows.Forms.Label();
-            this.textBoxURI = new System.Windows.Forms.TextBox();
+            this.textBoxBaseURI = new System.Windows.Forms.TextBox();
             this.textBoxHeader = new System.Windows.Forms.TextBox();
             this.textBoxApplication = new System.Windows.Forms.TextBox();
             this.textBoxContainer = new System.Windows.Forms.TextBox();
@@ -74,13 +74,15 @@
             this.textBoxHttpCodeText = new System.Windows.Forms.TextBox();
             this.textBoxRequestBody = new System.Windows.Forms.TextBox();
             this.textBoxResponseBody = new System.Windows.Forms.TextBox();
+            this.buttonSaveBaseURI = new System.Windows.Forms.Button();
+            this.textBoxURI = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // labelURI
             // 
             this.labelURI.AutoSize = true;
             this.labelURI.Font = new System.Drawing.Font("Microsoft Tai Le", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelURI.Location = new System.Drawing.Point(19, 23);
+            this.labelURI.Location = new System.Drawing.Point(131, 26);
             this.labelURI.Name = "labelURI";
             this.labelURI.Size = new System.Drawing.Size(27, 16);
             this.labelURI.TabIndex = 0;
@@ -166,13 +168,13 @@
             this.labelResponseBody.TabIndex = 8;
             this.labelResponseBody.Text = "ResponseBody (XML)";
             // 
-            // textBoxURI
+            // textBoxBaseURI
             // 
-            this.textBoxURI.Font = new System.Drawing.Font("Microsoft Tai Le", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxURI.Location = new System.Drawing.Point(55, 20);
-            this.textBoxURI.Name = "textBoxURI";
-            this.textBoxURI.Size = new System.Drawing.Size(683, 24);
-            this.textBoxURI.TabIndex = 9;
+            this.textBoxBaseURI.Font = new System.Drawing.Font("Microsoft Tai Le", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxBaseURI.Location = new System.Drawing.Point(167, 23);
+            this.textBoxBaseURI.Name = "textBoxBaseURI";
+            this.textBoxBaseURI.Size = new System.Drawing.Size(242, 24);
+            this.textBoxBaseURI.TabIndex = 9;
             // 
             // textBoxHeader
             // 
@@ -602,11 +604,32 @@
             this.textBoxResponseBody.Size = new System.Drawing.Size(625, 360);
             this.textBoxResponseBody.TabIndex = 47;
             // 
+            // buttonSaveBaseURI
+            // 
+            this.buttonSaveBaseURI.Location = new System.Drawing.Point(23, 16);
+            this.buttonSaveBaseURI.Name = "buttonSaveBaseURI";
+            this.buttonSaveBaseURI.Size = new System.Drawing.Size(98, 35);
+            this.buttonSaveBaseURI.TabIndex = 48;
+            this.buttonSaveBaseURI.Text = "Save URI";
+            this.buttonSaveBaseURI.UseVisualStyleBackColor = true;
+            this.buttonSaveBaseURI.Click += new System.EventHandler(this.buttonSaveBaseURI_Click);
+            // 
+            // textBoxURI
+            // 
+            this.textBoxURI.Font = new System.Drawing.Font("Microsoft Tai Le", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxURI.Location = new System.Drawing.Point(416, 23);
+            this.textBoxURI.Name = "textBoxURI";
+            this.textBoxURI.ReadOnly = true;
+            this.textBoxURI.Size = new System.Drawing.Size(350, 24);
+            this.textBoxURI.TabIndex = 49;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1293, 746);
+            this.Controls.Add(this.textBoxURI);
+            this.Controls.Add(this.buttonSaveBaseURI);
             this.Controls.Add(this.textBoxResponseBody);
             this.Controls.Add(this.textBoxRequestBody);
             this.Controls.Add(this.textBoxHttpCodeText);
@@ -643,7 +666,7 @@
             this.Controls.Add(this.textBoxContainer);
             this.Controls.Add(this.textBoxApplication);
             this.Controls.Add(this.textBoxHeader);
-            this.Controls.Add(this.textBoxURI);
+            this.Controls.Add(this.textBoxBaseURI);
             this.Controls.Add(this.labelResponseBody);
             this.Controls.Add(this.labelRequestBody);
             this.Controls.Add(this.labelHttpCode);
@@ -671,7 +694,7 @@
         private System.Windows.Forms.Label labelHttpCode;
         private System.Windows.Forms.Label labelRequestBody;
         private System.Windows.Forms.Label labelResponseBody;
-        private System.Windows.Forms.TextBox textBoxURI;
+        private System.Windows.Forms.TextBox textBoxBaseURI;
         private System.Windows.Forms.TextBox textBoxHeader;
         private System.Windows.Forms.TextBox textBoxApplication;
         private System.Windows.Forms.TextBox textBoxContainer;
@@ -708,6 +731,8 @@
         private System.Windows.Forms.TextBox textBoxHttpCodeText;
         private System.Windows.Forms.TextBox textBoxRequestBody;
         private System.Windows.Forms.TextBox textBoxResponseBody;
+        private System.Windows.Forms.Button buttonSaveBaseURI;
+        private System.Windows.Forms.TextBox textBoxURI;
     }
 }
 
