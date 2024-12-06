@@ -6,6 +6,7 @@ using System.Web;
 using System.Xml.Serialization;
 using System.Xml;
 using System.Xml.Schema;
+using System.Text;
 
 namespace somiod.Helpers
 {
@@ -57,11 +58,26 @@ namespace somiod.Helpers
         public static string SerializeXml<T>(T model)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(T));
-            using (StringWriter writer = new StringWriter())
+            using (Utf8StringWriter stringWriter = new Utf8StringWriter())
             {
-                serializer.Serialize(writer, model);
-                return writer.ToString();
+                XmlWriterSettings settings = new XmlWriterSettings
+                {
+                    Encoding = Encoding.UTF8,
+                    Indent = true,
+                    OmitXmlDeclaration = false
+                };
+                using (XmlWriter xmlWriter = XmlWriter.Create(stringWriter, settings))
+                {
+                    serializer.Serialize(xmlWriter, model);
+                }
+
+                return stringWriter.ToString();
             }
+        }
+
+        private class Utf8StringWriter : StringWriter
+        {
+            public override Encoding Encoding => Encoding.UTF8;
         }
     }
 }
