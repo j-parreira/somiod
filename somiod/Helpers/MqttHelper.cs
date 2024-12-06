@@ -12,7 +12,7 @@ namespace somiod.Helpers
 {
     public class MqttHelper
     {
-        internal static List<Notification> FindNotificationsToSend(string application, string container, string evento)
+        internal static List<Notification> FindNotificationsToSend(string application, string container, string NotifEvent)
         {
             var containerId = ContainerHelper.FindContainerInDatabase(application, container).Id;
             var notifications = new List<Notification>();
@@ -26,7 +26,7 @@ namespace somiod.Helpers
                         "AND (Event = 0 OR Event = @Event)", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@ContainerId", containerId);
-                        sqlCommand.Parameters.AddWithValue("@Event", evento);
+                        sqlCommand.Parameters.AddWithValue("@Event", NotifEvent);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         using (SqlDataReader reader = sqlCommand.ExecuteReader())
                         {
@@ -60,7 +60,7 @@ namespace somiod.Helpers
         {
             MqttClient mClient;
             string message = XMLHelper.SerializeXml(mqttMessage);
-            byte qos = MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE;
+            byte qos = MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE;
 
             try
             {
