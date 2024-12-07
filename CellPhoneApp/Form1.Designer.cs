@@ -29,18 +29,20 @@
         private void InitializeComponent()
         {
             this.groupBoxSecurity = new System.Windows.Forms.GroupBox();
+            this.buttonOff = new System.Windows.Forms.Button();
+            this.buttonOn = new System.Windows.Forms.Button();
+            this.comboBoxContainer = new System.Windows.Forms.ComboBox();
+            this.comboBoxApplication = new System.Windows.Forms.ComboBox();
             this.labelContainer = new System.Windows.Forms.Label();
             this.labelApplication = new System.Windows.Forms.Label();
-            this.comboBoxApplication = new System.Windows.Forms.ComboBox();
-            this.comboBoxContainer = new System.Windows.Forms.ComboBox();
-            this.buttonOn = new System.Windows.Forms.Button();
-            this.buttonOff = new System.Windows.Forms.Button();
+            this.textBoxResult = new System.Windows.Forms.TextBox();
             this.groupBoxSecurity.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBoxSecurity
             // 
             this.groupBoxSecurity.BackColor = System.Drawing.Color.OldLace;
+            this.groupBoxSecurity.Controls.Add(this.textBoxResult);
             this.groupBoxSecurity.Controls.Add(this.buttonOff);
             this.groupBoxSecurity.Controls.Add(this.buttonOn);
             this.groupBoxSecurity.Controls.Add(this.comboBoxContainer);
@@ -50,10 +52,50 @@
             this.groupBoxSecurity.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBoxSecurity.Location = new System.Drawing.Point(12, 12);
             this.groupBoxSecurity.Name = "groupBoxSecurity";
-            this.groupBoxSecurity.Size = new System.Drawing.Size(407, 415);
+            this.groupBoxSecurity.Size = new System.Drawing.Size(407, 463);
             this.groupBoxSecurity.TabIndex = 8;
             this.groupBoxSecurity.TabStop = false;
             this.groupBoxSecurity.Text = "Smart Home";
+            // 
+            // buttonOff
+            // 
+            this.buttonOff.BackColor = System.Drawing.Color.NavajoWhite;
+            this.buttonOff.Location = new System.Drawing.Point(26, 328);
+            this.buttonOff.Name = "buttonOff";
+            this.buttonOff.Size = new System.Drawing.Size(355, 63);
+            this.buttonOff.TabIndex = 7;
+            this.buttonOff.Text = "OFF";
+            this.buttonOff.UseVisualStyleBackColor = false;
+            this.buttonOff.Click += new System.EventHandler(this.buttonOff_Click);
+            // 
+            // buttonOn
+            // 
+            this.buttonOn.BackColor = System.Drawing.Color.NavajoWhite;
+            this.buttonOn.Location = new System.Drawing.Point(26, 242);
+            this.buttonOn.Name = "buttonOn";
+            this.buttonOn.Size = new System.Drawing.Size(355, 63);
+            this.buttonOn.TabIndex = 6;
+            this.buttonOn.Text = "ON";
+            this.buttonOn.UseVisualStyleBackColor = false;
+            this.buttonOn.Click += new System.EventHandler(this.buttonOn_Click);
+            // 
+            // comboBoxContainer
+            // 
+            this.comboBoxContainer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxContainer.FormattingEnabled = true;
+            this.comboBoxContainer.Location = new System.Drawing.Point(26, 156);
+            this.comboBoxContainer.Name = "comboBoxContainer";
+            this.comboBoxContainer.Size = new System.Drawing.Size(355, 32);
+            this.comboBoxContainer.TabIndex = 5;
+            // 
+            // comboBoxApplication
+            // 
+            this.comboBoxApplication.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxApplication.FormattingEnabled = true;
+            this.comboBoxApplication.Location = new System.Drawing.Point(26, 70);
+            this.comboBoxApplication.Name = "comboBoxApplication";
+            this.comboBoxApplication.Size = new System.Drawing.Size(355, 32);
+            this.comboBoxApplication.TabIndex = 4;
             // 
             // labelContainer
             // 
@@ -73,49 +115,22 @@
             this.labelApplication.TabIndex = 0;
             this.labelApplication.Text = "Application";
             // 
-            // comboBoxApplication
+            // textBoxResult
             // 
-            this.comboBoxApplication.FormattingEnabled = true;
-            this.comboBoxApplication.Location = new System.Drawing.Point(26, 70);
-            this.comboBoxApplication.Name = "comboBoxApplication";
-            this.comboBoxApplication.Size = new System.Drawing.Size(355, 32);
-            this.comboBoxApplication.TabIndex = 4;
-            // 
-            // comboBoxContainer
-            // 
-            this.comboBoxContainer.FormattingEnabled = true;
-            this.comboBoxContainer.Location = new System.Drawing.Point(26, 156);
-            this.comboBoxContainer.Name = "comboBoxContainer";
-            this.comboBoxContainer.Size = new System.Drawing.Size(355, 32);
-            this.comboBoxContainer.TabIndex = 5;
-            // 
-            // buttonOn
-            // 
-            this.buttonOn.BackColor = System.Drawing.Color.NavajoWhite;
-            this.buttonOn.Location = new System.Drawing.Point(26, 242);
-            this.buttonOn.Name = "buttonOn";
-            this.buttonOn.Size = new System.Drawing.Size(355, 63);
-            this.buttonOn.TabIndex = 6;
-            this.buttonOn.Text = "ON";
-            this.buttonOn.UseVisualStyleBackColor = false;
-            this.buttonOn.Click += new System.EventHandler(this.buttonOn_Click);
-            // 
-            // buttonOff
-            // 
-            this.buttonOff.BackColor = System.Drawing.Color.NavajoWhite;
-            this.buttonOff.Location = new System.Drawing.Point(26, 328);
-            this.buttonOff.Name = "buttonOff";
-            this.buttonOff.Size = new System.Drawing.Size(355, 63);
-            this.buttonOff.TabIndex = 7;
-            this.buttonOff.Text = "OFF";
-            this.buttonOff.UseVisualStyleBackColor = false;
-            this.buttonOff.Click += new System.EventHandler(this.buttonOff_Click);
+            this.textBoxResult.BackColor = System.Drawing.Color.Wheat;
+            this.textBoxResult.Font = new System.Drawing.Font("Calibri", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxResult.Location = new System.Drawing.Point(26, 413);
+            this.textBoxResult.Name = "textBoxResult";
+            this.textBoxResult.ReadOnly = true;
+            this.textBoxResult.Size = new System.Drawing.Size(355, 28);
+            this.textBoxResult.TabIndex = 8;
+            this.textBoxResult.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(431, 437);
+            this.ClientSize = new System.Drawing.Size(431, 487);
             this.Controls.Add(this.groupBoxSecurity);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -134,6 +149,7 @@
         private System.Windows.Forms.ComboBox comboBoxContainer;
         private System.Windows.Forms.Button buttonOn;
         private System.Windows.Forms.Button buttonOff;
+        private System.Windows.Forms.TextBox textBoxResult;
     }
 }
 

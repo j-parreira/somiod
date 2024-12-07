@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net;
+using System.Text;
 using System.Web;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
@@ -12,10 +14,11 @@ namespace somiod.Helpers
 {
     public class MqttHelper
     {
-        internal static List<Notification> FindNotificationsToSend(string application, string container, string NotifEvent)
+        internal static List<String> FindEndpointsToSend(string application, string container, string NotifEvent)
         {
             var containerId = ContainerHelper.FindContainerInDatabase(application, container).Id;
             var notifications = new List<Notification>();
+            List<string> endpoints = new List<string>();
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
@@ -23,9 +26,10 @@ namespace somiod.Helpers
                     sqlConnection.Open();
                     using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Notifications " +
                         "WHERE Parent = @ContainerId AND Enabled = 1 " +
-                        "AND (Event = 0 OR Event = @Event)", sqlConnection))
+                        "AND (Event = @EventAll OR Event = @Event)", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@ContainerId", containerId);
+                        sqlCommand.Parameters.AddWithValue("@EventAll", "0");
                         sqlCommand.Parameters.AddWithValue("@Event", NotifEvent);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         using (SqlDataReader reader = sqlCommand.ExecuteReader())
@@ -48,15 +52,17 @@ namespace somiod.Helpers
                     }
                     sqlConnection.Close();
                 }
+                endpoints = notifications.Select(n => n.Endpoint).ToList();
             }
             catch (Exception e)
             {
                 throw new Exception("Error finding notifications to send", e);
             }
-            return notifications;
+            Console.WriteLine("Endpoints to send: " + string.Join(", ", endpoints));
+            return endpoints;
         }
 
-        internal static void PublishNotifications(List<Notification> notificationsToSend, MqttMessage mqttMessage)
+        internal static void PublishRecord(List<String> endpointsToSend, MqttMessage mqttMessage)
         {
             MqttClient mClient;
             string message = XMLHelper.SerializeXml(mqttMessage);
@@ -64,16 +70,16 @@ namespace somiod.Helpers
 
             try
             {
-                var endpoints = notificationsToSend.Select(n => n.Endpoint).ToList();
-                foreach (var endpoint in endpoints)
+                foreach (var endpoint in endpointsToSend)
                 {
-                    mClient = new MqttClient(endpoint);
+                    Console.WriteLine("Sending to endpoint: " + endpoint);  
+                    mClient = new MqttClient(IPAddress.Parse(endpoint));
                     mClient.Connect(Guid.NewGuid().ToString());
                     if (!mClient.IsConnected)
                     {
                         throw new Exception("Error connecting to message broker...");
                     }
-                    mClient.Publish(mqttMessage.Topic, System.Text.Encoding.UTF8.GetBytes(message), qos, false);
+                    mClient.Publish(mqttMessage.Topic, Encoding.UTF8.GetBytes(message), qos, false);
                     mClient.Disconnect();
                 }
             }

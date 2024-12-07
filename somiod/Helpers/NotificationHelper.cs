@@ -11,6 +11,29 @@ namespace somiod.Helpers
 {
     public class NotificationHelper
     {
+        internal static bool NotificationNameExists(string notificationName)
+        {
+            try
+            {
+                using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
+                {
+                    sqlConnection.Open();
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM Notifications " +
+                        "WHERE Name = @NotificationName", sqlConnection))
+                    {
+                        sqlCommand.Parameters.AddWithValue("@NotificationName", notificationName.ToLower());
+                        sqlCommand.CommandType = System.Data.CommandType.Text;
+                        int count = (int)sqlCommand.ExecuteScalar();
+                        return count > 0;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error checking if notification name exists", e);
+            }
+        }
+
         internal static bool NotificationExists(string application, string container, string notification)
         {   
             var app = ApplicationHelper.FindApplicationInDatabase(application);
@@ -215,12 +238,13 @@ namespace somiod.Helpers
                 throw new Exception("Invalid event type");
             }
 
-            if (NotificationExists(application, container, notification.Name))
+            notification.Name = "not_0";
+            if (NotificationNameExists(notification.Name))
             {
                 int i = 1;
-                while (NotificationExists(application, container, notification.Name))
+                while (NotificationNameExists(notification.Name))
                 {
-                    notification.Name += i.ToString();
+                    notification.Name = "not_" + i.ToString();
                     i++;
                 }
             }

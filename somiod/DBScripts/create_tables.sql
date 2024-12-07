@@ -21,7 +21,7 @@ CREATE TABLE [dbo].[Containers]
 CREATE TABLE [dbo].[Records]
 (
 	[Id] INT IDENTITY(1, 1) NOT NULL,
-	[Name] NVARCHAR (50) NOT NULL,
+	[Name] NVARCHAR (150) NOT NULL,
 	[CreationDateTime] SMALLDATETIME NOT NULL,
 	[Parent] INT NOT NULL,
 	[Content] NVARCHAR (MAX) NOT NULL,

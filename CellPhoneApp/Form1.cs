@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
@@ -19,6 +20,7 @@ namespace CellPhoneApp
         string baseURI = "http://localhost:51897/api/somiod/";
         public Form1()
         {
+            Thread.Sleep(5000);
             InitializeComponent();
             LoadAppsIntoComboBox();
         }
@@ -112,7 +114,7 @@ namespace CellPhoneApp
                     Record record = new Record
                     {
                         Id = 0,
-                        Name = "notif",
+                        Name = "rec",
                         CreationDateTime = DateTime.Now,
                         Parent = 0,
                         Content = "ON"
@@ -123,9 +125,22 @@ namespace CellPhoneApp
                     string header = "res_type";
                     string headerValue = "record";
                     client.DefaultRequestHeaders.Add(header, headerValue);
-                    string requestBody = XMLHelper.SerializeXml(record).Trim();
+                    string requestBody = XMLHelper.SerializeXml<Record>(record).ToString().Trim();
                     HttpContent httpContent = new StringContent(requestBody, Encoding.UTF8, "application/xml");
                     HttpResponseMessage response = client.PostAsync(fullURI, httpContent).Result;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    XmlDocument xmlDocument = new XmlDocument();
+                    xmlDocument.LoadXml(responseBody);
+                    XmlNode xmlNode = xmlDocument.SelectSingleNode("/Record/Name");
+                    string name = xmlNode.InnerText;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        textBoxResult.Text = $"Record {name} created.";
+                    }
+                    else
+                    {
+                        textBoxResult.Text = "Failure! Record not sent.";
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -151,7 +166,7 @@ namespace CellPhoneApp
                     Record record = new Record
                     {
                         Id = 0,
-                        Name = "notif",
+                        Name = "rec",
                         CreationDateTime = DateTime.Now,
                         Parent = 0,
                         Content = "OFF"
@@ -162,9 +177,22 @@ namespace CellPhoneApp
                     string header = "res_type";
                     string headerValue = "record";
                     client.DefaultRequestHeaders.Add(header, headerValue);
-                    string requestBody = XMLHelper.SerializeXml(record).Trim();
+                    string requestBody = XMLHelper.SerializeXml<Record>(record).ToString().Trim();
                     HttpContent httpContent = new StringContent(requestBody, Encoding.UTF8, "application/xml");
                     HttpResponseMessage response = client.PostAsync(fullURI, httpContent).Result;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    XmlDocument xmlDocument = new XmlDocument();
+                    xmlDocument.LoadXml(responseBody);
+                    XmlNode xmlNode = xmlDocument.SelectSingleNode("/Record/Name");
+                    string name = xmlNode.InnerText;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        textBoxResult.Text = $"Record {name} created.";
+                    }
+                    else
+                    {
+                        textBoxResult.Text = "Failure! Record not sent.";
+                    }
                 }
                 catch (Exception ex)
                 {

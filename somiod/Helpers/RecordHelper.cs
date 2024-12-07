@@ -15,6 +15,29 @@ namespace somiod.Helpers
 {
     public class RecordHelper
     {
+        internal static bool RecordNameExists(string recordName)
+        {
+            try
+            {
+                using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
+                {
+                    sqlConnection.Open();
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM Records " +
+                        "WHERE Name = @RecordName", sqlConnection))
+                    {
+                        sqlCommand.Parameters.AddWithValue("@RecordName", recordName.ToLower());
+                        sqlCommand.CommandType = System.Data.CommandType.Text;
+                        int count = (int)sqlCommand.ExecuteScalar();
+                        return count > 0;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error checking if record name exists", e);
+            }
+        }
+
         internal static bool RecordExists(string application, string container, string record)
         {
             var app = ApplicationHelper.FindApplicationInDatabase(application);
@@ -206,12 +229,13 @@ namespace somiod.Helpers
 
         internal static Record AddRecordToDatabase(string application, string container, Record record)
         {
-            if (RecordExists(application, container, record.Name))
+            record.Name = "rec_0";
+            if (RecordNameExists(record.Name))
             {
                 int i = 1;
-                while (RecordExists(application, container, record.Name))
+                while (RecordNameExists(record.Name))
                 {
-                    record.Name += i.ToString();
+                    record.Name = "rec_" + i.ToString();
                     i++;
                 }
             }
@@ -243,28 +267,28 @@ namespace somiod.Helpers
                 throw new Exception("Error adding record to database", e);
             }
 
-            var notificationsToSend = MqttHelper.FindNotificationsToSend(application, container, "1");
+            var notificationsToSend = MqttHelper.FindEndpointsToSend(application, container, "1");
             MqttMessage mqttMessage = new MqttMessage
             {
                 Topic = application + "/" + container,
                 Event = "creation",
                 Record = FindRecordInDatabase(application, container, record.Name)
             };
-            MqttHelper.PublishNotifications(notificationsToSend, mqttMessage);
+            MqttHelper.PublishRecord(notificationsToSend, mqttMessage);
 
             return record;
         }
 
         internal static void DeleteRecordFromDatabase(string application, string container, string record)
         {
-            var notificationsToSend = MqttHelper.FindNotificationsToSend(application, container, "2");
+            var notificationsToSend = MqttHelper.FindEndpointsToSend(application, container, "2");
             MqttMessage mqttMessage = new MqttMessage
             {
                 Topic = application + "/" + container,
                 Event = "deletion",
                 Record = FindRecordInDatabase(application, container, record)
             };
-            MqttHelper.PublishNotifications(notificationsToSend, mqttMessage);
+            MqttHelper.PublishRecord(notificationsToSend, mqttMessage);
 
             var cont = ContainerHelper.FindContainerInDatabase(application, container);
             try

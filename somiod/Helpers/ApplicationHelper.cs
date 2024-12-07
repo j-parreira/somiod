@@ -69,7 +69,7 @@ namespace somiod.Helpers
             return apps;
         }
 
-        internal static Application FindApplicationInDatabase(string application)
+        public static Application FindApplicationInDatabase(string application)
         {
             Application app = null;
             try

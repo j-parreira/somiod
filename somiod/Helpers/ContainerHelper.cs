@@ -11,6 +11,29 @@ namespace somiod.Helpers
 {
     public class ContainerHelper
     {
+        internal static bool ContainerNameExists(string container)
+        {
+            try
+            {
+                using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
+                {
+                    sqlConnection.Open();
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM Containers " +
+                        "WHERE Name = @ContainerName", sqlConnection))
+                    {
+                        sqlCommand.Parameters.AddWithValue("@ContainerName", container.ToLower());
+                        sqlCommand.CommandType = System.Data.CommandType.Text;
+                        int count = (int)sqlCommand.ExecuteScalar();
+                        return count > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error checking if container name exists", ex);
+            }
+        }
+
         internal static bool ContainerExists(string application, string container)
         {
             var app = ApplicationHelper.FindApplicationInDatabase(application); 
@@ -35,6 +58,7 @@ namespace somiod.Helpers
                 throw new Exception("Error checking if container exists", ex);
             }
         }
+
         internal static List<Container> FindContainersInDatabase()
         {
             var containers = new List<Container>();
@@ -152,10 +176,10 @@ namespace somiod.Helpers
 
         internal static Container AddContainerToDatabase(string application, Container container)
         {
-            if (ContainerExists(application, container.Name))
+            if (ContainerNameExists(container.Name))
             {
                 int i = 1;
-                while (ContainerExists(application, container.Name))
+                while (ContainerNameExists(container.Name))
                 {
                     container.Name += i.ToString();
                     i++;
@@ -217,10 +241,10 @@ namespace somiod.Helpers
 
         internal static Container UpdateContainerInDatabase(string application, string container, Container newContainer)
         {
-            if (ContainerExists(application, newContainer.Name))
+            if (ContainerNameExists(newContainer.Name))
             {
                 int i = 1;
-                while (ContainerExists(application, newContainer.Name))
+                while (ContainerNameExists(newContainer.Name))
                 {
                     newContainer.Name += i.ToString();
                     i++;

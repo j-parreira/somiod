@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.groupBoxLighting = new System.Windows.Forms.GroupBox();
-            this.labelParkingLight = new System.Windows.Forms.Label();
-            this.richTextBoxParkingLight = new System.Windows.Forms.RichTextBox();
+            this.labelGardenLightSwitch = new System.Windows.Forms.Label();
+            this.labelParkingLightSwitch = new System.Windows.Forms.Label();
             this.richTextBoxGardenLight = new System.Windows.Forms.RichTextBox();
             this.labelGardenLight = new System.Windows.Forms.Label();
-            this.labelParkingLightSwitch = new System.Windows.Forms.Label();
-            this.labelGardenLightSwitch = new System.Windows.Forms.Label();
+            this.richTextBoxParkingLight = new System.Windows.Forms.RichTextBox();
+            this.labelParkingLight = new System.Windows.Forms.Label();
             this.groupBoxHeating = new System.Windows.Forms.GroupBox();
             this.labelHeaterSwitch = new System.Windows.Forms.Label();
             this.labelAirConditioningSwitch = new System.Windows.Forms.Label();
@@ -46,7 +46,7 @@
             this.labelAlarmSwitch = new System.Windows.Forms.Label();
             this.labelCameraSwitch = new System.Windows.Forms.Label();
             this.richTextBoxAlarm = new System.Windows.Forms.RichTextBox();
-            this.label7 = new System.Windows.Forms.Label();
+            this.labelAlarm = new System.Windows.Forms.Label();
             this.richTextBoxCamera = new System.Windows.Forms.RichTextBox();
             this.labelCamera = new System.Windows.Forms.Label();
             this.groupBoxLighting.SuspendLayout();
@@ -71,23 +71,25 @@
             this.groupBoxLighting.TabStop = false;
             this.groupBoxLighting.Text = "Lighting Application";
             // 
-            // labelParkingLight
+            // labelGardenLightSwitch
             // 
-            this.labelParkingLight.AutoSize = true;
-            this.labelParkingLight.Location = new System.Drawing.Point(22, 43);
-            this.labelParkingLight.Name = "labelParkingLight";
-            this.labelParkingLight.Size = new System.Drawing.Size(118, 24);
-            this.labelParkingLight.TabIndex = 0;
-            this.labelParkingLight.Text = "Parking Light";
+            this.labelGardenLightSwitch.AutoSize = true;
+            this.labelGardenLightSwitch.BackColor = System.Drawing.SystemColors.Window;
+            this.labelGardenLightSwitch.Location = new System.Drawing.Point(255, 129);
+            this.labelGardenLightSwitch.Name = "labelGardenLightSwitch";
+            this.labelGardenLightSwitch.Size = new System.Drawing.Size(37, 24);
+            this.labelGardenLightSwitch.TabIndex = 6;
+            this.labelGardenLightSwitch.Text = "ON";
             // 
-            // richTextBoxParkingLight
+            // labelParkingLightSwitch
             // 
-            this.richTextBoxParkingLight.BackColor = System.Drawing.SystemColors.Window;
-            this.richTextBoxParkingLight.Location = new System.Drawing.Point(26, 70);
-            this.richTextBoxParkingLight.Name = "richTextBoxParkingLight";
-            this.richTextBoxParkingLight.Size = new System.Drawing.Size(150, 150);
-            this.richTextBoxParkingLight.TabIndex = 2;
-            this.richTextBoxParkingLight.Text = "";
+            this.labelParkingLightSwitch.AutoSize = true;
+            this.labelParkingLightSwitch.BackColor = System.Drawing.SystemColors.Window;
+            this.labelParkingLightSwitch.Location = new System.Drawing.Point(80, 129);
+            this.labelParkingLightSwitch.Name = "labelParkingLightSwitch";
+            this.labelParkingLightSwitch.Size = new System.Drawing.Size(42, 24);
+            this.labelParkingLightSwitch.TabIndex = 5;
+            this.labelParkingLightSwitch.Text = "OFF";
             // 
             // richTextBoxGardenLight
             // 
@@ -107,25 +109,23 @@
             this.labelGardenLight.TabIndex = 3;
             this.labelGardenLight.Text = "Garden Light";
             // 
-            // labelParkingLightSwitch
+            // richTextBoxParkingLight
             // 
-            this.labelParkingLightSwitch.AutoSize = true;
-            this.labelParkingLightSwitch.BackColor = System.Drawing.SystemColors.Window;
-            this.labelParkingLightSwitch.Location = new System.Drawing.Point(80, 129);
-            this.labelParkingLightSwitch.Name = "labelParkingLightSwitch";
-            this.labelParkingLightSwitch.Size = new System.Drawing.Size(42, 24);
-            this.labelParkingLightSwitch.TabIndex = 5;
-            this.labelParkingLightSwitch.Text = "OFF";
+            this.richTextBoxParkingLight.BackColor = System.Drawing.SystemColors.Window;
+            this.richTextBoxParkingLight.Location = new System.Drawing.Point(26, 70);
+            this.richTextBoxParkingLight.Name = "richTextBoxParkingLight";
+            this.richTextBoxParkingLight.Size = new System.Drawing.Size(150, 150);
+            this.richTextBoxParkingLight.TabIndex = 2;
+            this.richTextBoxParkingLight.Text = "";
             // 
-            // labelGardenLightSwitch
+            // labelParkingLight
             // 
-            this.labelGardenLightSwitch.AutoSize = true;
-            this.labelGardenLightSwitch.BackColor = System.Drawing.SystemColors.Window;
-            this.labelGardenLightSwitch.Location = new System.Drawing.Point(255, 129);
-            this.labelGardenLightSwitch.Name = "labelGardenLightSwitch";
-            this.labelGardenLightSwitch.Size = new System.Drawing.Size(37, 24);
-            this.labelGardenLightSwitch.TabIndex = 6;
-            this.labelGardenLightSwitch.Text = "ON";
+            this.labelParkingLight.AutoSize = true;
+            this.labelParkingLight.Location = new System.Drawing.Point(22, 43);
+            this.labelParkingLight.Name = "labelParkingLight";
+            this.labelParkingLight.Size = new System.Drawing.Size(118, 24);
+            this.labelParkingLight.TabIndex = 0;
+            this.labelParkingLight.Text = "Parking Light";
             // 
             // groupBoxHeating
             // 
@@ -206,7 +206,7 @@
             this.groupBoxSecurity.Controls.Add(this.labelAlarmSwitch);
             this.groupBoxSecurity.Controls.Add(this.labelCameraSwitch);
             this.groupBoxSecurity.Controls.Add(this.richTextBoxAlarm);
-            this.groupBoxSecurity.Controls.Add(this.label7);
+            this.groupBoxSecurity.Controls.Add(this.labelAlarm);
             this.groupBoxSecurity.Controls.Add(this.richTextBoxCamera);
             this.groupBoxSecurity.Controls.Add(this.labelCamera);
             this.groupBoxSecurity.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -246,14 +246,14 @@
             this.richTextBoxAlarm.TabIndex = 4;
             this.richTextBoxAlarm.Text = "";
             // 
-            // label7
+            // labelAlarm
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(194, 43);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(60, 24);
-            this.label7.TabIndex = 3;
-            this.label7.Text = "Alarm";
+            this.labelAlarm.AutoSize = true;
+            this.labelAlarm.Location = new System.Drawing.Point(194, 43);
+            this.labelAlarm.Name = "labelAlarm";
+            this.labelAlarm.Size = new System.Drawing.Size(60, 24);
+            this.labelAlarm.TabIndex = 3;
+            this.labelAlarm.Text = "Alarm";
             // 
             // richTextBoxCamera
             // 
@@ -313,7 +313,7 @@
         private System.Windows.Forms.Label labelAlarmSwitch;
         private System.Windows.Forms.Label labelCameraSwitch;
         private System.Windows.Forms.RichTextBox richTextBoxAlarm;
-        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label labelAlarm;
         private System.Windows.Forms.RichTextBox richTextBoxCamera;
         private System.Windows.Forms.Label labelCamera;
     }
