@@ -6,10 +6,16 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "somiod", "somiod\somiod.csproj", "{73993F91-3FE3-4949-BEB7-BD8A891F0972}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App_Test_Endpoints", "App_Test_Endpoints\App_Test_Endpoints.csproj", "{280FB115-6205-4200-A85E-5C41879FBC43}"
+	ProjectSection(ProjectDependencies) = postProject
+		{73993F91-3FE3-4949-BEB7-BD8A891F0972} = {73993F91-3FE3-4949-BEB7-BD8A891F0972}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartHomeApp", "SmartHomeApp\SmartHomeApp.csproj", "{E345D1B4-81D4-4308-BB7C-F970873EE465}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CellPhoneApp", "CellPhoneApp\CellPhoneApp.csproj", "{278A3101-9417-4FFA-A969-D8F8958C7441}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E345D1B4-81D4-4308-BB7C-F970873EE465} = {E345D1B4-81D4-4308-BB7C-F970873EE465}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

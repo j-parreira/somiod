@@ -58,7 +58,12 @@ namespace somiod.Helpers
             {
                 throw new Exception("Error finding notifications to send", e);
             }
-            Console.WriteLine("Endpoints to send: " + string.Join(", ", endpoints));
+            if (endpoints.Count == 0)
+            {
+                throw new Exception("No endpoints found to send notifications");
+            }
+            Console.ReadLine();
+            Console.WriteLine(endpoints);
             return endpoints;
         }
 
