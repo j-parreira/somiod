@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Web;
+using System.Web.Services.Description;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 using static System.Net.Mime.MediaTypeNames;
@@ -264,6 +265,10 @@ namespace somiod.Helpers
             {
                 throw new Exception("Error adding record to database", e);
             }
+            string topic = application + "/" + container;
+            string message = "deletion;" + record.Content;
+            List<string> endpoints = MqttHelper.FindEndpointsToSend(application, container, "1");
+            MqttHelper.PublishMqttMessages(topic, message, endpoints);
             return record;
         }
 
@@ -292,9 +297,9 @@ namespace somiod.Helpers
                 throw new Exception("Error deleting record from database", e);
             }
             string topic = application + "/" + container;
-            string mqttEvent = "deletion";
+            message = "deletion;" + message;
             List<string> endpoints = MqttHelper.FindEndpointsToSend(application, container, "1");
-            MqttHelper.PublishMqttMessageInTopic(topic, mqttEvent, message, endpoints);
+            MqttHelper.PublishMqttMessages(topic, message, endpoints);
         }
     }
 }

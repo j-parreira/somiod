@@ -46,6 +46,18 @@ namespace SmartHomeApp
             InitializeSmartHomeAsync();
             SubscribeToTopics(topics);
             PruneOldMessages(daysToKeep);
+            labelParkingLightSwitch.Text = "ON";
+            richTextBoxParkingLight.BackColor = Color.Yellow;
+            labelGardenLightSwitch.Text = "ON";
+            richTextBoxGardenLight.BackColor = Color.Yellow;
+            labelAirConditioningSwitch.Text = "ON";
+            richTextBoxAirConditioning.BackColor = Color.Blue;
+            labelHeaterSwitch.Text = "ON";
+            richTextBoxHeater.BackColor = Color.Red;
+            labelCameraSwitch.Text = "ON";
+            richTextBoxCamera.BackColor = Color.Green;
+            labelAlarmSwitch.Text = "ON";
+            richTextBoxAlarm.BackColor = Color.Red;
         }
 
         private async void InitializeSmartHomeAsync()
@@ -222,8 +234,6 @@ namespace SmartHomeApp
             }
         }
 
-
-
         private void UpdateUI(string topic, string message)
         {
             if (InvokeRequired)
@@ -236,11 +246,33 @@ namespace SmartHomeApp
                 case "smarthome/smarthome_all":
                     if (message == "ON")
                     {
-                        // Turn on all devices
+                        labelParkingLightSwitch.Text = "ON";
+                        richTextBoxParkingLight.BackColor = Color.Yellow;
+                        labelGardenLightSwitch.Text = "ON";
+                        richTextBoxGardenLight.BackColor = Color.Yellow;
+                        labelAirConditioningSwitch.Text = "ON";
+                        richTextBoxAirConditioning.BackColor = Color.Blue;
+                        labelHeaterSwitch.Text = "ON";
+                        richTextBoxHeater.BackColor = Color.Red;
+                        labelCameraSwitch.Text = "ON";
+                        richTextBoxCamera.BackColor = Color.Green;
+                        labelAlarmSwitch.Text = "ON";
+                        richTextBoxAlarm.BackColor = Color.Red;
                     }
                     else
                     {
-                        // Turn off all devices
+                        labelParkingLightSwitch.Text = "OFF";
+                        richTextBoxParkingLight.BackColor = Color.Black;
+                        labelGardenLightSwitch.Text = "OFF";
+                        richTextBoxGardenLight.BackColor = Color.Black;
+                        labelHeaterSwitch.Text = "OFF";
+                        richTextBoxHeater.BackColor = Color.Black;
+                        labelAirConditioningSwitch.Text = "OFF";
+                        richTextBoxAirConditioning.BackColor = Color.Black;
+                        labelCameraSwitch.Text = "OFF";
+                        richTextBoxCamera.BackColor = Color.Black;
+                        labelAlarmSwitch.Text = "OFF";
+                        richTextBoxAlarm.BackColor = Color.Black;
                     }
                     break;
                 case "lighting/parking_light":
@@ -258,81 +290,120 @@ namespace SmartHomeApp
                 case "lighting/garden_light":
                     if (message == "ON")
                     {
-                        // Turn on garden light
+                        labelGardenLightSwitch.Text = "ON";
+                        richTextBoxGardenLight.BackColor = Color.Yellow;
                     }
                     else
                     {
-                        // Turn off garden light
+                        labelGardenLightSwitch.Text = "OFF";
+                        richTextBoxGardenLight.BackColor = Color.Black;
                     }
                     break;
                 case "lighting/lighting_all":
                     if (message == "ON")
                     {
-                        // Turn on all lights
+                        labelParkingLightSwitch.Text = "ON";
+                        richTextBoxParkingLight.BackColor = Color.Yellow;
+                        labelGardenLightSwitch.Text = "ON";
+                        richTextBoxGardenLight.BackColor = Color.Yellow;
                     }
                     else
                     {
-                        // Turn off all lights
+                        labelParkingLightSwitch.Text = "OFF";
+                        richTextBoxParkingLight.BackColor = Color.Black;
+                        labelGardenLightSwitch.Text = "OFF";
+                        richTextBoxGardenLight.BackColor = Color.Black;
                     }
                     break;
                 case "heating/air_conditioning":
                     if (message == "ON")
                     {
-                        // Turn on air conditioning
+                        labelAirConditioningSwitch.Text = "ON";
+                        richTextBoxAirConditioning.BackColor = Color.Blue;
                     }
                     else
                     {
                         // Turn off air conditioning
+                        labelAirConditioningSwitch.Text = "OFF";
+                        richTextBoxAirConditioning.BackColor = Color.Black;
                     }
                     break;
                 case "heating/heater":
                     if (message == "ON")
                     {
                         // Turn on heater
+                        labelHeaterSwitch.Text = "ON";
+                        richTextBoxHeater.BackColor = Color.Red;
                     }
                     else
                     {
                         // Turn off heater
+                        labelHeaterSwitch.Text = "OFF";
+                        richTextBoxHeater.BackColor = Color.Black;
                     }
                     break;
                 case "heating/heating_all":
                     if (message == "ON")
                     {
                         // Turn on all heating devices
+                        labelAirConditioningSwitch.Text = "ON";
+                        richTextBoxAirConditioning.BackColor = Color.Blue;
+                        labelHeaterSwitch.Text = "ON";
+                        richTextBoxHeater.BackColor = Color.Red;
                     }
                     else
                     {
                         // Turn off all heating devices
+                        labelHeaterSwitch.Text = "OFF";
+                        richTextBoxHeater.BackColor = Color.Black;
+                        labelAirConditioningSwitch.Text = "OFF";
+                        richTextBoxAirConditioning.BackColor = Color.Black;
                     }
                     break;
                 case "security/camera":
                     if (message == "ON")
                     {
                         // Turn on camera
+                        labelCameraSwitch.Text = "ON";
+                        richTextBoxCamera.BackColor = Color.Green;
                     }
                     else
                     {
                         // Turn off camera
+                        labelCameraSwitch.Text = "OFF";
+                        richTextBoxCamera.BackColor = Color.Black;
                     }
                     break;
                 case "security/alarm":
                     if (message == "ON")
                     {
                         // Turn on alarm
+                        labelAlarmSwitch.Text = "ON";
+                        richTextBoxAlarm.BackColor = Color.Red;
                     }
                     else
                     {
                         // Turn off alarm
+                        labelAlarmSwitch.Text = "OFF";
+                        richTextBoxAlarm.BackColor = Color.Black;
                     }
                     break;
                 case "security/security_all":
                     if (message == "ON")
                     {
                         // Turn on all security devices
+                        labelCameraSwitch.Text = "ON";
+                        richTextBoxCamera.BackColor = Color.Green;
+                        labelAlarmSwitch.Text = "ON";
+                        richTextBoxAlarm.BackColor = Color.Red;
                     }
                     else
                     {
                         // Turn off all security devices
+                        labelCameraSwitch.Text = "OFF";
+                        richTextBoxCamera.BackColor = Color.Black;
+                        labelAlarmSwitch.Text = "OFF";
+                        richTextBoxAlarm.BackColor = Color.Black;
                     }
                     break;
                 default:

@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Web;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
@@ -54,7 +55,7 @@ namespace somiod.Helpers
             return endpoints;
         }
 
-        internal static void PublishMqttMessageInTopic(string topic, string mqttEvent, string message, List<string> endpointsToSend)
+        internal static void PublishMqttMessages(string topic, string message, List<string> endpointsToSend)
         {
             MqttClient mClient;
             try
@@ -63,13 +64,37 @@ namespace somiod.Helpers
                 {
                     mClient = new MqttClient(IPAddress.Parse(endpoint));
                     mClient.Connect(Guid.NewGuid().ToString());
+                    Thread.Sleep(250);
                     if (!mClient.IsConnected)
                     {
                         throw new Exception("Error connecting to message broker...");
                     }
                     mClient.Publish(topic, Encoding.UTF8.GetBytes(message));
+                    Thread.Sleep(250);
                     mClient.Disconnect();
                 }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error publishing notifications", e);
+            }
+        }
+
+        internal static void BasicPublish(string topic, string message, string endpoint)
+        {
+            MqttClient mClient;
+            try
+            {
+                mClient = new MqttClient(IPAddress.Parse(endpoint));
+                mClient.Connect(Guid.NewGuid().ToString());
+                Thread.Sleep(1000);
+                if (!mClient.IsConnected)
+                {
+                    throw new Exception("Error connecting to message broker...");
+                }
+                mClient.Publish(topic, Encoding.UTF8.GetBytes(message));
+                Thread.Sleep(1000);
+                mClient.Disconnect();
             }
             catch (Exception e)
             {
