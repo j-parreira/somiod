@@ -18,8 +18,8 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM Containers " +
-                        "WHERE Name = @ContainerName", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM containers " +
+                        "WHERE name = @ContainerName", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@ContainerName", container.ToLower());
                         sqlCommand.CommandType = System.Data.CommandType.Text;
@@ -43,10 +43,10 @@ namespace somiod.Helpers
                 {
                     sqlConnection.Open();
                     using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) " +
-                        "FROM Containers WHERE Name = @ContainerName AND Parent = @ParentId", sqlConnection))
+                        "FROM containers WHERE name = @ContainerName AND parent = @ParentId", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@ContainerName", container.ToLower());
-                        sqlCommand.Parameters.AddWithValue("@ParentId", app.Id);
+                        sqlCommand.Parameters.AddWithValue("@ParentId", app.id);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         int count = (int)sqlCommand.ExecuteScalar();
                         return count > 0;
@@ -67,7 +67,7 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Containers", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM containers", sqlConnection))
                     {
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         using (SqlDataReader reader = sqlCommand.ExecuteReader())
@@ -76,10 +76,10 @@ namespace somiod.Helpers
                             {
                                 containers.Add(new Container
                                 {
-                                    Id = reader.GetInt32(0),
-                                    Name = reader.GetString(1),
-                                    CreationDateTime = reader.GetDateTime(2),
-                                    Parent = reader.GetInt32(3)
+                                    id = reader.GetInt32(0),
+                                    name = reader.GetString(1),
+                                    creation_datetime = reader.GetDateTime(2),
+                                    parent = reader.GetInt32(3)
                                 });
                             }
                             reader.Close();
@@ -103,10 +103,10 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Containers " +
-                        "WHERE Parent = @ApplicationId", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM containers " +
+                        "WHERE parent = @ApplicationId", sqlConnection))
                     {
-                        int appId = ApplicationHelper.FindApplicationInDatabase(application).Id;
+                        int appId = ApplicationHelper.FindApplicationInDatabase(application).id;
                         sqlCommand.Parameters.AddWithValue("@ApplicationId", appId);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         using (SqlDataReader reader = sqlCommand.ExecuteReader())
@@ -115,10 +115,10 @@ namespace somiod.Helpers
                             {
                                 containers.Add(new Container
                                 {
-                                    Id = reader.GetInt32(0),
-                                    Name = reader.GetString(1),
-                                    CreationDateTime = reader.GetDateTime(2),
-                                    Parent = reader.GetInt32(3)
+                                    id = reader.GetInt32(0),
+                                    name = reader.GetString(1),
+                                    creation_datetime = reader.GetDateTime(2),
+                                    parent = reader.GetInt32(3)
                                 });
                             }
                             reader.Close();
@@ -142,10 +142,10 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Containers " +
-                        "WHERE Name = @ContainerName AND Parent = @ApplicationId", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM containers " +
+                        "WHERE name = @ContainerName AND parent = @ApplicationId", sqlConnection))
                     {
-                        int appId = ApplicationHelper.FindApplicationInDatabase(application).Id;
+                        int appId = ApplicationHelper.FindApplicationInDatabase(application).id;
                         sqlCommand.Parameters.AddWithValue("@ApplicationId", appId);
                         sqlCommand.Parameters.AddWithValue("@ContainerName", container.ToLower());
                         sqlCommand.CommandType = System.Data.CommandType.Text;
@@ -155,10 +155,10 @@ namespace somiod.Helpers
                             {
                                 cont = new Container
                                 {
-                                    Id = reader.GetInt32(0),
-                                    Name = reader.GetString(1),
-                                    CreationDateTime = reader.GetDateTime(2),
-                                    Parent = reader.GetInt32(3)
+                                    id = reader.GetInt32(0),
+                                    name = reader.GetString(1),
+                                    creation_datetime = reader.GetDateTime(2),
+                                    parent = reader.GetInt32(3)
                                 };
                             }
                             reader.Close();
@@ -176,12 +176,12 @@ namespace somiod.Helpers
 
         internal static Container AddContainerToDatabase(string application, Container container)
         {
-            if (ContainerNameExists(container.Name))
+            if (ContainerNameExists(container.name))
             {
                 int i = 1;
-                while (ContainerNameExists(container.Name))
+                while (ContainerNameExists(container.name))
                 {
-                    container.Name += i.ToString();
+                    container.name += i.ToString();
                     i++;
                 }
             }
@@ -191,13 +191,13 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO Containers " +
-                        "(Name, CreationDateTime, Parent) " +
+                    using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO containers " +
+                        "(name, creation_datetime, parent) " +
                         "VALUES (@ContainerName, @CreationDateTime, @ParentId)", sqlConnection))
                     {
-                        sqlCommand.Parameters.AddWithValue("@ContainerName", container.Name.ToLower());
+                        sqlCommand.Parameters.AddWithValue("@ContainerName", container.name.ToLower());
                         sqlCommand.Parameters.AddWithValue("@CreationDateTime", DateTime.Now);
-                        sqlCommand.Parameters.AddWithValue("@ParentId", app.Id);
+                        sqlCommand.Parameters.AddWithValue("@ParentId", app.id);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         sqlCommand.ExecuteNonQuery();
                     }
@@ -208,7 +208,7 @@ namespace somiod.Helpers
             {
                 throw new Exception("Error adding container to database", e);
             }
-            container = FindContainerInDatabase(application, container.Name);
+            container = FindContainerInDatabase(application, container.name);
             return container;
         }
 
@@ -220,11 +220,11 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("DELETE FROM Containers " +
-                        "WHERE Name = @ContainerName AND Parent = @ApplicationId", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("DELETE FROM containers " +
+                        "WHERE name = @ContainerName AND parent = @ApplicationId", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@ContainerName", container.ToLower());
-                        sqlCommand.Parameters.AddWithValue("@ApplicationId", app.Id);
+                        sqlCommand.Parameters.AddWithValue("@ApplicationId", app.id);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         sqlCommand.ExecuteNonQuery();
                     }
@@ -239,12 +239,12 @@ namespace somiod.Helpers
 
         internal static Container UpdateContainerInDatabase(string application, string container, Container newContainer)
         {
-            if (ContainerNameExists(newContainer.Name))
+            if (ContainerNameExists(newContainer.name))
             {
                 int i = 1;
-                while (ContainerNameExists(newContainer.Name))
+                while (ContainerNameExists(newContainer.name))
                 {
-                    newContainer.Name += i.ToString();
+                    newContainer.name += i.ToString();
                     i++;
                 }
             }
@@ -254,13 +254,13 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("UPDATE Containers " +
-                        "SET Name = @NewContainerName " +
-                        "WHERE Name = @ContainerName AND Parent = @ApplicationId", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("UPDATE containers " +
+                        "SET name = @NewContainerName " +
+                        "WHERE name = @ContainerName AND parent = @ApplicationId", sqlConnection))
                     {
-                        sqlCommand.Parameters.AddWithValue("@NewContainerName", newContainer.Name.ToLower());
+                        sqlCommand.Parameters.AddWithValue("@NewContainerName", newContainer.name.ToLower());
                         sqlCommand.Parameters.AddWithValue("@ContainerName", container);
-                        sqlCommand.Parameters.AddWithValue("@ApplicationId", app.Id);
+                        sqlCommand.Parameters.AddWithValue("@ApplicationId", app.id);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         sqlCommand.ExecuteNonQuery();
                     }
@@ -271,7 +271,7 @@ namespace somiod.Helpers
             {
                 throw new Exception("Error updating container in database", e);
             }
-            var NewCont = FindContainerInDatabase(application, newContainer.Name);
+            var NewCont = FindContainerInDatabase(application, newContainer.name);
             return NewCont;
         }
     }

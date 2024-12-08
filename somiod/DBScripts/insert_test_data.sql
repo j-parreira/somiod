@@ -1,10 +1,10 @@
-﻿INSERT INTO Applications ([Name], [CreationDateTime]) 
+﻿INSERT INTO applications ([name], [creation_datetime]) 
 VALUES 
     ('lighting', GETDATE()), 
     ('heating', GETDATE()), 
     ('security', GETDATE());
 
-INSERT INTO Containers ([Name], [CreationDateTime], [Parent]) 
+INSERT INTO containers ([name], [creation_datetime], [parent]) 
 VALUES 
     ('light_bulb', GETDATE(), 1),
     ('parking_light', GETDATE(), 1),
@@ -13,7 +13,7 @@ VALUES
     ('camera', GETDATE(), 3),
     ('alarm', GETDATE(), 3);
 
-INSERT INTO Records ([Name], [CreationDateTime], [Parent], [Content]) 
+INSERT INTO records ([name], [creation_datetime], [parent], [content]) 
 VALUES 
     ('on1', GETDATE(), 1, 'Light is turned on'),
     ('off1', GETDATE(), 1, 'Light is turned off'),
@@ -28,7 +28,7 @@ VALUES
     ('on6', GETDATE(), 6, 'Alarm is turned on'),
     ('off6', GETDATE(), 6, 'Alarm is turned off');
 
-INSERT INTO Notifications ([Name], [CreationDateTime], [Parent], [Event], [Endpoint], [Enabled]) 
+INSERT INTO notifications ([name], [creation_datetime], [parent], [event_type], [endpoint], [enabled]) 
 VALUES 
     ('notification_1', GETDATE(), 1, '0', '127.0.0.1', 1),
     ('notification_2', GETDATE(), 2, '0', '127.0.0.1', 1),

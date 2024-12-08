@@ -15,22 +15,22 @@ namespace somiod.Helpers
 {
     public class MqttHelper
     {
-        internal static List<string> FindEndpointsToSend(string application, string container, string notifEvent)
+        internal static List<string> FindEndpointsToSend(string application, string container, string eventType)
         {
-            var containerId = ContainerHelper.FindContainerInDatabase(application, container).Id;
+            var containerId = ContainerHelper.FindContainerInDatabase(application, container).id;
             List<string> endpoints = new List<string>();
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT Endpoint FROM Notifications " +
-                        "WHERE Parent = @ContainerId AND Enabled = 1 " +
-                        "AND (Event = @EventAll OR Event = @Event)", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT endpoint FROM notifications " +
+                        "WHERE parent = @ContainerId AND enabled = 1 " +
+                        "AND (event_type = @EventAll OR event_type = @Event)", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@ContainerId", containerId);
                         sqlCommand.Parameters.AddWithValue("@EventAll", "0");
-                        sqlCommand.Parameters.AddWithValue("@Event", notifEvent);
+                        sqlCommand.Parameters.AddWithValue("@Event", eventType);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         using (SqlDataReader reader = sqlCommand.ExecuteReader())
                         {
@@ -73,28 +73,6 @@ namespace somiod.Helpers
                     Thread.Sleep(250);
                     mClient.Disconnect();
                 }
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Error publishing notifications", e);
-            }
-        }
-
-        internal static void BasicPublish(string topic, string message, string endpoint)
-        {
-            MqttClient mClient;
-            try
-            {
-                mClient = new MqttClient(IPAddress.Parse(endpoint));
-                mClient.Connect(Guid.NewGuid().ToString());
-                Thread.Sleep(1000);
-                if (!mClient.IsConnected)
-                {
-                    throw new Exception("Error connecting to message broker...");
-                }
-                mClient.Publish(topic, Encoding.UTF8.GetBytes(message));
-                Thread.Sleep(1000);
-                mClient.Disconnect();
             }
             catch (Exception e)
             {

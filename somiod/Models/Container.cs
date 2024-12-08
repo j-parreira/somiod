@@ -7,6 +7,6 @@ namespace somiod.Models
 {
     public class Container : Application
     {
-        public int Parent { get; set; }
+        public int parent { get; set; }
     }
 }

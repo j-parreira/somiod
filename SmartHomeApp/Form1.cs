@@ -135,11 +135,25 @@ namespace SmartHomeApp
                         Name = applicationName,
                         CreationDateTime = DateTime.Now
                     };
-                    string fullURI = baseURI;
-                    string requestBody = XMLHelper.SerializeXmlUtf8<Application>(app).ToString().Trim();
-                    HttpContent httpContent = new StringContent(requestBody, Encoding.UTF8, "application/xml");
-                    HttpResponseMessage response = await client.PostAsync(fullURI, httpContent);
-                    string responseBody = await response.Content.ReadAsStringAsync();
+                    string fullURI = baseURI + applicationName;
+                    HttpResponseMessage response_1 = client.GetAsync(fullURI).Result;
+                    int statusCode = (int)response_1.StatusCode;
+                    if (statusCode == 404)
+                    {
+                        fullURI = baseURI;
+                        string requestBody = XMLHelper.SerializeXmlUtf8<Application>(app).ToString().Trim();
+                        HttpContent httpContent = new StringContent(requestBody, Encoding.UTF8, "application/xml");
+                        HttpResponseMessage response_2 = await client.PostAsync(fullURI, httpContent);
+                        int statusCode_2 = (int)response_2.StatusCode;
+                        if (statusCode_2 != 201)
+                        {
+                            throw new Exception("Error creating container");
+                        }
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -161,11 +175,25 @@ namespace SmartHomeApp
                         CreationDateTime = DateTime.Now,
                         Parent = 0
                     };
-                    string fullURI = baseURI + applicationName;
-                    string requestBody = XMLHelper.SerializeXmlUtf8<Container>(cont).ToString().Trim();
-                    HttpContent httpContent = new StringContent(requestBody, Encoding.UTF8, "application/xml");
-                    HttpResponseMessage response = await client.PostAsync(fullURI, httpContent);
-                    string responseBody = await response.Content.ReadAsStringAsync();
+                    string fullURI = baseURI + applicationName + "/" + containerName;
+                    HttpResponseMessage response_1 = client.GetAsync(fullURI).Result;
+                    int statusCode = (int)response_1.StatusCode;
+                    if (statusCode == 404)
+                    {
+                        fullURI = baseURI + applicationName;
+                        string requestBody = XMLHelper.SerializeXmlUtf8<Container>(cont).ToString().Trim();
+                        HttpContent httpContent = new StringContent(requestBody, Encoding.UTF8, "application/xml");
+                        HttpResponseMessage response_2 = await client.PostAsync(fullURI, httpContent);
+                        int statusCode_2 = (int)response_2.StatusCode;
+                        if (statusCode_2 != 201)
+                        {
+                            throw new Exception("Error creating container");
+                        }
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -207,13 +235,14 @@ namespace SmartHomeApp
         }
         private void MClient_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
         {
+            DateTime receivedTime = DateTime.Now;
             string topic = e.Topic;
             string body = Encoding.UTF8.GetString(e.Message);
             string[] vars = body.Split(';');
             string mqttEvent = vars[0];
             string message = vars[1];
-            AppendMqttMessage(topic, mqttEvent, message);
-            UpdateUI(topic, message);
+            HandleEvent(topic, mqttEvent, message, receivedTime);
+            AppendMqttMessage(topic, mqttEvent, message, receivedTime);
         }
 
         private void SubscribeToTopics(string[] topics)
@@ -234,11 +263,11 @@ namespace SmartHomeApp
             }
         }
 
-        private void UpdateUI(string topic, string message)
+        private void HandleEvent(string topic, string mqttEvent, string message, DateTime receivedTime)
         {
             if (InvokeRequired)
             {
-                Invoke(new Action(() => UpdateUI(topic, message)));
+                Invoke(new Action(() => HandleEvent(topic, mqttEvent, message, receivedTime)));
                 return;
             }
             switch (topic)
@@ -411,15 +440,20 @@ namespace SmartHomeApp
             }
         }
 
-        private void AppendMqttMessage(string topic, string mqttEvent, string message)
+        private void AppendMqttMessage(string topic, string mqttEvent, string message, DateTime receivedTime)
         {
             string filePath = Path.Combine(Directory.GetCurrentDirectory(), filename);
-
             try
             {
+                MqttMessage mqttMessage = new MqttMessage
+                {
+                    Topic = topic,
+                    MqttEvent = mqttEvent,
+                    Message = message,
+                    ReceivedTime = receivedTime
+                };
+                string xmlMessage = XMLHelper.SerializeXmlUtf8<MqttMessage>(mqttMessage).ToString().Trim();
                 XDocument doc;
-
-                // Load existing file or create a new one
                 if (File.Exists(filePath))
                 {
                     doc = XDocument.Load(filePath);
@@ -428,23 +462,8 @@ namespace SmartHomeApp
                 {
                     doc = new XDocument(new XElement("MqttMessages"));
                 }
-
-                // Parse the incoming XML string into an XElement
-                XElement messageElement;
-                try
-                {
-                    //messageElement = XElement.Parse(xmlMessage);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Invalid XML: {ex.Message}");
-                    return;
-                }
-
-                // Add the parsed XElement to the root of the document
-                //doc.Root.Add(messageElement);
-
-                // Save the updated document
+                XElement messageElement = XElement.Parse(xmlMessage);
+                doc.Root.Add(messageElement);
                 doc.Save(filePath);
             }
             catch (Exception ex)
@@ -456,8 +475,7 @@ namespace SmartHomeApp
 
         private void PruneOldMessages(int daysToKeep)
         {
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "data.xml");
-
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), filename);
             try
             {
                 if (!File.Exists(filePath))
@@ -466,7 +484,13 @@ namespace SmartHomeApp
                 }
                 XDocument doc = XDocument.Load(filePath);
                 DateTime cutoffDate = DateTime.Now.AddDays(-daysToKeep);
-                doc.Root.Elements("MqttMessage").Where(m => DateTime.Parse(m.Element("Record").Element("CreationDateTime").Value) < cutoffDate).Remove();
+                doc.Root.Elements("MqttMessage")
+                    .Where(m =>
+                    {
+                        DateTime messageDate = DateTime.Parse(m.Element("ReceivedTime").Value);
+                        return messageDate < cutoffDate;
+                    })
+                    .Remove();
                 doc.Save(filePath);
             }
             catch (Exception ex)

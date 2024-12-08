@@ -7,6 +7,6 @@ namespace somiod.Models
 {
     public class Record : Container
     {
-        public string Content { get; set; }
+        public string content { get; set; }
     }
 }

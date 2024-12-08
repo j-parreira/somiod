@@ -1,47 +1,47 @@
-﻿CREATE TABLE [dbo].[Applications]
+﻿CREATE TABLE [dbo].[applications]
 (
-	[Id] INT IDENTITY(1, 1) NOT NULL,
-	[Name] NVARCHAR (50) NOT NULL,
-	[CreationDateTime] SMALLDATETIME NOT NULL,
-	CONSTRAINT [PK_Application_Id] PRIMARY KEY CLUSTERED ([Id] ASC),
-    CONSTRAINT [UC_Application_Name] UNIQUE NONCLUSTERED ([Name] ASC),
+	[id] INT IDENTITY(1, 1) NOT NULL,
+	[name] NVARCHAR (50) NOT NULL,
+	[creation_datetime] SMALLDATETIME NOT NULL,
+	CONSTRAINT [PK_Application_Id] PRIMARY KEY CLUSTERED ([id] ASC),
+    CONSTRAINT [UC_Application_Name] UNIQUE NONCLUSTERED ([name] ASC),
 )
 
-CREATE TABLE [dbo].[Containers]
+CREATE TABLE [dbo].[containers]
 (
-	[Id] INT IDENTITY(1, 1) NOT NULL,
-	[Name] NVARCHAR (50) NOT NULL,
-	[CreationDateTime] SMALLDATETIME NOT NULL,
-	[Parent] INT NOT NULL,
-	CONSTRAINT [PK_Container_Id] PRIMARY KEY CLUSTERED ([Id] ASC),
-	CONSTRAINT [FK_Container_Parent] FOREIGN KEY (Parent) REFERENCES Applications(Id) ON DELETE CASCADE,
-    CONSTRAINT [UC_Container_Name] UNIQUE NONCLUSTERED ([Name] ASC),
+	[id] INT IDENTITY(1, 1) NOT NULL,
+	[name] NVARCHAR (50) NOT NULL,
+	[creation_datetime] SMALLDATETIME NOT NULL,
+	[parent] INT NOT NULL,
+	CONSTRAINT [PK_Container_Id] PRIMARY KEY CLUSTERED ([id] ASC),
+	CONSTRAINT [FK_Container_Parent] FOREIGN KEY (parent) REFERENCES applications(id) ON DELETE CASCADE,
+    CONSTRAINT [UC_Container_Name] UNIQUE NONCLUSTERED ([name] ASC),
 )
 
-CREATE TABLE [dbo].[Records]
+CREATE TABLE [dbo].[records]
 (
-	[Id] INT IDENTITY(1, 1) NOT NULL,
-	[Name] NVARCHAR (150) NOT NULL,
-	[CreationDateTime] SMALLDATETIME NOT NULL,
-	[Parent] INT NOT NULL,
-	[Content] NVARCHAR (MAX) NOT NULL,
-	CONSTRAINT [PK_Record_Id] PRIMARY KEY CLUSTERED ([Id] ASC),
-	CONSTRAINT [FK_Record_Parent] FOREIGN KEY (Parent) REFERENCES Containers(Id) ON DELETE CASCADE,
-	CONSTRAINT [UC_Record_Name] UNIQUE NONCLUSTERED ([Name] ASC),
+	[id] INT IDENTITY(1, 1) NOT NULL,
+	[name] NVARCHAR (100) NOT NULL,
+	[creation_datetime] SMALLDATETIME NOT NULL,
+	[parent] INT NOT NULL,
+	[content] NVARCHAR (MAX) NOT NULL,
+	CONSTRAINT [PK_Record_Id] PRIMARY KEY CLUSTERED ([id] ASC),
+	CONSTRAINT [FK_Record_Parent] FOREIGN KEY (parent) REFERENCES containers(id) ON DELETE CASCADE,
+	CONSTRAINT [UC_Record_Name] UNIQUE NONCLUSTERED ([name] ASC),
 )
 
-CREATE TABLE [dbo].[Notifications]
+CREATE TABLE [dbo].[notifications]
 (
-	[Id] INT IDENTITY(1, 1) NOT NULL,
-	[Name] NVARCHAR (50) NOT NULL,
-	[CreationDateTime] SMALLDATETIME NOT NULL,
-	[Parent] INT NOT NULL,
-	[Event] CHAR NOT NULL,
-	[Endpoint] NVARCHAR (150) NOT NULL,
-	[Enabled] BIT NOT NULL DEFAULT 1,
-	CONSTRAINT [PK_Notification_Id] PRIMARY KEY CLUSTERED ([Id] ASC),
-	CONSTRAINT [FK_Notification_Parent] FOREIGN KEY (Parent) REFERENCES Containers(Id) ON DELETE CASCADE,
-	CONSTRAINT [UC_Notification_Name] UNIQUE NONCLUSTERED ([Name] ASC),
-	CONSTRAINT [CHK_Notification_Event] CHECK ([Event] IN ('0', '1', '2')),
-	CONSTRAINT [CHK_Notification_Enabled] CHECK ([Enabled] IN (0, 1)),
+	[id] INT IDENTITY(1, 1) NOT NULL,
+	[name] NVARCHAR (50) NOT NULL,
+	[creation_datetime] SMALLDATETIME NOT NULL,
+	[parent] INT NOT NULL,
+	[event_type] CHAR NOT NULL,
+	[endpoint] NVARCHAR (150) NOT NULL,
+	[enabled] BIT NOT NULL DEFAULT 1,
+	CONSTRAINT [PK_Notification_Id] PRIMARY KEY CLUSTERED ([id] ASC),
+	CONSTRAINT [FK_Notification_Parent] FOREIGN KEY (parent) REFERENCES containers(id) ON DELETE CASCADE,
+	CONSTRAINT [UC_Notification_Name] UNIQUE NONCLUSTERED ([name] ASC),
+	CONSTRAINT [CHK_Notification_Event] CHECK ([event_type] IN ('0', '1', '2')),
+	CONSTRAINT [CHK_Notification_Enabled] CHECK ([enabled] IN (0, 1)),
 )

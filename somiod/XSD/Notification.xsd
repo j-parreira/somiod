@@ -3,13 +3,13 @@
 	<xs:element name="Notification">
 		<xs:complexType>
 			<xs:all>
-				<xs:element name="Id" type="xs:int" />
-				<xs:element name="Name" type="xs:string" />
-				<xs:element name="CreationDateTime" type="xs:dateTime" />
-				<xs:element name="Parent" type="xs:int" />
-				<xs:element name="Event" type="xs:int" />
-				<xs:element name="Endpoint" type="xs:string" />
-				<xs:element name="Enabled" type="xs:boolean" minOccurs="1" />
+				<xs:element name="id" type="xs:int" />
+				<xs:element name="name" type="xs:string" />
+				<xs:element name="creation_datetime" type="xs:dateTime" />
+				<xs:element name="parent" type="xs:int" />
+				<xs:element name="event_type" type="xs:int" />
+				<xs:element name="endpoint" type="xs:string" />
+				<xs:element name="enabled" type="xs:boolean" />
 			</xs:all>
 		</xs:complexType>
 	</xs:element>

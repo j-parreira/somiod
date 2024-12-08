@@ -18,8 +18,8 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM Notifications " +
-                        "WHERE Name = @NotificationName", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM notifications " +
+                        "WHERE name = @NotificationName", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@NotificationName", notificationName.ToLower());
                         sqlCommand.CommandType = System.Data.CommandType.Text;
@@ -44,14 +44,14 @@ namespace somiod.Helpers
                 {
                     sqlConnection.Open();
                     using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1)" +
-                        "FROM Notifications n " +
-                        "INNER JOIN Containers c ON n.Parent = c.Id " +
-                        "WHERE n.Name = @NotificationName AND n.Parent = @NotificationParent " +
-                        "AND c.Parent = @ContainerParent", sqlConnection))
+                        "FROM notifications n " +
+                        "INNER JOIN containers c ON n.parent = c.id " +
+                        "WHERE n.name = @NotificationName AND n.parent = @NotificationParent " +
+                        "AND c.parent = @ContainerParent", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@NotificationName", notification.ToLower());
-                        sqlCommand.Parameters.AddWithValue("@NotificationParent", cont.Id);
-                        sqlCommand.Parameters.AddWithValue("@ContainerParent", app.Id);
+                        sqlCommand.Parameters.AddWithValue("@NotificationParent", cont.id);
+                        sqlCommand.Parameters.AddWithValue("@ContainerParent", app.id);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         int count = (int)sqlCommand.ExecuteScalar();
                         return count > 0;
@@ -72,7 +72,7 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Notifications", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM notifications", sqlConnection))
                     {
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         using (SqlDataReader reader = sqlCommand.ExecuteReader())
@@ -81,13 +81,13 @@ namespace somiod.Helpers
                             {
                                 notifications.Add(new Notification
                                 {
-                                    Id = reader.GetInt32(0),
-                                    Name = reader.GetString(1),
-                                    CreationDateTime = reader.GetDateTime(2),
-                                    Parent = reader.GetInt32(3),
-                                    Event = reader.GetString(4),
-                                    Endpoint = reader.GetString(5),
-                                    Enabled = reader.GetBoolean(6)
+                                    id = reader.GetInt32(0),
+                                    name = reader.GetString(1),
+                                    creation_datetime = reader.GetDateTime(2),
+                                    parent = reader.GetInt32(3),
+                                    event_type = reader.GetString(4),
+                                    endpoint = reader.GetString(5),
+                                    enabled = reader.GetBoolean(6)
                                 });
                             }
                             reader.Close();
@@ -113,10 +113,10 @@ namespace somiod.Helpers
                 {
                     sqlConnection.Open();
                     using (SqlCommand sqlCommand = new SqlCommand("SELECT * " +
-                        "FROM Notifications WHERE Parent IN " +
-                        "(SELECT Id FROM Containers WHERE Parent = @ParentId)", sqlConnection))
+                        "FROM notifications WHERE parent IN " +
+                        "(SELECT id FROM containers WHERE parent = @ParentId)", sqlConnection))
                     {
-                        sqlCommand.Parameters.AddWithValue("@ParentId", app.Id);
+                        sqlCommand.Parameters.AddWithValue("@ParentId", app.id);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         using (SqlDataReader reader = sqlCommand.ExecuteReader())
                         {
@@ -124,13 +124,13 @@ namespace somiod.Helpers
                             {
                                 notifications.Add(new Notification
                                 {
-                                    Id = reader.GetInt32(0),
-                                    Name = reader.GetString(1),
-                                    CreationDateTime = reader.GetDateTime(2),
-                                    Parent = reader.GetInt32(3),
-                                    Event = reader.GetString(4),
-                                    Endpoint = reader.GetString(5),
-                                    Enabled = reader.GetBoolean(6)
+                                    id = reader.GetInt32(0),
+                                    name = reader.GetString(1),
+                                    creation_datetime = reader.GetDateTime(2),
+                                    parent = reader.GetInt32(3),
+                                    event_type = reader.GetString(4),
+                                    endpoint = reader.GetString(5),
+                                    enabled = reader.GetBoolean(6)
                                 });
                             }
                             reader.Close();
@@ -155,10 +155,10 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Notifications " +
-                        "WHERE Parent = @ParentId", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM notifications " +
+                        "WHERE parent = @ParentId", sqlConnection))
                     {
-                        sqlCommand.Parameters.AddWithValue("@ParentId", cont.Id);
+                        sqlCommand.Parameters.AddWithValue("@ParentId", cont.id);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         using (SqlDataReader reader = sqlCommand.ExecuteReader())
                         {
@@ -166,13 +166,13 @@ namespace somiod.Helpers
                             {
                                 notifications.Add(new Notification
                                 {
-                                    Id = reader.GetInt32(0),
-                                    Name = reader.GetString(1),
-                                    CreationDateTime = reader.GetDateTime(2),
-                                    Parent = reader.GetInt32(3),
-                                    Event = reader.GetString(4),
-                                    Endpoint = reader.GetString(5),
-                                    Enabled = reader.GetBoolean(6)
+                                    id = reader.GetInt32(0),
+                                    name = reader.GetString(1),
+                                    creation_datetime = reader.GetDateTime(2),
+                                    parent = reader.GetInt32(3),
+                                    event_type = reader.GetString(4),
+                                    endpoint = reader.GetString(5),
+                                    enabled = reader.GetBoolean(6)
                                 });
                             }
                             reader.Close();
@@ -196,10 +196,10 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Notifications " +
-                        "WHERE Name = @NotificationName AND Parent = @ContainerId", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM notifications " +
+                        "WHERE name = @NotificationName AND parent = @ContainerId", sqlConnection))
                     {
-                        int contId = ContainerHelper.FindContainerInDatabase(application, container).Id;
+                        int contId = ContainerHelper.FindContainerInDatabase(application, container).id;
                         sqlCommand.Parameters.AddWithValue("@ContainerId", contId);
                         sqlCommand.Parameters.AddWithValue("@NotificationName", notification.ToLower());
                         sqlCommand.CommandType = System.Data.CommandType.Text;
@@ -209,13 +209,13 @@ namespace somiod.Helpers
                             {
                                 not = new Notification
                                 {
-                                    Id = reader.GetInt32(0),
-                                    Name = reader.GetString(1),
-                                    CreationDateTime = reader.GetDateTime(2),
-                                    Parent = reader.GetInt32(3),
-                                    Event = reader.GetString(4),
-                                    Endpoint = reader.GetString(5),
-                                    Enabled = reader.GetBoolean(6)
+                                    id = reader.GetInt32(0),
+                                    name = reader.GetString(1),
+                                    creation_datetime = reader.GetDateTime(2),
+                                    parent = reader.GetInt32(3),
+                                    event_type = reader.GetString(4),
+                                    endpoint = reader.GetString(5),
+                                    enabled = reader.GetBoolean(6)
                                 };
                             }
                             reader.Close();
@@ -233,17 +233,17 @@ namespace somiod.Helpers
 
         internal static Notification AddNotificationToDatabase(string application, string container, Notification notification)
         {
-            if (notification.Event != "0" && notification.Event != "1" && notification.Event != "2")
+            if (notification.event_type != "0" && notification.event_type != "1" && notification.event_type != "2")
             {
                 throw new Exception("Invalid event type");
             }
-            notification.Name = "not_0";
-            if (NotificationNameExists(notification.Name))
+            notification.name = "not_0";
+            if (NotificationNameExists(notification.name))
             {
                 int i = 1;
-                while (NotificationNameExists(notification.Name))
+                while (NotificationNameExists(notification.name))
                 {
-                    notification.Name = "not_" + i.ToString();
+                    notification.name = "not_" + i.ToString();
                     i++;
                 }
             }
@@ -253,17 +253,17 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO Notifications " +
-                        "(Name, CreationDateTime, Parent, Event, Endpoint, Enabled) " +
+                    using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO notifications " +
+                        "(name, creation_datetime, parent, event_type, endpoint, enabled) " +
                         "VALUES (@NotificationName, @NotificationCreationDateTime, @NotificationParent, " +
                         "@NotificationEvent, @NotificationEndpoint, @NotificationEnabled)", sqlConnection))
                     {
-                        sqlCommand.Parameters.AddWithValue("@NotificationName", notification.Name.ToLower());
+                        sqlCommand.Parameters.AddWithValue("@NotificationName", notification.name.ToLower());
                         sqlCommand.Parameters.AddWithValue("@NotificationCreationDateTime", DateTime.Now);
-                        sqlCommand.Parameters.AddWithValue("@NotificationParent", cont.Id);
-                        sqlCommand.Parameters.AddWithValue("@NotificationEvent", notification.Event);
-                        sqlCommand.Parameters.AddWithValue("@NotificationEndpoint", notification.Endpoint);
-                        sqlCommand.Parameters.AddWithValue("@NotificationEnabled", notification.Enabled);
+                        sqlCommand.Parameters.AddWithValue("@NotificationParent", cont.id);
+                        sqlCommand.Parameters.AddWithValue("@NotificationEvent", notification.event_type);
+                        sqlCommand.Parameters.AddWithValue("@NotificationEndpoint", notification.endpoint);
+                        sqlCommand.Parameters.AddWithValue("@NotificationEnabled", notification.enabled);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         sqlCommand.ExecuteNonQuery();
                     }
@@ -274,7 +274,7 @@ namespace somiod.Helpers
             {
                 throw new Exception("Error adding notification to database", e);
             }
-            notification = FindNotificationInDatabase(application, container, notification.Name);
+            notification = FindNotificationInDatabase(application, container, notification.name);
             return notification;
         }
 
@@ -286,11 +286,11 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("DELETE FROM Notifications " +
-                        "WHERE Name = @NotificationName AND Parent = @ContainerId", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("DELETE FROM notifications " +
+                        "WHERE name = @NotificationName AND parent = @ContainerId", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@NotificationName", notification.ToLower());
-                        sqlCommand.Parameters.AddWithValue("@ContainerId", cont.Id);
+                        sqlCommand.Parameters.AddWithValue("@ContainerId", cont.id);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         sqlCommand.ExecuteNonQuery();
                     }

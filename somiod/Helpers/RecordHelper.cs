@@ -23,8 +23,8 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM Records " +
-                        "WHERE Name = @RecordName", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1) FROM records " +
+                        "WHERE name = @RecordName", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@RecordName", recordName.ToLower());
                         sqlCommand.CommandType = System.Data.CommandType.Text;
@@ -49,14 +49,14 @@ namespace somiod.Helpers
                 {
                     sqlConnection.Open();
                     using (SqlCommand sqlCommand = new SqlCommand("SELECT COUNT(1)" +
-                        "FROM Records r " +
-                        "INNER JOIN Containers c ON r.Parent = c.Id " +
-                        "WHERE r.Name = @RecordName AND r.Parent = @RecordParent " +
-                        "AND c.Parent = @ContainerParent", sqlConnection))
+                        "FROM records r " +
+                        "INNER JOIN containers c ON r.parent = c.id " +
+                        "WHERE r.name = @RecordName AND r.parent = @RecordParent " +
+                        "AND c.parent = @ContainerParent", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@RecordName", record.ToLower());
-                        sqlCommand.Parameters.AddWithValue("@RecordParent", cont.Id);
-                        sqlCommand.Parameters.AddWithValue("@ContainerParent", app.Id);
+                        sqlCommand.Parameters.AddWithValue("@RecordParent", cont.id);
+                        sqlCommand.Parameters.AddWithValue("@ContainerParent", app.id);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         int count = (int)sqlCommand.ExecuteScalar();
                         return count > 0;
@@ -77,7 +77,7 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Records", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM records", sqlConnection))
                     {
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         using (SqlDataReader reader = sqlCommand.ExecuteReader())
@@ -86,11 +86,11 @@ namespace somiod.Helpers
                             {
                                 records.Add(new Record
                                 {
-                                    Id = reader.GetInt32(0),
-                                    Name = reader.GetString(1),
-                                    CreationDateTime = reader.GetDateTime(2),
-                                    Parent = reader.GetInt32(3),
-                                    Content = reader.GetString(4)
+                                    id = reader.GetInt32(0),
+                                    name = reader.GetString(1),
+                                    creation_datetime = reader.GetDateTime(2),
+                                    parent = reader.GetInt32(3),
+                                    content = reader.GetString(4)
                                 });
                             }
                             reader.Close();
@@ -115,10 +115,10 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Records " +
-                        "WHERE Parent IN (SELECT Id FROM Containers WHERE Parent = @ParentId)", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("SELECT * FROM records " +
+                        "WHERE parent IN (SELECT id FROM containers WHERE parent = @ParentId)", sqlConnection))
                     {
-                        sqlCommand.Parameters.AddWithValue("@ParentId", app.Id);
+                        sqlCommand.Parameters.AddWithValue("@ParentId", app.id);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         using (SqlDataReader reader = sqlCommand.ExecuteReader())
                         {
@@ -126,11 +126,11 @@ namespace somiod.Helpers
                             {
                                 records.Add(new Record
                                 {
-                                    Id = reader.GetInt32(0),
-                                    Name = reader.GetString(1),
-                                    CreationDateTime = reader.GetDateTime(2),
-                                    Parent = reader.GetInt32(3),
-                                    Content = reader.GetString(4)
+                                    id = reader.GetInt32(0),
+                                    name = reader.GetString(1),
+                                    creation_datetime = reader.GetDateTime(2),
+                                    parent = reader.GetInt32(3),
+                                    content = reader.GetString(4)
                                 });
                             }
                             reader.Close();
@@ -156,9 +156,9 @@ namespace somiod.Helpers
                 {
                     sqlConnection.Open();
                     using (SqlCommand sqlCommand = new SqlCommand("SELECT * " +
-                        "FROM Records WHERE Parent = @ParentId", sqlConnection))
+                        "FROM records WHERE parent = @ParentId", sqlConnection))
                     {
-                        sqlCommand.Parameters.AddWithValue("@ParentId", cont.Id);
+                        sqlCommand.Parameters.AddWithValue("@ParentId", cont.id);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         using (SqlDataReader reader = sqlCommand.ExecuteReader())
                         {
@@ -166,11 +166,11 @@ namespace somiod.Helpers
                             {
                                 records.Add(new Record
                                 {
-                                    Id = reader.GetInt32(0),
-                                    Name = reader.GetString(1),
-                                    CreationDateTime = reader.GetDateTime(2),
-                                    Parent = reader.GetInt32(3),
-                                    Content = reader.GetString(4)
+                                    id = reader.GetInt32(0),
+                                    name = reader.GetString(1),
+                                    creation_datetime = reader.GetDateTime(2),
+                                    parent = reader.GetInt32(3),
+                                    content = reader.GetString(4)
                                 });
                             }
                             reader.Close();
@@ -195,10 +195,10 @@ namespace somiod.Helpers
                 {
                     sqlConnection.Open();
                     using (SqlCommand sqlCommand = new SqlCommand("SELECT * " +
-                        "FROM Records WHERE Name = @RecordName " +
-                        "AND Parent = @ContainerId", sqlConnection))
+                        "FROM records WHERE name = @RecordName " +
+                        "AND parent = @ContainerId", sqlConnection))
                     {
-                        int contId = ContainerHelper.FindContainerInDatabase(application, container).Id;
+                        int contId = ContainerHelper.FindContainerInDatabase(application, container).id;
                         sqlCommand.Parameters.AddWithValue("@ContainerId", contId);
                         sqlCommand.Parameters.AddWithValue("@RecordName", record.ToLower());
                         sqlCommand.CommandType = System.Data.CommandType.Text;
@@ -208,11 +208,11 @@ namespace somiod.Helpers
                             {
                                 rec = new Record
                                 {
-                                    Id = reader.GetInt32(0),
-                                    Name = reader.GetString(1),
-                                    CreationDateTime = reader.GetDateTime(2),
-                                    Parent = reader.GetInt32(3),
-                                    Content = reader.GetString(4)
+                                    id = reader.GetInt32(0),
+                                    name = reader.GetString(1),
+                                    creation_datetime = reader.GetDateTime(2),
+                                    parent = reader.GetInt32(3),
+                                    content = reader.GetString(4)
                                 };
                             }
                             reader.Close();
@@ -230,13 +230,13 @@ namespace somiod.Helpers
 
         internal static Record AddRecordToDatabase(string application, string container, Record record)
         {
-            record.Name = "rec_0";
-            if (RecordNameExists(record.Name))
+            record.name = "rec_0";
+            if (RecordNameExists(record.name))
             {
                 int i = 1;
-                while (RecordNameExists(record.Name))
+                while (RecordNameExists(record.name))
                 {
-                    record.Name = "rec_" + i.ToString();
+                    record.name = "rec_" + i.ToString();
                     i++;
                 }
             }
@@ -246,15 +246,15 @@ namespace somiod.Helpers
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO Records " +
-                        "(Name, Content, CreationDateTime, Parent) " +
+                    using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO records " +
+                        "(name, nontent, creation_datetime, parent) " +
                         "VALUES (@RecordName, @RecordContent, @RecordCreationDateTime, @RecordParent)", sqlConnection))
                     {
-                        record.Name = record.Name.ToLower();
-                        sqlCommand.Parameters.AddWithValue("@RecordName", record.Name);
-                        sqlCommand.Parameters.AddWithValue("@RecordContent", record.Content);
+                        record.name = record.name.ToLower();
+                        sqlCommand.Parameters.AddWithValue("@RecordName", record.name);
+                        sqlCommand.Parameters.AddWithValue("@RecordContent", record.content);
                         sqlCommand.Parameters.AddWithValue("@RecordCreationDateTime", DateTime.Now);
-                        sqlCommand.Parameters.AddWithValue("@RecordParent", cont.Id);
+                        sqlCommand.Parameters.AddWithValue("@RecordParent", cont.id);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         sqlCommand.ExecuteNonQuery();
                     }
@@ -266,7 +266,7 @@ namespace somiod.Helpers
                 throw new Exception("Error adding record to database", e);
             }
             string topic = application + "/" + container;
-            string message = "deletion;" + record.Content;
+            string message = "creation;" + record.content;
             List<string> endpoints = MqttHelper.FindEndpointsToSend(application, container, "1");
             MqttHelper.PublishMqttMessages(topic, message, endpoints);
             return record;
@@ -274,18 +274,18 @@ namespace somiod.Helpers
 
         internal static void DeleteRecordFromDatabase(string application, string container, string record)
         {
-            string message = FindRecordInDatabase(application, container, record).Content;
+            string message = FindRecordInDatabase(application, container, record).content;
             var cont = ContainerHelper.FindContainerInDatabase(application, container);
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
                 {
                     sqlConnection.Open();
-                    using (SqlCommand sqlCommand = new SqlCommand("DELETE FROM Records " +
-                        "WHERE Name = @RecordName AND Parent = @ContainerId", sqlConnection))
+                    using (SqlCommand sqlCommand = new SqlCommand("DELETE FROM records " +
+                        "WHERE name = @RecordName AND parent = @ContainerId", sqlConnection))
                     {
                         sqlCommand.Parameters.AddWithValue("@RecordName", record.ToLower());
-                        sqlCommand.Parameters.AddWithValue("@ContainerId", cont.Id);
+                        sqlCommand.Parameters.AddWithValue("@ContainerId", cont.id);
                         sqlCommand.CommandType = System.Data.CommandType.Text;
                         sqlCommand.ExecuteNonQuery();
                     }

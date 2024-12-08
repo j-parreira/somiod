@@ -75,9 +75,10 @@
             // 
             this.labelGardenLightSwitch.AutoSize = true;
             this.labelGardenLightSwitch.BackColor = System.Drawing.SystemColors.Window;
-            this.labelGardenLightSwitch.Location = new System.Drawing.Point(255, 129);
+            this.labelGardenLightSwitch.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelGardenLightSwitch.Location = new System.Drawing.Point(248, 124);
             this.labelGardenLightSwitch.Name = "labelGardenLightSwitch";
-            this.labelGardenLightSwitch.Size = new System.Drawing.Size(37, 24);
+            this.labelGardenLightSwitch.Size = new System.Drawing.Size(52, 35);
             this.labelGardenLightSwitch.TabIndex = 6;
             this.labelGardenLightSwitch.Text = "ON";
             // 
@@ -85,9 +86,10 @@
             // 
             this.labelParkingLightSwitch.AutoSize = true;
             this.labelParkingLightSwitch.BackColor = System.Drawing.SystemColors.Window;
-            this.labelParkingLightSwitch.Location = new System.Drawing.Point(80, 129);
+            this.labelParkingLightSwitch.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelParkingLightSwitch.Location = new System.Drawing.Point(73, 124);
             this.labelParkingLightSwitch.Name = "labelParkingLightSwitch";
-            this.labelParkingLightSwitch.Size = new System.Drawing.Size(42, 24);
+            this.labelParkingLightSwitch.Size = new System.Drawing.Size(60, 35);
             this.labelParkingLightSwitch.TabIndex = 5;
             this.labelParkingLightSwitch.Text = "OFF";
             // 
@@ -148,9 +150,10 @@
             // 
             this.labelHeaterSwitch.AutoSize = true;
             this.labelHeaterSwitch.BackColor = System.Drawing.SystemColors.Window;
-            this.labelHeaterSwitch.Location = new System.Drawing.Point(255, 129);
+            this.labelHeaterSwitch.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelHeaterSwitch.Location = new System.Drawing.Point(248, 124);
             this.labelHeaterSwitch.Name = "labelHeaterSwitch";
-            this.labelHeaterSwitch.Size = new System.Drawing.Size(37, 24);
+            this.labelHeaterSwitch.Size = new System.Drawing.Size(52, 35);
             this.labelHeaterSwitch.TabIndex = 6;
             this.labelHeaterSwitch.Text = "ON";
             // 
@@ -158,9 +161,10 @@
             // 
             this.labelAirConditioningSwitch.AutoSize = true;
             this.labelAirConditioningSwitch.BackColor = System.Drawing.SystemColors.Window;
-            this.labelAirConditioningSwitch.Location = new System.Drawing.Point(80, 129);
+            this.labelAirConditioningSwitch.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelAirConditioningSwitch.Location = new System.Drawing.Point(73, 124);
             this.labelAirConditioningSwitch.Name = "labelAirConditioningSwitch";
-            this.labelAirConditioningSwitch.Size = new System.Drawing.Size(42, 24);
+            this.labelAirConditioningSwitch.Size = new System.Drawing.Size(60, 35);
             this.labelAirConditioningSwitch.TabIndex = 5;
             this.labelAirConditioningSwitch.Text = "OFF";
             // 
@@ -221,9 +225,10 @@
             // 
             this.labelAlarmSwitch.AutoSize = true;
             this.labelAlarmSwitch.BackColor = System.Drawing.SystemColors.Window;
-            this.labelAlarmSwitch.Location = new System.Drawing.Point(255, 129);
+            this.labelAlarmSwitch.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelAlarmSwitch.Location = new System.Drawing.Point(248, 124);
             this.labelAlarmSwitch.Name = "labelAlarmSwitch";
-            this.labelAlarmSwitch.Size = new System.Drawing.Size(37, 24);
+            this.labelAlarmSwitch.Size = new System.Drawing.Size(52, 35);
             this.labelAlarmSwitch.TabIndex = 6;
             this.labelAlarmSwitch.Text = "ON";
             // 
@@ -231,9 +236,10 @@
             // 
             this.labelCameraSwitch.AutoSize = true;
             this.labelCameraSwitch.BackColor = System.Drawing.SystemColors.Window;
-            this.labelCameraSwitch.Location = new System.Drawing.Point(80, 129);
+            this.labelCameraSwitch.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelCameraSwitch.Location = new System.Drawing.Point(73, 124);
             this.labelCameraSwitch.Name = "labelCameraSwitch";
-            this.labelCameraSwitch.Size = new System.Drawing.Size(42, 24);
+            this.labelCameraSwitch.Size = new System.Drawing.Size(60, 35);
             this.labelCameraSwitch.TabIndex = 5;
             this.labelCameraSwitch.Text = "OFF";
             // 

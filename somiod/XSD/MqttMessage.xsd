@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="MqttMessage">
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="topic" type="xs:string" />
+				<xs:element name="event_type" type="xs:string" />
+				<xs:element name="message" type="xs:string" />
+				<xs:element name="received_time" type="xs:dateTime" />
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
