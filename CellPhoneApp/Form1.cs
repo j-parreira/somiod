@@ -117,11 +117,11 @@ namespace CellPhoneApp
                 {
                     Record record = new Record
                     {
-                        Id = 0,
-                        Name = "rec",
-                        CreationDateTime = DateTime.Now,
-                        Parent = 0,
-                        Content = "ON"
+                        id = 0,
+                        name = "rec",
+                        creation_datetime = DateTime.Now,
+                        parent = 0,
+                        content = "ON"
                     };
                     string applicationName = comboBoxApplication.SelectedItem.ToString();
                     string containerName = comboBoxContainer.SelectedItem.ToString();
@@ -135,7 +135,7 @@ namespace CellPhoneApp
                     string responseBody = response.Content.ReadAsStringAsync().Result;
                     XmlDocument xmlDocument = new XmlDocument();
                     xmlDocument.LoadXml(responseBody);
-                    XmlNode xmlNode = xmlDocument.SelectSingleNode("/Record/Name");
+                    XmlNode xmlNode = xmlDocument.SelectSingleNode("/Record/name");
                     string name = xmlNode.InnerText;
                     if (response.IsSuccessStatusCode)
                     {
@@ -169,11 +169,11 @@ namespace CellPhoneApp
                 {
                     Record record = new Record
                     {
-                        Id = 0,
-                        Name = "rec",
-                        CreationDateTime = DateTime.Now,
-                        Parent = 0,
-                        Content = "OFF"
+                        id = 0,
+                        name = "rec",
+                        creation_datetime = DateTime.Now,
+                        parent = 0,
+                        content = "OFF"
                     };
                     string applicationName = comboBoxApplication.SelectedItem.ToString();
                     string containerName = comboBoxContainer.SelectedItem.ToString();
@@ -187,7 +187,7 @@ namespace CellPhoneApp
                     string responseBody = response.Content.ReadAsStringAsync().Result;
                     XmlDocument xmlDocument = new XmlDocument();
                     xmlDocument.LoadXml(responseBody);
-                    XmlNode xmlNode = xmlDocument.SelectSingleNode("/Record/Name");
+                    XmlNode xmlNode = xmlDocument.SelectSingleNode("/Record/name");
                     string name = xmlNode.InnerText;
                     if (response.IsSuccessStatusCode)
                     {

@@ -46,48 +46,39 @@ namespace SmartHomeApp
             InitializeSmartHomeAsync();
             SubscribeToTopics(topics);
             PruneOldMessages(daysToKeep);
-            labelParkingLightSwitch.Text = "ON";
-            richTextBoxParkingLight.BackColor = Color.Yellow;
-            labelGardenLightSwitch.Text = "ON";
-            richTextBoxGardenLight.BackColor = Color.Yellow;
-            labelAirConditioningSwitch.Text = "ON";
-            richTextBoxAirConditioning.BackColor = Color.Blue;
-            labelHeaterSwitch.Text = "ON";
-            richTextBoxHeater.BackColor = Color.Red;
-            labelCameraSwitch.Text = "ON";
-            richTextBoxCamera.BackColor = Color.Green;
-            labelAlarmSwitch.Text = "ON";
-            richTextBoxAlarm.BackColor = Color.Red;
+            ToggleAll(false);
         }
 
         private async void InitializeSmartHomeAsync()
         {
             try
             {
-                await CreateApplicationAsync("smarthome");
-                await CreateApplicationAsync("lighting");
-                await CreateApplicationAsync("heating");
-                await CreateApplicationAsync("security");
-                await CreateContainerAsync("smarthome", "smarthome_all");
-                await CreateContainerAsync("lighting", "parking_light");
-                await CreateContainerAsync("lighting", "garden_light");
-                await CreateContainerAsync("lighting", "lighting_all");
-                await CreateContainerAsync("heating", "air_conditioning");
-                await CreateContainerAsync("heating", "heater");
-                await CreateContainerAsync("heating", "heating_all");
-                await CreateContainerAsync("security", "camera");
-                await CreateContainerAsync("security", "alarm");
-                await CreateContainerAsync("security", "security_all");
-                await CreateNotification("smarthome", "smarthome_all");
-                await CreateNotification("lighting", "parking_light");
-                await CreateNotification("lighting", "garden_light");
-                await CreateNotification("lighting", "lighting_all");
-                await CreateNotification("heating", "air_conditioning");
-                await CreateNotification("heating", "heater");
-                await CreateNotification("heating", "heating_all");
-                await CreateNotification("security", "camera");
-                await CreateNotification("security", "alarm");
-                await CreateNotification("security", "security_all");
+                string[] applications = { "smarthome", "lighting", "heating", "security" };
+                (string application, string container)[] containersAndNotifications =
+                {
+                    ("smarthome", "smarthome_all"),
+                    ("lighting", "parking_light"),
+                    ("lighting", "garden_light"),
+                    ("lighting", "lighting_all"),
+                    ("heating", "air_conditioning"),
+                    ("heating", "heater"),
+                    ("heating", "heating_all"),
+                    ("security", "camera"),
+                    ("security", "alarm"),
+                    ("security", "security_all")
+                };
+                foreach (var app in applications)
+                {
+                    await CreateApplicationAsync(app);
+                }
+                foreach (var (application, container) in containersAndNotifications)
+                {
+                    await CreateContainerAsync(application, container);
+                }
+                foreach (var (application, container) in containersAndNotifications)
+                {
+                    await CreateNotification(application, container);
+                }
             }
             catch (Exception ex)
             {
@@ -131,9 +122,9 @@ namespace SmartHomeApp
                 {
                     Application app = new Application
                     {
-                        Id = 0,
-                        Name = applicationName,
-                        CreationDateTime = DateTime.Now
+                        id = 0,
+                        name = applicationName,
+                        creation_datetime = DateTime.Now
                     };
                     string fullURI = baseURI + applicationName;
                     HttpResponseMessage response_1 = client.GetAsync(fullURI).Result;
@@ -170,10 +161,10 @@ namespace SmartHomeApp
                 {
                     Container cont = new Container
                     {
-                        Id = 0,
-                        Name = containerName,
-                        CreationDateTime = DateTime.Now,
-                        Parent = 0
+                        id = 0,
+                        name = containerName,
+                        creation_datetime = DateTime.Now,
+                        parent = 0
                     };
                     string fullURI = baseURI + applicationName + "/" + containerName;
                     HttpResponseMessage response_1 = client.GetAsync(fullURI).Result;
@@ -210,13 +201,13 @@ namespace SmartHomeApp
                 {
                     Notification not = new Notification
                     {
-                        Id = 0,
-                        Name = "not",
-                        CreationDateTime = DateTime.Now,
-                        Parent = 0,
-                        Event = "1",
-                        Endpoint = "127.0.0.1",
-                        Enabled = true
+                        id = 0,
+                        name = "not",
+                        creation_datetime = DateTime.Now,
+                        parent = 0,
+                        event_type = "1",
+                        endpoint = "127.0.0.1",
+                        enabled = true
                     };
                     string fullURI = baseURI + applicationName + "/" + containerName;
                     string header = "res_type";
@@ -255,7 +246,7 @@ namespace SmartHomeApp
                 }
                 mClient.MqttMsgPublishReceived += MClient_MqttMsgPublishReceived;
                 byte[] qosLevels = topics.Select(t => MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE).ToArray();
-                mClient.Subscribe( topics, qosLevels);
+                mClient.Subscribe(topics, qosLevels);
             }
             catch (Exception ex)
             {
@@ -275,164 +266,101 @@ namespace SmartHomeApp
                 case "smarthome/smarthome_all":
                     if (message == "ON")
                     {
-                        labelParkingLightSwitch.Text = "ON";
-                        richTextBoxParkingLight.BackColor = Color.Yellow;
-                        labelGardenLightSwitch.Text = "ON";
-                        richTextBoxGardenLight.BackColor = Color.Yellow;
-                        labelAirConditioningSwitch.Text = "ON";
-                        richTextBoxAirConditioning.BackColor = Color.Blue;
-                        labelHeaterSwitch.Text = "ON";
-                        richTextBoxHeater.BackColor = Color.Red;
-                        labelCameraSwitch.Text = "ON";
-                        richTextBoxCamera.BackColor = Color.Green;
-                        labelAlarmSwitch.Text = "ON";
-                        richTextBoxAlarm.BackColor = Color.Red;
+                        ToggleAll(true);
                     }
                     else
                     {
-                        labelParkingLightSwitch.Text = "OFF";
-                        richTextBoxParkingLight.BackColor = Color.Black;
-                        labelGardenLightSwitch.Text = "OFF";
-                        richTextBoxGardenLight.BackColor = Color.Black;
-                        labelHeaterSwitch.Text = "OFF";
-                        richTextBoxHeater.BackColor = Color.Black;
-                        labelAirConditioningSwitch.Text = "OFF";
-                        richTextBoxAirConditioning.BackColor = Color.Black;
-                        labelCameraSwitch.Text = "OFF";
-                        richTextBoxCamera.BackColor = Color.Black;
-                        labelAlarmSwitch.Text = "OFF";
-                        richTextBoxAlarm.BackColor = Color.Black;
+                        ToggleAll(false);
                     }
                     break;
                 case "lighting/parking_light":
                     if (message == "ON")
                     {
-                        labelParkingLightSwitch.Text = "ON";
-                        richTextBoxParkingLight.BackColor = Color.Yellow;
+                        ToggleParkingLight(true);
                     }
                     else
                     {
-                        labelParkingLightSwitch.Text = "OFF";
-                        richTextBoxParkingLight.BackColor = Color.Black;
+                        ToggleParkingLight(false);
                     }
                     break;
                 case "lighting/garden_light":
                     if (message == "ON")
                     {
-                        labelGardenLightSwitch.Text = "ON";
-                        richTextBoxGardenLight.BackColor = Color.Yellow;
+                        ToggleGardenLight(true);
                     }
                     else
                     {
-                        labelGardenLightSwitch.Text = "OFF";
-                        richTextBoxGardenLight.BackColor = Color.Black;
+                        ToggleGardenLight(false);
                     }
                     break;
                 case "lighting/lighting_all":
                     if (message == "ON")
                     {
-                        labelParkingLightSwitch.Text = "ON";
-                        richTextBoxParkingLight.BackColor = Color.Yellow;
-                        labelGardenLightSwitch.Text = "ON";
-                        richTextBoxGardenLight.BackColor = Color.Yellow;
+                        ToggleLighting(true);
                     }
                     else
                     {
-                        labelParkingLightSwitch.Text = "OFF";
-                        richTextBoxParkingLight.BackColor = Color.Black;
-                        labelGardenLightSwitch.Text = "OFF";
-                        richTextBoxGardenLight.BackColor = Color.Black;
+                        ToggleLighting(false);
                     }
                     break;
                 case "heating/air_conditioning":
                     if (message == "ON")
                     {
-                        labelAirConditioningSwitch.Text = "ON";
-                        richTextBoxAirConditioning.BackColor = Color.Blue;
+                        ToggleAirConditioning(true);
                     }
                     else
                     {
-                        // Turn off air conditioning
-                        labelAirConditioningSwitch.Text = "OFF";
-                        richTextBoxAirConditioning.BackColor = Color.Black;
+                        ToggleAirConditioning(false);
                     }
                     break;
                 case "heating/heater":
                     if (message == "ON")
                     {
-                        // Turn on heater
-                        labelHeaterSwitch.Text = "ON";
-                        richTextBoxHeater.BackColor = Color.Red;
+                        ToggleAirConditioning(true);
                     }
                     else
                     {
-                        // Turn off heater
-                        labelHeaterSwitch.Text = "OFF";
-                        richTextBoxHeater.BackColor = Color.Black;
+                        ToggleAirConditioning(false);
                     }
                     break;
                 case "heating/heating_all":
                     if (message == "ON")
                     {
-                        // Turn on all heating devices
-                        labelAirConditioningSwitch.Text = "ON";
-                        richTextBoxAirConditioning.BackColor = Color.Blue;
-                        labelHeaterSwitch.Text = "ON";
-                        richTextBoxHeater.BackColor = Color.Red;
+                        ToggleHeating(true);
                     }
                     else
                     {
-                        // Turn off all heating devices
-                        labelHeaterSwitch.Text = "OFF";
-                        richTextBoxHeater.BackColor = Color.Black;
-                        labelAirConditioningSwitch.Text = "OFF";
-                        richTextBoxAirConditioning.BackColor = Color.Black;
+                        ToggleHeating(false);
                     }
                     break;
                 case "security/camera":
                     if (message == "ON")
                     {
-                        // Turn on camera
-                        labelCameraSwitch.Text = "ON";
-                        richTextBoxCamera.BackColor = Color.Green;
+                        ToggleCamera(true);
                     }
                     else
                     {
-                        // Turn off camera
-                        labelCameraSwitch.Text = "OFF";
-                        richTextBoxCamera.BackColor = Color.Black;
+                        ToggleCamera(false);    
                     }
                     break;
                 case "security/alarm":
                     if (message == "ON")
                     {
-                        // Turn on alarm
-                        labelAlarmSwitch.Text = "ON";
-                        richTextBoxAlarm.BackColor = Color.Red;
+                        ToggleAlarm(true);
                     }
                     else
                     {
-                        // Turn off alarm
-                        labelAlarmSwitch.Text = "OFF";
-                        richTextBoxAlarm.BackColor = Color.Black;
+                        ToggleAlarm(false);
                     }
                     break;
                 case "security/security_all":
                     if (message == "ON")
                     {
-                        // Turn on all security devices
-                        labelCameraSwitch.Text = "ON";
-                        richTextBoxCamera.BackColor = Color.Green;
-                        labelAlarmSwitch.Text = "ON";
-                        richTextBoxAlarm.BackColor = Color.Red;
+                        ToggleSecurity(true);
                     }
                     else
                     {
-                        // Turn off all security devices
-                        labelCameraSwitch.Text = "OFF";
-                        richTextBoxCamera.BackColor = Color.Black;
-                        labelAlarmSwitch.Text = "OFF";
-                        richTextBoxAlarm.BackColor = Color.Black;
+                        ToggleSecurity(false);
                     }
                     break;
                 default:
@@ -440,17 +368,17 @@ namespace SmartHomeApp
             }
         }
 
-        private void AppendMqttMessage(string topic, string mqttEvent, string message, DateTime receivedTime)
+        private void AppendMqttMessage(string topic, string eventType, string message, DateTime receivedTime)
         {
             string filePath = Path.Combine(Directory.GetCurrentDirectory(), filename);
             try
             {
                 MqttMessage mqttMessage = new MqttMessage
                 {
-                    Topic = topic,
-                    MqttEvent = mqttEvent,
-                    Message = message,
-                    ReceivedTime = receivedTime
+                    topic = topic,
+                    event_type = eventType,
+                    message = message,
+                    received_time = receivedTime
                 };
                 string xmlMessage = XMLHelper.SerializeXmlUtf8<MqttMessage>(mqttMessage).ToString().Trim();
                 XDocument doc;
@@ -472,7 +400,6 @@ namespace SmartHomeApp
             }
         }
 
-
         private void PruneOldMessages(int daysToKeep)
         {
             string filePath = Path.Combine(Directory.GetCurrentDirectory(), filename);
@@ -487,7 +414,7 @@ namespace SmartHomeApp
                 doc.Root.Elements("MqttMessage")
                     .Where(m =>
                     {
-                        DateTime messageDate = DateTime.Parse(m.Element("ReceivedTime").Value);
+                        DateTime messageDate = DateTime.Parse(m.Element("received_time").Value);
                         return messageDate < cutoffDate;
                     })
                     .Remove();
@@ -496,6 +423,148 @@ namespace SmartHomeApp
             catch (Exception ex)
             {
                 MessageBox.Show($"Error pruning old messages: {ex.Message}");
+            }
+        }
+
+        private void ToggleParkingLight(bool status)
+        {
+            if (status)
+            {
+                labelParkingLightSwitch.Text = "ON";
+                richTextBoxParkingLight.BackColor = Color.Yellow;
+            }
+            else
+            {
+                labelParkingLightSwitch.Text = "OFF";
+                richTextBoxParkingLight.BackColor = Color.Black;
+            }
+        }
+
+        private void ToggleGardenLight(bool status)
+        {
+            if (status)
+            {
+                labelGardenLightSwitch.Text = "ON";
+                richTextBoxGardenLight.BackColor = Color.Yellow;
+            }
+            else
+            {
+                labelGardenLightSwitch.Text = "OFF";
+                richTextBoxGardenLight.BackColor = Color.Black;
+            }
+        }
+
+        private void ToggleAirConditioning(bool status)
+        {
+            if (status)
+            {
+                labelAirConditioningSwitch.Text = "ON";
+                richTextBoxAirConditioning.BackColor = Color.Blue;
+            }
+            else
+            {
+                labelAirConditioningSwitch.Text = "OFF";
+                richTextBoxAirConditioning.BackColor = Color.Black;
+            }
+        }
+
+        private void ToggleHeater(bool status)
+        {
+            if (status)
+            {
+                labelHeaterSwitch.Text = "ON";
+                richTextBoxHeater.BackColor = Color.Red;
+            }
+            else
+            {
+                labelHeaterSwitch.Text = "OFF";
+                richTextBoxHeater.BackColor = Color.Black;
+            }
+        }
+
+        private void ToggleCamera(bool status)
+        {
+            if (status)
+            {
+                labelCameraSwitch.Text = "ON";
+                richTextBoxCamera.BackColor = Color.Green;
+            }
+            else
+            {
+                labelCameraSwitch.Text = "OFF";
+                richTextBoxCamera.BackColor = Color.Black;
+            }
+        }
+
+        private void ToggleAlarm(bool status)
+        {
+            if (status)
+            {
+                labelAlarmSwitch.Text = "ON";
+                richTextBoxAlarm.BackColor = Color.Red;
+            }
+            else
+            {
+                labelAlarmSwitch.Text = "OFF";
+                richTextBoxAlarm.BackColor = Color.Black;
+            }
+        }
+
+        private void ToggleLighting(bool status)
+        {
+            if (status)
+            {
+                ToggleParkingLight(true);
+                ToggleGardenLight(true);
+            }
+            else
+            {
+                ToggleParkingLight(false);
+                ToggleGardenLight(false);
+            }
+        }
+
+        private void ToggleHeating(bool status)
+        {
+            if (status)
+            {
+                ToggleAirConditioning(true);
+                ToggleHeater(true);
+            }
+            else
+            {
+                ToggleAirConditioning(false);
+                ToggleHeater(false);
+            }
+        }
+
+        private void ToggleSecurity(bool status)
+        {
+            if (status)
+            {
+                ToggleCamera(true);
+                ToggleAlarm(true);
+            }
+            else
+            {
+                ToggleCamera(false);
+                ToggleAlarm(false);
+            }
+        }
+
+        private void ToggleAll(bool status)
+        {
+            if (status)
+            {
+                ToggleLighting(true);
+                ToggleHeating(true);
+                ToggleSecurity(true);
+            }
+            else
+            {
+                ToggleLighting(false);
+                ToggleHeating(false);
+                ToggleSecurity(false);
             }
         }
     }

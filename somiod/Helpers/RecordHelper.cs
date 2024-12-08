@@ -247,7 +247,7 @@ namespace somiod.Helpers
                 {
                     sqlConnection.Open();
                     using (SqlCommand sqlCommand = new SqlCommand("INSERT INTO records " +
-                        "(name, nontent, creation_datetime, parent) " +
+                        "(name, content, creation_datetime, parent) " +
                         "VALUES (@RecordName, @RecordContent, @RecordCreationDateTime, @RecordParent)", sqlConnection))
                     {
                         record.name = record.name.ToLower();

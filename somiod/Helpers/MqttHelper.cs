@@ -64,13 +64,13 @@ namespace somiod.Helpers
                 {
                     mClient = new MqttClient(IPAddress.Parse(endpoint));
                     mClient.Connect(Guid.NewGuid().ToString());
-                    Thread.Sleep(250);
+                    Thread.Sleep(100);
                     if (!mClient.IsConnected)
                     {
                         throw new Exception("Error connecting to message broker...");
                     }
                     mClient.Publish(topic, Encoding.UTF8.GetBytes(message));
-                    Thread.Sleep(250);
+                    Thread.Sleep(100);
                     mClient.Disconnect();
                 }
             }
