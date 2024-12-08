@@ -1214,7 +1214,7 @@ namespace App_Test_Endpoints
 
         private void buttonSaveBaseURI_Click(object sender, EventArgs e)
         {
-            baseURI = textBoxBaseURI.Text;
+            baseURI = textBoxBaseURI.Text + "/";
         }
     }
 }

@@ -316,11 +316,11 @@ namespace SmartHomeApp
                 case "heating/heater":
                     if (message == "ON")
                     {
-                        ToggleAirConditioning(true);
+                        ToggleHeater(true);
                     }
                     else
                     {
-                        ToggleAirConditioning(false);
+                        ToggleHeater(false);
                     }
                     break;
                 case "heating/heating_all":

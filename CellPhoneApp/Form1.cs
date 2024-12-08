@@ -133,12 +133,12 @@ namespace CellPhoneApp
                     HttpContent httpContent = new StringContent(requestBody, Encoding.UTF8, "application/xml");
                     HttpResponseMessage response = client.PostAsync(fullURI, httpContent).Result;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    XmlDocument xmlDocument = new XmlDocument();
-                    xmlDocument.LoadXml(responseBody);
-                    XmlNode xmlNode = xmlDocument.SelectSingleNode("/Record/name");
-                    string name = xmlNode.InnerText;
                     if (response.IsSuccessStatusCode)
                     {
+                        XmlDocument xmlDocument = new XmlDocument();
+                        xmlDocument.LoadXml(responseBody);
+                        XmlNode xmlNode = xmlDocument.SelectSingleNode("/Record/name");
+                        string name = xmlNode.InnerText;
                         textBoxResult.Text = $"Record {name} created.";
                     }
                     else
@@ -185,12 +185,12 @@ namespace CellPhoneApp
                     HttpContent httpContent = new StringContent(requestBody, Encoding.UTF8, "application/xml");
                     HttpResponseMessage response = client.PostAsync(fullURI, httpContent).Result;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
-                    XmlDocument xmlDocument = new XmlDocument();
-                    xmlDocument.LoadXml(responseBody);
-                    XmlNode xmlNode = xmlDocument.SelectSingleNode("/Record/name");
-                    string name = xmlNode.InnerText;
                     if (response.IsSuccessStatusCode)
                     {
+                        XmlDocument xmlDocument = new XmlDocument();
+                        xmlDocument.LoadXml(responseBody);
+                        XmlNode xmlNode = xmlDocument.SelectSingleNode("/Record/name");
+                        string name = xmlNode.InnerText;
                         textBoxResult.Text = $"Record {name} created.";
                     }
                     else

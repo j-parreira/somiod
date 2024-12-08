@@ -298,7 +298,7 @@ namespace somiod.Helpers
             }
             string topic = application + "/" + container;
             message = "deletion;" + message;
-            List<string> endpoints = MqttHelper.FindEndpointsToSend(application, container, "1");
+            List<string> endpoints = MqttHelper.FindEndpointsToSend(application, container, "2");
             MqttHelper.PublishMqttMessages(topic, message, endpoints);
         }
     }
