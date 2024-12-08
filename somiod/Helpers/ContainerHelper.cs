@@ -185,9 +185,7 @@ namespace somiod.Helpers
                     i++;
                 }
             }
-
             var app = ApplicationHelper.FindApplicationInDatabase(application);
-
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
@@ -250,9 +248,7 @@ namespace somiod.Helpers
                     i++;
                 }
             }
-
             var app = ApplicationHelper.FindApplicationInDatabase(application);
-            
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))

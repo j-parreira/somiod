@@ -28,39 +28,50 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.groupBoxSecurity = new System.Windows.Forms.GroupBox();
+            this.groupBoxMobileApp = new System.Windows.Forms.GroupBox();
+            this.textBoxResult = new System.Windows.Forms.TextBox();
             this.buttonOff = new System.Windows.Forms.Button();
             this.buttonOn = new System.Windows.Forms.Button();
             this.comboBoxContainer = new System.Windows.Forms.ComboBox();
             this.comboBoxApplication = new System.Windows.Forms.ComboBox();
             this.labelContainer = new System.Windows.Forms.Label();
             this.labelApplication = new System.Windows.Forms.Label();
-            this.textBoxResult = new System.Windows.Forms.TextBox();
-            this.groupBoxSecurity.SuspendLayout();
+            this.groupBoxMobileApp.SuspendLayout();
             this.SuspendLayout();
             // 
-            // groupBoxSecurity
+            // groupBoxMobileApp
             // 
-            this.groupBoxSecurity.BackColor = System.Drawing.Color.OldLace;
-            this.groupBoxSecurity.Controls.Add(this.textBoxResult);
-            this.groupBoxSecurity.Controls.Add(this.buttonOff);
-            this.groupBoxSecurity.Controls.Add(this.buttonOn);
-            this.groupBoxSecurity.Controls.Add(this.comboBoxContainer);
-            this.groupBoxSecurity.Controls.Add(this.comboBoxApplication);
-            this.groupBoxSecurity.Controls.Add(this.labelContainer);
-            this.groupBoxSecurity.Controls.Add(this.labelApplication);
-            this.groupBoxSecurity.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBoxSecurity.Location = new System.Drawing.Point(12, 12);
-            this.groupBoxSecurity.Name = "groupBoxSecurity";
-            this.groupBoxSecurity.Size = new System.Drawing.Size(407, 463);
-            this.groupBoxSecurity.TabIndex = 8;
-            this.groupBoxSecurity.TabStop = false;
-            this.groupBoxSecurity.Text = "Smart Home";
+            this.groupBoxMobileApp.BackColor = System.Drawing.Color.OldLace;
+            this.groupBoxMobileApp.Controls.Add(this.textBoxResult);
+            this.groupBoxMobileApp.Controls.Add(this.buttonOff);
+            this.groupBoxMobileApp.Controls.Add(this.buttonOn);
+            this.groupBoxMobileApp.Controls.Add(this.comboBoxContainer);
+            this.groupBoxMobileApp.Controls.Add(this.comboBoxApplication);
+            this.groupBoxMobileApp.Controls.Add(this.labelContainer);
+            this.groupBoxMobileApp.Controls.Add(this.labelApplication);
+            this.groupBoxMobileApp.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBoxMobileApp.Location = new System.Drawing.Point(12, 12);
+            this.groupBoxMobileApp.Name = "groupBoxMobileApp";
+            this.groupBoxMobileApp.Size = new System.Drawing.Size(407, 463);
+            this.groupBoxMobileApp.TabIndex = 8;
+            this.groupBoxMobileApp.TabStop = false;
+            this.groupBoxMobileApp.Text = "Mobile App Smart Home";
+            // 
+            // textBoxResult
+            // 
+            this.textBoxResult.BackColor = System.Drawing.Color.Wheat;
+            this.textBoxResult.Font = new System.Drawing.Font("Calibri", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxResult.Location = new System.Drawing.Point(26, 409);
+            this.textBoxResult.Name = "textBoxResult";
+            this.textBoxResult.ReadOnly = true;
+            this.textBoxResult.Size = new System.Drawing.Size(355, 28);
+            this.textBoxResult.TabIndex = 8;
+            this.textBoxResult.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // buttonOff
             // 
             this.buttonOff.BackColor = System.Drawing.Color.NavajoWhite;
-            this.buttonOff.Location = new System.Drawing.Point(26, 328);
+            this.buttonOff.Location = new System.Drawing.Point(26, 322);
             this.buttonOff.Name = "buttonOff";
             this.buttonOff.Size = new System.Drawing.Size(355, 63);
             this.buttonOff.TabIndex = 7;
@@ -71,7 +82,7 @@
             // buttonOn
             // 
             this.buttonOn.BackColor = System.Drawing.Color.NavajoWhite;
-            this.buttonOn.Location = new System.Drawing.Point(26, 242);
+            this.buttonOn.Location = new System.Drawing.Point(26, 236);
             this.buttonOn.Name = "buttonOn";
             this.buttonOn.Size = new System.Drawing.Size(355, 63);
             this.buttonOn.TabIndex = 6;
@@ -115,34 +126,24 @@
             this.labelApplication.TabIndex = 0;
             this.labelApplication.Text = "Application";
             // 
-            // textBoxResult
-            // 
-            this.textBoxResult.BackColor = System.Drawing.Color.Wheat;
-            this.textBoxResult.Font = new System.Drawing.Font("Calibri", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxResult.Location = new System.Drawing.Point(26, 413);
-            this.textBoxResult.Name = "textBoxResult";
-            this.textBoxResult.ReadOnly = true;
-            this.textBoxResult.Size = new System.Drawing.Size(355, 28);
-            this.textBoxResult.TabIndex = 8;
-            this.textBoxResult.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(431, 487);
-            this.Controls.Add(this.groupBoxSecurity);
+            this.Controls.Add(this.groupBoxMobileApp);
             this.Name = "Form1";
             this.Text = "Form1";
-            this.groupBoxSecurity.ResumeLayout(false);
-            this.groupBoxSecurity.PerformLayout();
+            this.Load += new System.EventHandler(this.Form1_Load);
+            this.groupBoxMobileApp.ResumeLayout(false);
+            this.groupBoxMobileApp.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.GroupBox groupBoxSecurity;
+        private System.Windows.Forms.GroupBox groupBoxMobileApp;
         private System.Windows.Forms.Label labelContainer;
         private System.Windows.Forms.Label labelApplication;
         private System.Windows.Forms.ComboBox comboBoxApplication;

@@ -29,13 +29,11 @@ namespace somiod.Helpers
                         localValidationError = $"Exception during validation: {args.Message}";
                     }
                 };
-
                 using (StringReader stringReader = new StringReader(xmlContent))
                 using (XmlReader reader = XmlReader.Create(stringReader, settings))
                 {
                     while (reader.Read()) { }
                 }
-
                 validationError = localValidationError;
                 return string.IsNullOrEmpty(validationError);
             }
@@ -55,7 +53,7 @@ namespace somiod.Helpers
             }
         }
 
-        public static string SerializeXml<T>(T model)
+        public static string SerializeXmlUtf8<T>(T model)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(T));
             using (Utf8StringWriter stringWriter = new Utf8StringWriter())
@@ -63,7 +61,7 @@ namespace somiod.Helpers
                 XmlWriterSettings settings = new XmlWriterSettings
                 {
                     Encoding = Encoding.UTF8,
-                    Indent = true,
+                    Indent = false,
                     OmitXmlDeclaration = false
                 };
                 using (XmlWriter xmlWriter = XmlWriter.Create(stringWriter, settings))

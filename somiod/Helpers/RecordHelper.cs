@@ -239,9 +239,7 @@ namespace somiod.Helpers
                     i++;
                 }
             }
-
             var cont = ContainerHelper.FindContainerInDatabase(application, container);
-
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
@@ -266,30 +264,12 @@ namespace somiod.Helpers
             {
                 throw new Exception("Error adding record to database", e);
             }
-
-            var notificationsToSend = MqttHelper.FindEndpointsToSend(application, container, "1");
-            MqttMessage mqttMessage = new MqttMessage
-            {
-                Topic = application + "/" + container,
-                Event = "creation",
-                Record = FindRecordInDatabase(application, container, record.Name)
-            };
-            MqttHelper.PublishRecord(notificationsToSend, mqttMessage);
-
             return record;
         }
 
         internal static void DeleteRecordFromDatabase(string application, string container, string record)
         {
-            var notificationsToSend = MqttHelper.FindEndpointsToSend(application, container, "2");
-            MqttMessage mqttMessage = new MqttMessage
-            {
-                Topic = application + "/" + container,
-                Event = "deletion",
-                Record = FindRecordInDatabase(application, container, record)
-            };
-            MqttHelper.PublishRecord(notificationsToSend, mqttMessage);
-
+            string message = FindRecordInDatabase(application, container, record).Content;
             var cont = ContainerHelper.FindContainerInDatabase(application, container);
             try
             {
@@ -311,6 +291,10 @@ namespace somiod.Helpers
             {
                 throw new Exception("Error deleting record from database", e);
             }
+            string topic = application + "/" + container;
+            string mqttEvent = "deletion";
+            List<string> endpoints = MqttHelper.FindEndpointsToSend(application, container, "1");
+            MqttHelper.PublishMqttMessageInTopic(topic, mqttEvent, message, endpoints);
         }
     }
 }

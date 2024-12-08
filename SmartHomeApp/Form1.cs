@@ -18,6 +18,7 @@ using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 using System.Net;
 using System.IO;
+using System.Xml;
 
 namespace SmartHomeApp
 {
@@ -32,14 +33,18 @@ namespace SmartHomeApp
             "heating/air_conditioning", "heating/heater",
             "heating/heating_all", "security/camera",
             "security/alarm", "security/security_all" };
-        string[] topics2 = { "lighting/parking_light", "lighting/garden_light" };
 
         public Form1()
         {
             InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            mClient.Connect(Guid.NewGuid().ToString());
             LoadConfigValues();
             InitializeSmartHomeAsync();
-            SubscribeToNotifications(topics);
+            SubscribeToTopics(topics);
             PruneOldMessages(daysToKeep);
         }
 
@@ -119,7 +124,7 @@ namespace SmartHomeApp
                         CreationDateTime = DateTime.Now
                     };
                     string fullURI = baseURI;
-                    string requestBody = XMLHelper.SerializeXml<Application>(app).Trim();
+                    string requestBody = XMLHelper.SerializeXmlUtf8<Application>(app).ToString().Trim();
                     HttpContent httpContent = new StringContent(requestBody, Encoding.UTF8, "application/xml");
                     HttpResponseMessage response = await client.PostAsync(fullURI, httpContent);
                     string responseBody = await response.Content.ReadAsStringAsync();
@@ -145,7 +150,7 @@ namespace SmartHomeApp
                         Parent = 0
                     };
                     string fullURI = baseURI + applicationName;
-                    string requestBody = XMLHelper.SerializeXml<Container>(cont).Trim();
+                    string requestBody = XMLHelper.SerializeXmlUtf8<Container>(cont).ToString().Trim();
                     HttpContent httpContent = new StringContent(requestBody, Encoding.UTF8, "application/xml");
                     HttpResponseMessage response = await client.PostAsync(fullURI, httpContent);
                     string responseBody = await response.Content.ReadAsStringAsync();
@@ -177,7 +182,7 @@ namespace SmartHomeApp
                     string header = "res_type";
                     string headerValue = "notification";
                     client.DefaultRequestHeaders.Add(header, headerValue);
-                    string requestBody = XMLHelper.SerializeXml<Notification>(not).Trim();
+                    string requestBody = XMLHelper.SerializeXmlUtf8<Notification>(not);
                     HttpContent httpContent = new StringContent(requestBody, Encoding.UTF8, "application/xml");
                     HttpResponseMessage response = await client.PostAsync(fullURI, httpContent);
                     string responseBody = await response.Content.ReadAsStringAsync();
@@ -188,22 +193,28 @@ namespace SmartHomeApp
                 }
             }
         }
+        private void MClient_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
+        {
+            string topic = e.Topic;
+            string body = Encoding.UTF8.GetString(e.Message);
+            string[] vars = body.Split(';');
+            string mqttEvent = vars[0];
+            string message = vars[1];
+            AppendMqttMessage(topic, mqttEvent, message);
+            UpdateUI(topic, message);
+        }
 
-        private void SubscribeToNotifications(string[] topics)
+        private void SubscribeToTopics(string[] topics)
         {
             try
             {
-                mClient.Connect(Guid.NewGuid().ToString());
                 if (!mClient.IsConnected)
                 {
                     throw new Exception("Error connecting to message broker...");
                 }
                 mClient.MqttMsgPublishReceived += MClient_MqttMsgPublishReceived;
-                //byte[] qosLevels = topics.Select(t => MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE).ToArray();
-                byte[] qosLevels = { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE };
-                Console.WriteLine(qosLevels);
-                mClient.Subscribe( topics2, qosLevels);
-
+                byte[] qosLevels = topics.Select(t => MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE).ToArray();
+                mClient.Subscribe( topics, qosLevels);
             }
             catch (Exception ex)
             {
@@ -211,23 +222,19 @@ namespace SmartHomeApp
             }
         }
 
-        private void MClient_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
-        {
-            string topic = e.Topic;
-            Console.WriteLine($"Received message on topic: {topic}");
-            string message = Encoding.UTF8.GetString(e.Message);
-            Console.WriteLine($"Message: {message}");
-            MqttMessage mqttMessage = XMLHelper.DeserializeXml<MqttMessage>(message);
-            AppendMqttMessage(mqttMessage);
-            HandleEvent(topic, mqttMessage);
-        }
 
-        private void HandleEvent(string topic, MqttMessage mqttMessage)
+
+        private void UpdateUI(string topic, string message)
         {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => UpdateUI(topic, message)));
+                return;
+            }
             switch (topic)
             {
                 case "smarthome/smarthome_all":
-                    if (mqttMessage.Record.Content == "ON")
+                    if (message == "ON")
                     {
                         // Turn on all devices
                     }
@@ -237,21 +244,19 @@ namespace SmartHomeApp
                     }
                     break;
                 case "lighting/parking_light":
-                    if (mqttMessage.Record.Content == "ON")
+                    if (message == "ON")
                     {
                         labelParkingLightSwitch.Text = "ON";
-                        labelParkingLightSwitch.ForeColor = Color.Black;
                         richTextBoxParkingLight.BackColor = Color.Yellow;
                     }
                     else
                     {
                         labelParkingLightSwitch.Text = "OFF";
-                        labelParkingLightSwitch.ForeColor = Color.White;
                         richTextBoxParkingLight.BackColor = Color.Black;
                     }
                     break;
                 case "lighting/garden_light":
-                    if (mqttMessage.Record.Content == "ON")
+                    if (message == "ON")
                     {
                         // Turn on garden light
                     }
@@ -261,7 +266,7 @@ namespace SmartHomeApp
                     }
                     break;
                 case "lighting/lighting_all":
-                    if (mqttMessage.Record.Content == "ON")
+                    if (message == "ON")
                     {
                         // Turn on all lights
                     }
@@ -271,7 +276,7 @@ namespace SmartHomeApp
                     }
                     break;
                 case "heating/air_conditioning":
-                    if (mqttMessage.Record.Content == "ON")
+                    if (message == "ON")
                     {
                         // Turn on air conditioning
                     }
@@ -281,7 +286,7 @@ namespace SmartHomeApp
                     }
                     break;
                 case "heating/heater":
-                    if (mqttMessage.Record.Content == "ON")
+                    if (message == "ON")
                     {
                         // Turn on heater
                     }
@@ -291,7 +296,7 @@ namespace SmartHomeApp
                     }
                     break;
                 case "heating/heating_all":
-                    if (mqttMessage.Record.Content == "ON")
+                    if (message == "ON")
                     {
                         // Turn on all heating devices
                     }
@@ -301,7 +306,7 @@ namespace SmartHomeApp
                     }
                     break;
                 case "security/camera":
-                    if (mqttMessage.Record.Content == "ON")
+                    if (message == "ON")
                     {
                         // Turn on camera
                     }
@@ -311,7 +316,7 @@ namespace SmartHomeApp
                     }
                     break;
                 case "security/alarm":
-                    if (mqttMessage.Record.Content == "ON")
+                    if (message == "ON")
                     {
                         // Turn on alarm
                     }
@@ -321,7 +326,7 @@ namespace SmartHomeApp
                     }
                     break;
                 case "security/security_all":
-                    if (mqttMessage.Record.Content == "ON")
+                    if (message == "ON")
                     {
                         // Turn on all security devices
                     }
@@ -335,7 +340,7 @@ namespace SmartHomeApp
             }
         }
 
-        private void AppendMqttMessage(MqttMessage mqttMessage)
+        private void AppendMqttMessage(string topic, string mqttEvent, string message)
         {
             string filePath = Path.Combine(Directory.GetCurrentDirectory(), filename);
 
@@ -343,6 +348,7 @@ namespace SmartHomeApp
             {
                 XDocument doc;
 
+                // Load existing file or create a new one
                 if (File.Exists(filePath))
                 {
                     doc = XDocument.Load(filePath);
@@ -352,18 +358,22 @@ namespace SmartHomeApp
                     doc = new XDocument(new XElement("MqttMessages"));
                 }
 
-                XElement messageElement = new XElement("MqttMessage",
-                    new XElement("Topic", mqttMessage.Topic),
-                    new XElement("Event", mqttMessage.Event),
-                    new XElement("Record",
-                        new XElement("Id", mqttMessage.Record.Id),
-                        new XElement("Name", mqttMessage.Record.Name),
-                        new XElement("CreationDateTime", mqttMessage.Record.CreationDateTime.ToString("o")),
-                        new XElement("Parent", mqttMessage.Record.Parent),
-                        new XElement("Content", mqttMessage.Record.Content)
-                    )
-                );
-                doc.Root.Add(messageElement);
+                // Parse the incoming XML string into an XElement
+                XElement messageElement;
+                try
+                {
+                    //messageElement = XElement.Parse(xmlMessage);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Invalid XML: {ex.Message}");
+                    return;
+                }
+
+                // Add the parsed XElement to the root of the document
+                //doc.Root.Add(messageElement);
+
+                // Save the updated document
                 doc.Save(filePath);
             }
             catch (Exception ex)
@@ -371,6 +381,7 @@ namespace SmartHomeApp
                 MessageBox.Show($"Error saving MQTT message: {ex.Message}");
             }
         }
+
 
         private void PruneOldMessages(int daysToKeep)
         {

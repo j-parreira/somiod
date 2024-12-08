@@ -237,7 +237,6 @@ namespace somiod.Helpers
             {
                 throw new Exception("Invalid event type");
             }
-
             notification.Name = "not_0";
             if (NotificationNameExists(notification.Name))
             {
@@ -248,9 +247,7 @@ namespace somiod.Helpers
                     i++;
                 }
             }
-
             var cont = ContainerHelper.FindContainerInDatabase(application, container);
-
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))

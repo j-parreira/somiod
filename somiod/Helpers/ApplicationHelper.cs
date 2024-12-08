@@ -108,7 +108,6 @@ namespace somiod.Helpers
 
         internal static Application AddApplicationToDatabase(Application application)
         {
-            
             if (ApplicationExists(application.Name))
             {
                 int i = 1;
@@ -118,7 +117,6 @@ namespace somiod.Helpers
                     i++;
                 }
             }
-
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))
@@ -180,7 +178,6 @@ namespace somiod.Helpers
                     i++;
                 }
             }
-
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(Properties.Settings.Default.ConnStr))

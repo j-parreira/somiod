@@ -20,8 +20,12 @@ namespace CellPhoneApp
         string baseURI = "http://localhost:51897/api/somiod/";
         public Form1()
         {
-            Thread.Sleep(5000);
             InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            Thread.Sleep(5000);
             LoadAppsIntoComboBox();
         }
 
@@ -125,7 +129,7 @@ namespace CellPhoneApp
                     string header = "res_type";
                     string headerValue = "record";
                     client.DefaultRequestHeaders.Add(header, headerValue);
-                    string requestBody = XMLHelper.SerializeXml<Record>(record).ToString().Trim();
+                    string requestBody = XMLHelper.SerializeXmlUtf8<Record>(record).ToString().Trim();
                     HttpContent httpContent = new StringContent(requestBody, Encoding.UTF8, "application/xml");
                     HttpResponseMessage response = client.PostAsync(fullURI, httpContent).Result;
                     string responseBody = response.Content.ReadAsStringAsync().Result;
@@ -177,7 +181,7 @@ namespace CellPhoneApp
                     string header = "res_type";
                     string headerValue = "record";
                     client.DefaultRequestHeaders.Add(header, headerValue);
-                    string requestBody = XMLHelper.SerializeXml<Record>(record).ToString().Trim();
+                    string requestBody = XMLHelper.SerializeXmlUtf8<Record>(record).ToString().Trim();
                     HttpContent httpContent = new StringContent(requestBody, Encoding.UTF8, "application/xml");
                     HttpResponseMessage response = client.PostAsync(fullURI, httpContent).Result;
                     string responseBody = response.Content.ReadAsStringAsync().Result;

@@ -283,6 +283,7 @@
             this.Controls.Add(this.groupBoxLighting);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBoxLighting.ResumeLayout(false);
             this.groupBoxLighting.PerformLayout();
             this.groupBoxHeating.ResumeLayout(false);
