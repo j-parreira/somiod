@@ -14,13 +14,15 @@ namespace App_Test_Endpoints
 {
     public partial class Form1 : Form
     {
-        string baseURI = "http://localhost:51897/api/somiod/";
+        string baseURI = "http://localhost:51967/api/somiod/";
         public Form1()
         {
             InitializeComponent();
+            // Set the base URI in the text box
             textBoxBaseURI.Text = baseURI;
         }
 
+        // resetFields() clears all text boxes and resets their background colors
         private void resetFields()
         {
             textBoxBaseURI.Text = "";
@@ -32,6 +34,7 @@ namespace App_Test_Endpoints
             textBoxHttpCodeText.BackColor = SystemColors.Control;
         }
 
+        // getHttpResponseCodeText() returns the text of the HTTP response code
         private string getHttpResponseCodeText(int statusCode)
         {
             switch (statusCode)
@@ -71,6 +74,7 @@ namespace App_Test_Endpoints
             }
         }
 
+        // buttonGetAllApps_Click() sends a GET request to the URI to retrieve all applications
         private void buttonGetAllApps_Click(object sender, EventArgs e)
         {
             using (HttpClient client = new HttpClient())
@@ -95,6 +99,7 @@ namespace App_Test_Endpoints
             }
         }
 
+        // buttonGetOneApp_Click() sends a GET request to the URI to retrieve one application
         private void buttonGetOneApp_Click(object sender, EventArgs e)
         {
             using (HttpClient client = new HttpClient())
@@ -131,6 +136,7 @@ namespace App_Test_Endpoints
             }
         }
 
+        // buttonGetAllContainersInOneApp_Click() sends a GET request to the URI to retrieve all containers in one application
         private void buttonGetAllContainersInOneApp_Click(object sender, EventArgs e)
         {
             using (HttpClient client = new HttpClient())
@@ -167,6 +173,7 @@ namespace App_Test_Endpoints
             }
         }
 
+        // buttonGetOneContainerInOneApp_Click() sends a GET request to the URI to retrieve one container in one application
         private void buttonGetOneContainerInOneApp_Click(object sender, EventArgs e)
         {
             using (HttpClient client = new HttpClient())
@@ -214,6 +221,7 @@ namespace App_Test_Endpoints
             }
         }
 
+        // buttonGetAllNotifsInOneContainer_Click() sends a GET request to the URI to retrieve all notifications in one container
         private void buttonGetAllNotifsInOneContainer_Click(object sender, EventArgs e)
         {
             using (HttpClient client = new HttpClient())
@@ -261,6 +269,7 @@ namespace App_Test_Endpoints
             }
         }
 
+        // buttonOneNotifInOneContainer_Click() sends a GET request to the URI to retrieve one notification in one container
         private void buttonOneNotifInOneContainer_Click(object sender, EventArgs e)
         {
             using (HttpClient client = new HttpClient())
@@ -319,6 +328,7 @@ namespace App_Test_Endpoints
             }
         }
 
+        // buttonGetAllRecordsInOneContainer_Click() sends a GET request to the URI to retrieve all records in one container
         private void buttonGetAllRecordsInOneContainer_Click(object sender, EventArgs e)
         {
             using (HttpClient client = new HttpClient())
@@ -366,6 +376,7 @@ namespace App_Test_Endpoints
             }
         }
 
+        // buttonGetOneRecordInOneContainer_Click() sends a GET request to the URI to retrieve one record in one container
         private void buttonGetOneRecordInOneContainer_Click(object sender, EventArgs e)
         {
             using (HttpClient client = new HttpClient())
@@ -424,6 +435,7 @@ namespace App_Test_Endpoints
             }
         }
 
+        // buttonPostOneApp_Click() sends a POST request to the URI to create one application
         private void buttonPostOneApp_Click(object sender, EventArgs e)
         {
             using (HttpClient client = new HttpClient())
@@ -450,6 +462,7 @@ namespace App_Test_Endpoints
             }
         }
 
+        // buttonPostOneContainerInOneApp_Click() sends a POST request to the URI to create one container in one application
         private void buttonPostOneContainerInOneApp_Click(object sender, EventArgs e)
         {
             using (HttpClient client = new HttpClient())
@@ -488,6 +501,7 @@ namespace App_Test_Endpoints
             }
         }
 
+        // buttonPostOneNotifInOneContainer_Click() sends a POST request to the URI to create one notification in one container
         private void buttonPostOneNotifInOneContainer_Click(object sender, EventArgs e)
         {
             using (HttpClient client = new HttpClient())
@@ -541,6 +555,7 @@ namespace App_Test_Endpoints
             }
         }
 
+        // buttonPostOneRecordInOneContainer_Click() sends a POST request to the URI to create one record in one container
         private void buttonPostOneRecordInOneContainer_Click(object sender, EventArgs e)
         {
             using (HttpClient client = new HttpClient())
@@ -594,6 +609,7 @@ namespace App_Test_Endpoints
             }
         }
 
+        // buttonDeleteOneApp_Click() sends a DELETE request to the URI to delete one application
         private void buttonDeleteOneApp_Click(object sender, EventArgs e)
         {
             using (HttpClient client = new HttpClient())
@@ -630,6 +646,7 @@ namespace App_Test_Endpoints
             }
         }
 
+        // buttonDeleteOneContainerInOneApp_Click() sends a DELETE request to the URI to delete one container in one application
         private void buttonDeleteOneContainerInOneApp_Click(object sender, EventArgs e)
         {
             using (HttpClient client = new HttpClient())
@@ -677,6 +694,7 @@ namespace App_Test_Endpoints
             }
         }
 
+        // buttonDeleteOneNotifInOneContainer_Click() sends a DELETE request to the URI to delete one notification in one container
         private void buttonDeleteOneNotifInOneContainer_Click(object sender, EventArgs e)
         {
             using (HttpClient client = new HttpClient())
@@ -735,6 +753,7 @@ namespace App_Test_Endpoints
             }
         }
 
+        // buttonDeleteOneRecordInOneContainer_Click() sends a DELETE request to the URI to delete one record in one container
         private void buttonDeleteOneRecordInOneContainer_Click(object sender, EventArgs e)
         {
             using (HttpClient client = new HttpClient())
@@ -793,6 +812,7 @@ namespace App_Test_Endpoints
             }
         }
 
+        // buttonPutOneApp_Click() sends a PUT request to the URI to update one application
         private void buttonPutOneApp_Click(object sender, EventArgs e)
         {
             using (HttpClient client = new HttpClient())
@@ -831,6 +851,7 @@ namespace App_Test_Endpoints
             }
         }
 
+        // buttonPutOneContainerInOneApp_Click() sends a PUT request to the URI to update one container in one application
         private void buttonPutOneContainerInOneApp_Click(object sender, EventArgs e)
         {
             using (HttpClient client = new HttpClient())
@@ -880,6 +901,7 @@ namespace App_Test_Endpoints
             }
         }
 
+        // buttonLocateAllApps_Click() sends a GET request to the URI to locate all application's names
         private void buttonLocateAllApps_Click(object sender, EventArgs e)
         {
             using (HttpClient client = new HttpClient())
@@ -908,6 +930,7 @@ namespace App_Test_Endpoints
             }
         }
 
+        // buttonLocateAllContainers_Click() sends a GET request to the URI to locate all container's names
         private void buttonLocateAllContainers_Click(object sender, EventArgs e)
         {
             using (HttpClient client = new HttpClient())
@@ -936,6 +959,7 @@ namespace App_Test_Endpoints
             }
         }
 
+        // buttonLocateAllNotifs_Click() sends a GET request to the URI to locate all notification's names
         private void buttonLocateAllNotifs_Click(object sender, EventArgs e)
         {
             using (HttpClient client = new HttpClient())
@@ -964,6 +988,7 @@ namespace App_Test_Endpoints
             }
         }
 
+        // buttonLocateAllRecords_Click() sends a GET request to the URI to locate all record's names
         private void buttonLocateAllRecords_Click(object sender, EventArgs e)
         {
             using (HttpClient client = new HttpClient())
@@ -992,6 +1017,7 @@ namespace App_Test_Endpoints
             }
         }
 
+        // buttonLocateAllContainersInOneApp_Click() sends a GET request to the URI to locate all container's names in one application
         private void buttonLocateAllContainersInOneApp_Click(object sender, EventArgs e)
         {
             using (HttpClient client = new HttpClient())
@@ -1032,6 +1058,7 @@ namespace App_Test_Endpoints
             }
         }
 
+        // buttonLocateAllNotifsInOneApp_Click() sends a GET request to the URI to locate all notification's names in one application
         private void buttonLocateAllNotifsInOneApp_Click(object sender, EventArgs e)
         {
             using (HttpClient client = new HttpClient())
@@ -1072,6 +1099,7 @@ namespace App_Test_Endpoints
             }
         }
 
+        // buttonLocateAllRecordsInOneApp_Click() sends a GET request to the URI to locate all record's names in one application
         private void buttonLocateAllRecordsInOneApp_Click(object sender, EventArgs e)
         {
             using (HttpClient client = new HttpClient())
@@ -1112,6 +1140,7 @@ namespace App_Test_Endpoints
             }
         }
 
+        // buttonLocateAllNotifsInOneContainer_Click() sends a GET request to the URI to locate all notification's names in one container
         private void buttonLocateAllNotifsInOneContainer_Click(object sender, EventArgs e)
         {
             using (HttpClient client = new HttpClient())
@@ -1162,6 +1191,7 @@ namespace App_Test_Endpoints
             }
         }
 
+        // buttonLocateAllRecordsInOneContainer_Click() sends a GET request to the URI to locate all record's names in one container
         private void buttonLocateAllRecordsInOneContainer_Click(object sender, EventArgs e)
         {
             using (HttpClient client = new HttpClient())
@@ -1212,6 +1242,7 @@ namespace App_Test_Endpoints
             }
         }
 
+        // buttonSaveBaseURI_Click() saves the base URI from the text box
         private void buttonSaveBaseURI_Click(object sender, EventArgs e)
         {
             baseURI = textBoxBaseURI.Text + "/";

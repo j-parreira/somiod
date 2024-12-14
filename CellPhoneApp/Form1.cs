@@ -17,18 +17,21 @@ namespace CellPhoneApp
 {
     public partial class Form1 : Form
     {
-        string baseURI = "http://localhost:51897/api/somiod/";
+        // baseURI is the base URI of the server.
+        string baseURI = "http://localhost:51967/api/somiod/";
         public Form1()
         {
             InitializeComponent();
         }
 
+        // Form1_Load method is called when the form is loaded and waits for 5 seconds before calling LoadAppsIntoComboBox method.
         private void Form1_Load(object sender, EventArgs e)
         {
             Thread.Sleep(5000);
             LoadAppsIntoComboBox();
         }
 
+        // LoadAppsIntoComboBox method loads the applications into the comboBoxApplication.
         private void LoadAppsIntoComboBox()
         {
             using (HttpClient client = new HttpClient())
@@ -60,6 +63,7 @@ namespace CellPhoneApp
             }
         }
 
+        // LoadContainerIntoComboBox method loads the containers into the comboBoxContainer.
         private void LoadContainerIntoComboBox()
         {
             if (comboBoxApplication.SelectedIndex == 0)
@@ -96,11 +100,13 @@ namespace CellPhoneApp
             }
         }
 
+        // ComboBoxApplication_SelectedIndexChanged method is called when the comboBoxApplication is changed and calls LoadContainerIntoComboBox method.
         private void ComboBoxApplication_SelectedIndexChanged(object sender, EventArgs e)
         {
             LoadContainerIntoComboBox();
         }
 
+        // buttonOn_Click method is called when the buttonOn is clicked and sends a POST request to the server to create a record with content "ON".
         private void buttonOn_Click(object sender, EventArgs e)
         {
             if (comboBoxApplication.SelectedIndex == 0)
@@ -153,6 +159,7 @@ namespace CellPhoneApp
             }
         }
 
+        // buttonOff_Click method is called when the buttonOff is clicked and sends a POST request to the server to create a record with content "OFF".
         private void buttonOff_Click(object sender, EventArgs e)
         {
             if (comboBoxApplication.SelectedIndex == 0)

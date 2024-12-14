@@ -16,6 +16,7 @@ namespace somiod.Helpers
 {
     public class RecordHelper
     {
+        // Method to check if record name exists
         internal static bool RecordNameExists(string recordName)
         {
             try
@@ -39,6 +40,7 @@ namespace somiod.Helpers
             }
         }
 
+        // Method to check if record exists under a container in an application
         internal static bool RecordExists(string application, string container, string record)
         {
             var app = ApplicationHelper.FindApplicationInDatabase(application);
@@ -69,6 +71,7 @@ namespace somiod.Helpers
             }
         }
 
+        // Method to find all records in database
         internal static List<Record> FindRecordsInDatabase()
         {
             var records = new List<Record>();
@@ -106,6 +109,7 @@ namespace somiod.Helpers
             return records;
         }
 
+        // Method to find records by application
         internal static List<Record> FindRecordsByApplication(string application)
         {
             var app = ApplicationHelper.FindApplicationInDatabase(application);
@@ -146,6 +150,7 @@ namespace somiod.Helpers
             return records;
         }
 
+        // Method to find records by container
         internal static List<Record> FindRecordsByContainer(string application, string container)
         {
             var cont = ContainerHelper.FindContainerInDatabase(application, container);
@@ -186,6 +191,7 @@ namespace somiod.Helpers
             return records;
         }
 
+        // Method to find record in database under a container in an application
         internal static Record FindRecordInDatabase(string application, string container, string record)
         {
             Record rec = null;
@@ -228,17 +234,19 @@ namespace somiod.Helpers
             return rec;
         }
 
+        // Method to add record to database under a container in an application and publish MQTT messages or send HTTP post
         internal static Record AddRecordToDatabase(string application, string container, Record record)
         {
-            record.name = "rec_0";
             if (RecordNameExists(record.name))
             {
                 int i = 1;
-                while (RecordNameExists(record.name))
+                string newName = record.name;
+                while (RecordNameExists(newName))
                 {
-                    record.name = "rec_" + i.ToString();
+                    newName = record.name + i.ToString();
                     i++;
                 }
+                record.name = newName;
             }
             var cont = ContainerHelper.FindContainerInDatabase(application, container);
             try
@@ -272,6 +280,7 @@ namespace somiod.Helpers
             return record;
         }
 
+        // Method to update record in database under a container in an application and publish MQTT messages or send HTTP post
         internal static void DeleteRecordFromDatabase(string application, string container, string record)
         {
             string message = FindRecordInDatabase(application, container, record).content;

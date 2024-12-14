@@ -12,6 +12,7 @@ namespace somiod.Helpers
 {
     public class XMLHelper
     {
+        // Method to validate XML against XSD
         public static bool ValidateXml(string xmlContent, string xsdPath, out string validationError)
         {
             validationError = null;
@@ -44,6 +45,7 @@ namespace somiod.Helpers
             }
         }
 
+        // Method to deserialize XML
         public static T DeserializeXml<T>(string xml)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(T));
@@ -53,6 +55,7 @@ namespace somiod.Helpers
             }
         }
 
+        // Method to serialize XML with UTF-8 encoding
         public static string SerializeXmlUtf8<T>(T model)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(T));
@@ -73,6 +76,7 @@ namespace somiod.Helpers
             }
         }
 
+        // Class to write XML with UTF-8 encoding
         private class Utf8StringWriter : StringWriter
         {
             public override Encoding Encoding => Encoding.UTF8;

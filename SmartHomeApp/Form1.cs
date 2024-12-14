@@ -24,10 +24,15 @@ namespace SmartHomeApp
 {
     public partial class Form1 : Form
     {
-        string baseURI = "http://localhost:51897/api/somiod/";
+        // baseURI is the base URI for the somiod API and mClient is the MQTT client
+        string baseURI = "http://localhost:51967/api/somiod/";
         MqttClient mClient = new MqttClient(IPAddress.Parse("127.0.0.1"));
+
+        // filename is the name of the XML file to store MQTT messages and daysToKeep is the number of days to keep messages
         string filename;
         int daysToKeep;
+
+        // topics is an array of MQTT topics to subscribe to
         string[] topics = { "smarthome/smarthome_all", "lighting/parking_light",
             "lighting/garden_light", "lighting/lighting_all",
             "heating/air_conditioning", "heating/heater",
@@ -39,6 +44,7 @@ namespace SmartHomeApp
             InitializeComponent();
         }
 
+        // Form1_Load method is called when the form is loaded
         private void Form1_Load(object sender, EventArgs e)
         {
             mClient.Connect(Guid.NewGuid().ToString());
@@ -49,6 +55,7 @@ namespace SmartHomeApp
             ToggleAll(false);
         }
 
+        // InitializeSmartHomeAsync method creates the necessary applications, containers, and notifications
         private async void InitializeSmartHomeAsync()
         {
             try
@@ -86,6 +93,7 @@ namespace SmartHomeApp
             }
         }
 
+        // LoadConfigValues method reads the filename and daysToKeep values from the configuration file
         private void LoadConfigValues()
         {
             try
@@ -114,6 +122,7 @@ namespace SmartHomeApp
             }
         }
 
+        // CreateApplicationAsync method creates an application with the given name
         private async Task CreateApplicationAsync(string applicationName)
         {
             using (HttpClient client = new HttpClient())
@@ -153,6 +162,7 @@ namespace SmartHomeApp
             }
         }
 
+        // CreateContainerAsync method creates a container with the given name under the given application
         private async Task CreateContainerAsync(string applicationName, string containerName)
         {
             using (HttpClient client = new HttpClient())
@@ -193,6 +203,7 @@ namespace SmartHomeApp
             }
         }
 
+        // CreateNotification method creates a notification for the given application and container
         private async Task CreateNotification(string applicationName, string containerName)
         {
             using (HttpClient client = new HttpClient())
@@ -224,6 +235,8 @@ namespace SmartHomeApp
                 }
             }
         }
+
+        // MClient_MqttMsgPublishReceived method handles incoming MQTT messages
         private void MClient_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
         {
             DateTime receivedTime = DateTime.Now;
@@ -236,6 +249,7 @@ namespace SmartHomeApp
             AppendMqttMessage(topic, mqttEvent, message, receivedTime);
         }
 
+        // SubscribeToTopics method subscribes to the given topics in the MQTT broker and sets up the event handler
         private void SubscribeToTopics(string[] topics)
         {
             try
@@ -254,6 +268,7 @@ namespace SmartHomeApp
             }
         }
 
+        // HandleEvent method processes the incoming MQTT message and updates the UI accordingly
         private void HandleEvent(string topic, string mqttEvent, string message, DateTime receivedTime)
         {
             if (InvokeRequired)
@@ -368,6 +383,7 @@ namespace SmartHomeApp
             }
         }
 
+        // AppendMqttMessage method appends the incoming MQTT message to the XML file
         private void AppendMqttMessage(string topic, string eventType, string message, DateTime receivedTime)
         {
             string filePath = Path.Combine(Directory.GetCurrentDirectory(), filename);
@@ -400,6 +416,7 @@ namespace SmartHomeApp
             }
         }
 
+        // PruneOldMessages method removes messages older than the given number of days from the XML file
         private void PruneOldMessages(int daysToKeep)
         {
             string filePath = Path.Combine(Directory.GetCurrentDirectory(), filename);
@@ -426,6 +443,7 @@ namespace SmartHomeApp
             }
         }
 
+        // ToggleParkingLight method updates the UI for the parking light
         private void ToggleParkingLight(bool status)
         {
             if (status)
@@ -440,6 +458,7 @@ namespace SmartHomeApp
             }
         }
 
+        // ToggleGardenLight method updates the UI for the garden light
         private void ToggleGardenLight(bool status)
         {
             if (status)
@@ -454,6 +473,7 @@ namespace SmartHomeApp
             }
         }
 
+        // ToggleAirConditioning method updates the UI for the air conditioning
         private void ToggleAirConditioning(bool status)
         {
             if (status)
@@ -468,6 +488,7 @@ namespace SmartHomeApp
             }
         }
 
+        // ToggleHeater method updates the UI for the heater
         private void ToggleHeater(bool status)
         {
             if (status)
@@ -482,6 +503,7 @@ namespace SmartHomeApp
             }
         }
 
+        // ToggleCamera method updates the UI for the camera
         private void ToggleCamera(bool status)
         {
             if (status)
@@ -496,6 +518,7 @@ namespace SmartHomeApp
             }
         }
 
+        // ToggleAlarm method updates the UI for the alarm
         private void ToggleAlarm(bool status)
         {
             if (status)
@@ -510,6 +533,7 @@ namespace SmartHomeApp
             }
         }
 
+        // ToggleLighting method updates the UI for the lighting
         private void ToggleLighting(bool status)
         {
             if (status)
@@ -524,6 +548,7 @@ namespace SmartHomeApp
             }
         }
 
+        // ToggleHeating method updates the UI for the heating
         private void ToggleHeating(bool status)
         {
             if (status)
@@ -538,6 +563,7 @@ namespace SmartHomeApp
             }
         }
 
+        // ToggleSecurity method updates the UI for the security
         private void ToggleSecurity(bool status)
         {
             if (status)
@@ -552,6 +578,7 @@ namespace SmartHomeApp
             }
         }
 
+        // ToggleAll method updates the UI for all devices
         private void ToggleAll(bool status)
         {
             if (status)

@@ -11,6 +11,7 @@ namespace somiod.Helpers
 {
     public class ApplicationHelper
     {
+        // Check if application exists in database
         internal static bool ApplicationExists(string application)
         {
             try
@@ -34,6 +35,7 @@ namespace somiod.Helpers
             }
         }
 
+        // Find all applications in database
         internal static List<Application> FindApplicationsInDatabase()
         {
             var apps = new List<Application>();
@@ -69,6 +71,7 @@ namespace somiod.Helpers
             return apps;
         }
 
+        // Find application in database
         public static Application FindApplicationInDatabase(string application)
         {
             Application app = null;
@@ -106,16 +109,19 @@ namespace somiod.Helpers
             return app;
         }
 
+        // Add application to database
         internal static Application AddApplicationToDatabase(Application application)
         {
             if (ApplicationExists(application.name))
             {
                 int i = 1;
-                while (ApplicationExists(application.name))
+                string newName = application.name;
+                while (ApplicationExists(newName))
                 {
-                    application.name += i.ToString();
+                    newName = application.name + i.ToString();
                     i++;
                 }
+                application.name = newName;
             }
             try
             {
@@ -141,6 +147,7 @@ namespace somiod.Helpers
             return application;
         }
 
+        // Delete application from database
         internal static void DeleteApplicationFromDatabase(string application)
         {
             var app = FindApplicationInDatabase(application);
@@ -165,6 +172,7 @@ namespace somiod.Helpers
             }
         }
 
+        // Update application in database
         internal static Application UpdateApplicationInDatabase(string application, Application newApp)
         {
             var app = FindApplicationInDatabase(application);

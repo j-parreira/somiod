@@ -11,6 +11,7 @@ namespace somiod.Helpers
 {
     public class ContainerHelper
     {
+        // Check if container name exists in database
         internal static bool ContainerNameExists(string container)
         {
             try
@@ -34,6 +35,7 @@ namespace somiod.Helpers
             }
         }
 
+        // Check if container exists in database under an application
         internal static bool ContainerExists(string application, string container)
         {
             var app = ApplicationHelper.FindApplicationInDatabase(application); 
@@ -59,6 +61,7 @@ namespace somiod.Helpers
             }
         }
 
+        // Find all containers in database
         internal static List<Container> FindContainersInDatabase()
         {
             var containers = new List<Container>();
@@ -95,6 +98,7 @@ namespace somiod.Helpers
             return containers;
         }
 
+        // Find containers by application
         internal static List<Container> FindContainersByApplication(string application)
         {
             var containers = new List<Container>();
@@ -134,6 +138,7 @@ namespace somiod.Helpers
             return containers;
         }
 
+        // Find container in database under an application
         internal static Container FindContainerInDatabase(string application, string container)
         {
             Container cont = null;
@@ -174,16 +179,19 @@ namespace somiod.Helpers
             return cont;
         }
 
+        // Add container to database under an application
         internal static Container AddContainerToDatabase(string application, Container container)
         {
             if (ContainerNameExists(container.name))
             {
                 int i = 1;
-                while (ContainerNameExists(container.name))
+                string newName = container.name;
+                while (ContainerNameExists(newName))
                 {
-                    container.name += i.ToString();
+                    newName = container.name + i.ToString();
                     i++;
                 }
+                container.name = newName;
             }
             var app = ApplicationHelper.FindApplicationInDatabase(application);
             try
@@ -212,6 +220,7 @@ namespace somiod.Helpers
             return container;
         }
 
+        // Delete container from database under an application
         internal static void DeleteContainerFromDatabase(string application, string container)
         {
             var app = ApplicationHelper.FindApplicationInDatabase(application);
@@ -237,6 +246,7 @@ namespace somiod.Helpers
             }
         }
 
+        // Update container in database under an application
         internal static Container UpdateContainerInDatabase(string application, string container, Container newContainer)
         {
             if (ContainerNameExists(newContainer.name))

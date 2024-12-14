@@ -11,6 +11,7 @@ namespace somiod.Helpers
 {
     public class NotificationHelper
     {
+        // Check if notification name exists in database
         internal static bool NotificationNameExists(string notificationName)
         {
             try
@@ -34,6 +35,7 @@ namespace somiod.Helpers
             }
         }
 
+        // Check if notification exists in database under a container of an application
         internal static bool NotificationExists(string application, string container, string notification)
         {   
             var app = ApplicationHelper.FindApplicationInDatabase(application);
@@ -64,6 +66,7 @@ namespace somiod.Helpers
             }
         }
 
+        // Find all notifications in database
         internal static List<Notification> FindNotificationsInDatabase()
         {
             var notifications = new List<Notification>();
@@ -103,6 +106,7 @@ namespace somiod.Helpers
             return notifications;
         }
 
+        // Find notifications by application
         internal static List<Notification> FindNotificationsByApplication(string application)
         {
             var app = ApplicationHelper.FindApplicationInDatabase(application);
@@ -146,6 +150,7 @@ namespace somiod.Helpers
             return notifications;
         }
 
+        // Find notifications by container
         internal static List<Notification> FindNotificationsByContainer(string application, string container)
         {
             var cont = ContainerHelper.FindContainerInDatabase(application, container);
@@ -188,6 +193,7 @@ namespace somiod.Helpers
             return notifications;
         }
 
+        // Find notification in database under a container of an application
         internal static Notification FindNotificationInDatabase(string application, string container, string notification)
         {
             Notification not = null;
@@ -231,21 +237,23 @@ namespace somiod.Helpers
             return not;
         }
 
+        // Add notification to database under a container of an application
         internal static Notification AddNotificationToDatabase(string application, string container, Notification notification)
         {
             if (notification.event_type != "0" && notification.event_type != "1" && notification.event_type != "2")
             {
                 throw new Exception("Invalid event type");
             }
-            notification.name = "not_0";
             if (NotificationNameExists(notification.name))
             {
                 int i = 1;
-                while (NotificationNameExists(notification.name))
+                string newName = notification.name;
+                while (NotificationNameExists(newName))
                 {
-                    notification.name = "not_" + i.ToString();
+                    newName = notification.name + i.ToString();
                     i++;
                 }
+                notification.name = newName;
             }
             var cont = ContainerHelper.FindContainerInDatabase(application, container);
             try
@@ -278,6 +286,7 @@ namespace somiod.Helpers
             return notification;
         }
 
+        // Update notification in database under a container of an application
         internal static void DeleteNotificationFromDatabase(string application, string container, string notification)
         {
             var cont = ContainerHelper.FindContainerInDatabase(application, container);

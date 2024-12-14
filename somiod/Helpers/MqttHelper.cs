@@ -15,6 +15,7 @@ namespace somiod.Helpers
 {
     public class MqttHelper
     {
+        // Method to find endpoints to send notifications
         internal static List<string> FindEndpointsToSend(string application, string container, string eventType)
         {
             var containerId = ContainerHelper.FindContainerInDatabase(application, container).id;
@@ -55,6 +56,7 @@ namespace somiod.Helpers
             return endpoints;
         }
 
+        // Method to publish MQTT messages
         internal static void PublishMqttMessages(string topic, string message, List<string> endpointsToSend)
         {
             MqttClient mClient;

@@ -1,0 +1,261 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Somiod API Endpoints</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+        }
+
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        span {
+            color: dodgerblue;
+        }
+
+        .get {
+            background-color: lightgreen;
+        }
+
+        .post {
+            background-color: lightyellow;
+        }
+
+        .delete {
+            background-color: lightcoral;
+        }
+
+        .put {
+            background-color: lightblue;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            background: #4CAF50;
+            color: white;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Soimiod API Endpoints</h1>
+    </header>
+    <table>
+        <thead>
+            <tr>
+                <th>URI</th>
+                <th>Method</th>
+                <th>Headers</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>http://localhost:51967/api/somiod/</td>
+                <td class="get">GET</td>
+                <td>None</td>
+                <td>Get All Applications</td>
+            </tr>
+            <tr>
+                <td>http://localhost:51967/api/somiod/</td>
+                <td class="get">GET</td>
+                <td>somiod-locate: application</td>
+                <td>Locate All Applications</td>
+            </tr>
+            <tr>
+                <td>http://localhost:51967/api/somiod/</td>
+                <td class="get">GET</td>
+                <td>somiod-locate: container</td>
+                <td>Locate All Containers</td>
+            </tr>
+            <tr>
+                <td>http://localhost:51967/api/somiod/</td>
+                <td class="get">GET</td>
+                <td>somiod-locate: notification</td>
+                <td>Locate All Notifications</td>
+            </tr>
+            <tr>
+                <td>http://localhost:51967/api/somiod/</td>
+                <td class="get">GET</td>
+                <td>somiod-locate: record</td>
+                <td>Locate All Records</td>
+            </tr>
+            <tr>
+                <td>http://localhost:51967/api/somiod/<span>{application}</span>/</td>
+                <td class="get">GET</td>
+                <td>None</td>
+                <td>Get One Application</td>
+            </tr>
+            <tr>
+                <td>http://localhost:51967/api/somiod/<span>{application}</span>/</td>
+                <td class="get">GET</td>
+                <td>somiod-locate: container</td>
+                <td>Locate All Containers in One Application</td>
+            </tr>
+            <tr>
+                <td>http://localhost:51967/api/somiod/<span>{application}</span>/</td>
+                <td class="get">GET</td>
+                <td>somiod-locate: notification</td>
+                <td>Locate All Notifications in One Application</td>
+            </tr>
+            <tr>
+                <td>http://localhost:51967/api/somiod/<span>{application}</span>/</td>
+                <td class="get">GET</td>
+                <td>somiod-locate: record</td>
+                <td>Locate All Records in One Application</td>
+            <tr>
+                <td>http://localhost:51967/api/somiod/</td>
+                <td class="post">POST</td>
+                <td>None</td>
+                <td>Create a New Application</td>
+            </tr>
+            <tr>
+                <td>http://localhost:51967/api/somiod/<span>{application}</span>/</td>
+                <td class="delete">DELETE</td>
+                <td>None</td>
+                <td>Delete an Application</td>
+            </tr>
+            <tr>
+                <td>http://localhost:51967/api/somiod/<span>{application}</span>/</td>
+                <td class="put">PUT</td>
+                <td>None</td>
+                <td>Update an Application</td>
+            </tr>
+            <tr>
+                <td>http://localhost:51967/api/somiod/<span>{application}</span>/container/</td>
+                <td class="get">GET</td>
+                <td>None</td>
+                <td>Get All Containers from an Application</td>
+            </tr>
+            <tr>
+                <td>http://localhost:51967/api/somiod/<span>{application}</span>/<span>{container}</span>/</td>
+                <td class="get">GET</td>
+                <td>None</td>
+                <td>Get One Container from an Application</td>
+            </tr>
+            <tr>
+                <td>http://localhost:51967/api/somiod/<span>{application}</span>/<span>{container}</span>/</td>
+                <td class="get">GET</td>
+                <td>somiod-locate: notification</td>
+                <td>Locate All Notifications in One Container</td>
+            </tr>
+            <tr>
+                <td>http://localhost:51967/api/somiod/<span>{application}</span>/<span>{container}</span>/</td>
+                <td class="get">GET</td>
+                <td>somiod-locate: record</td>
+                <td>Locate All Records in One Container</td>
+            </tr>
+            <tr>
+                <td>http://localhost:51967/api/somiod/application/</td>
+                <td class="post">POST</td>
+                <td>None</td>
+                <td>Create a New Container in an Application</td>
+            </tr>
+            <tr>
+                <td>http://localhost:51967/api/somiod/<span>{application}</span>/<span>{container}</span>/</td>
+                <td class="delete">DELETE</td>
+                <td>None</td>
+                <td>Delete a Container from an Application</td>
+            </tr>
+            <tr>
+                <td>http://localhost:51967/api/somiod/<span>{application}</span>/<span>{container}</span>/</td>
+                <td class="put">PUT</td>
+                <td>None</td>
+                <td>Update a Container from an Application</td>
+            </tr>
+            <tr>
+                <td>http://localhost:51967/api/somiod/<span>{application}</span>/<span>{container}</span>/record/</td>
+                <td class="get">GET</td>
+                <td>None</td>
+                <td>Get All Records from a Container</td>
+            </tr>
+            <tr>
+                <td>http://localhost:51967/api/somiod/<span>{application}</span>/<span>{container}</span>/notification/</td>
+                <td class="get">GET</td>
+                <td>None</td>
+                <td>Get All Notifications from a Container</td>
+            </tr>
+            <tr>
+                <td>http://localhost:51967/api/somiod/<span>{application}</span>/<span>{container}</span>/record/<span>{record}</span>/</td>
+                <td class="get">GET</td>
+                <td>None</td>
+                <td>Get One Record from a Container</td>
+            </tr>
+            <tr>
+                <td>http://localhost:51967/api/somiod/<span>{application}</span>/<span>{container}</span>/notif/<span>{notification}</span>/</td>
+                <td class="get">GET</td>
+                <td>None</td>
+                <td>Get One Notification from a Container</td>
+            </tr>
+            <tr>
+                <td>http://localhost:51967/api/somiod/<span>{application}</span>/<span>{container}</span>/</td>
+                <td class="post">POST</td>
+                <td>res_type: record</td>
+                <td>Create a New Record in a Container</td>
+            </tr>
+            <tr>
+                <td>http://localhost:51967/api/somiod/<span>{application}</span>/<span>{container}</span>/</td>
+                <td class="post">POST</td>
+                <td>res_type: notification</td>
+
+                <td>Create a New Notification in a Container</td>
+            </tr>
+            <tr>
+                <td>http://localhost:51967/api/somiod/<span>{application}</span>/<span>{container}</span>/record/<span>{record}</span>/</td>
+                <td class="delete">DELETE</td>
+                <td>None</td>
+                <td>Delete a Record in a Container</td>
+            </tr>
+            <tr>
+                <td>http://localhost:51967/api/somiod/<span>{application}</span>/<span>{container}</span>/notif/<span>{notification}</span>/</td>
+                <td class="delete">DELETE</td>
+                <td>None</td>
+                <td>Delete a Notification in a Container</td>
+            </tr>
+        </tbody>
+    </table>
+    <footer>
+        <p>Somiod API Endpoints</p>
+    </footer>
+</body>
+</html>
