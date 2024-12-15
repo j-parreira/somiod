@@ -124,7 +124,7 @@
     </Compile>
     <Compile Include="Helpers\ApplicationHelper.cs" />
     <Compile Include="Helpers\ContainerHelper.cs" />
-    <Compile Include="Helpers\Message.cs" />
+    <Compile Include="Models\Message.cs" />
     <Compile Include="Helpers\MqttAndHttpHelper.cs" />
     <Compile Include="Helpers\NotificationHelper.cs" />
     <Compile Include="Helpers\RecordHelper.cs" />
