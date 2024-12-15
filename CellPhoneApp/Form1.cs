@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using Application = somiod.Models.Application;
 
 namespace CellPhoneApp
 {
@@ -25,10 +26,51 @@ namespace CellPhoneApp
         }
 
         // Form1_Load method is called when the form is loaded and waits for 5 seconds before calling LoadAppsIntoComboBox method.
-        private void Form1_Load(object sender, EventArgs e)
+        private async void Form1_Load(object sender, EventArgs e)
         {
             Thread.Sleep(5000);
+            await CreateApplicationAsync("mobile_application");
             LoadAppsIntoComboBox();
+        }
+
+        // CreateApplicationAsync method creates an application with the given name
+        private async Task CreateApplicationAsync(string applicationName)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    Application app = new Application
+                    {
+                        id = 0,
+                        name = applicationName,
+                        creation_datetime = DateTime.Now
+                    };
+                    string fullURI = baseURI + applicationName;
+                    HttpResponseMessage response_1 = client.GetAsync(fullURI).Result;
+                    int statusCode = (int)response_1.StatusCode;
+                    if (statusCode == 404)
+                    {
+                        fullURI = baseURI;
+                        string requestBody = XMLHelper.SerializeXmlUtf8<Application>(app).ToString().Trim();
+                        HttpContent httpContent = new StringContent(requestBody, Encoding.UTF8, "application/xml");
+                        HttpResponseMessage response_2 = await client.PostAsync(fullURI, httpContent);
+                        int statusCode_2 = (int)response_2.StatusCode;
+                        if (statusCode_2 != 201)
+                        {
+                            throw new Exception("Error creating container");
+                        }
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         // LoadAppsIntoComboBox method loads the applications into the comboBoxApplication.
