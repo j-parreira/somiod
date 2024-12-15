@@ -24,8 +24,10 @@ namespace SmartHomeApp
 {
     public partial class Form1 : Form
     {
-        // baseURI is the base URI for the somiod API and mClient is the MQTT client
+        // baseURI is the base URI for the somiod API
         string baseURI = "http://localhost:51967/api/somiod/";
+
+        // mClient is the MQTT client shared by the applications in the Smart Home
         MqttClient mClient = new MqttClient(IPAddress.Parse("127.0.0.1"));
 
         // filename is the name of the XML file to store MQTT messages and daysToKeep is the number of days to keep messages

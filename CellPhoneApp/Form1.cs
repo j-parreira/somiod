@@ -17,7 +17,7 @@ namespace CellPhoneApp
 {
     public partial class Form1 : Form
     {
-        // baseURI is the base URI of the server.
+        // baseURI is the base URI of the somiod server.
         string baseURI = "http://localhost:51967/api/somiod/";
         public Form1()
         {

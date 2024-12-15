@@ -49,6 +49,7 @@
             this.labelAlarm = new System.Windows.Forms.Label();
             this.richTextBoxCamera = new System.Windows.Forms.RichTextBox();
             this.labelCamera = new System.Windows.Forms.Label();
+            this.groupBoxSmartHomeApplication = new System.Windows.Forms.GroupBox();
             this.groupBoxLighting.SuspendLayout();
             this.groupBoxHeating.SuspendLayout();
             this.groupBoxSecurity.SuspendLayout();
@@ -64,7 +65,7 @@
             this.groupBoxLighting.Controls.Add(this.richTextBoxParkingLight);
             this.groupBoxLighting.Controls.Add(this.labelParkingLight);
             this.groupBoxLighting.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBoxLighting.Location = new System.Drawing.Point(12, 12);
+            this.groupBoxLighting.Location = new System.Drawing.Point(23, 54);
             this.groupBoxLighting.Name = "groupBoxLighting";
             this.groupBoxLighting.Size = new System.Drawing.Size(370, 241);
             this.groupBoxLighting.TabIndex = 0;
@@ -139,7 +140,7 @@
             this.groupBoxHeating.Controls.Add(this.richTextBoxAirConditioning);
             this.groupBoxHeating.Controls.Add(this.labelAirConditioning);
             this.groupBoxHeating.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBoxHeating.Location = new System.Drawing.Point(406, 12);
+            this.groupBoxHeating.Location = new System.Drawing.Point(417, 54);
             this.groupBoxHeating.Name = "groupBoxHeating";
             this.groupBoxHeating.Size = new System.Drawing.Size(370, 241);
             this.groupBoxHeating.TabIndex = 7;
@@ -214,7 +215,7 @@
             this.groupBoxSecurity.Controls.Add(this.richTextBoxCamera);
             this.groupBoxSecurity.Controls.Add(this.labelCamera);
             this.groupBoxSecurity.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBoxSecurity.Location = new System.Drawing.Point(800, 12);
+            this.groupBoxSecurity.Location = new System.Drawing.Point(811, 54);
             this.groupBoxSecurity.Name = "groupBoxSecurity";
             this.groupBoxSecurity.Size = new System.Drawing.Size(370, 241);
             this.groupBoxSecurity.TabIndex = 7;
@@ -279,14 +280,26 @@
             this.labelCamera.TabIndex = 0;
             this.labelCamera.Text = "Camera";
             // 
+            // groupBoxSmartHomeApplication
+            // 
+            this.groupBoxSmartHomeApplication.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.groupBoxSmartHomeApplication.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBoxSmartHomeApplication.Location = new System.Drawing.Point(12, 9);
+            this.groupBoxSmartHomeApplication.Name = "groupBoxSmartHomeApplication";
+            this.groupBoxSmartHomeApplication.Size = new System.Drawing.Size(1182, 299);
+            this.groupBoxSmartHomeApplication.TabIndex = 9;
+            this.groupBoxSmartHomeApplication.TabStop = false;
+            this.groupBoxSmartHomeApplication.Text = "Smart Home Application";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1182, 263);
+            this.ClientSize = new System.Drawing.Size(1206, 321);
             this.Controls.Add(this.groupBoxSecurity);
             this.Controls.Add(this.groupBoxHeating);
             this.Controls.Add(this.groupBoxLighting);
+            this.Controls.Add(this.groupBoxSmartHomeApplication);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -323,6 +336,7 @@
         private System.Windows.Forms.Label labelAlarm;
         private System.Windows.Forms.RichTextBox richTextBoxCamera;
         private System.Windows.Forms.Label labelCamera;
+        private System.Windows.Forms.GroupBox groupBoxSmartHomeApplication;
     }
 }
 
