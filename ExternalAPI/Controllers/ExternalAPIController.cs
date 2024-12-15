@@ -18,8 +18,9 @@ namespace ExternalAPI.Controllers
         // List of Messages received
         private static List<Message> messages = new List<Message>
         {
-            new Message { topic = "servers/server_mqtt", content = "ON", event_type = "creation" },
-            new Message { topic = "servers/server_mqtt", content = "OFF", event_type = "deletion" }
+            new Message { topic = "http_servers/http_server_mail", content = "ON", event_type = "creation" },
+            new Message { topic = "http_computers/http_desktop", content = "OFF", event_type = "deletion" },
+            new Message { topic = "http_sensors/http_temperature_sensor", content = "ON", event_type = "creation" }
         };
 
         // ---------------------------- XML Formatter ---------------------------

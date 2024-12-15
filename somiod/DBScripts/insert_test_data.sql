@@ -1,32 +1,32 @@
 ﻿INSERT INTO applications ([name], [creation_datetime]) 
 VALUES 
-    ('servers', GETDATE()), 
-    ('computers', GETDATE()), 
-    ('cables', GETDATE());
+    ('http_servers', GETDATE()), 
+    ('http_computers', GETDATE()), 
+    ('http_sensors', GETDATE());
 
 INSERT INTO containers ([name], [creation_datetime], [parent]) 
 VALUES 
-    ('server_mqtt', GETDATE(), 1),
-    ('server_http', GETDATE(), 1),
-    ('desktop', GETDATE(), 2),
-    ('laptop', GETDATE(), 2),
-    ('rj-45', GETDATE(), 3),
-    ('hdmi', GETDATE(), 3);
+    ('http_server_mail', GETDATE(), 1),
+    ('http_server_proxy', GETDATE(), 1),
+    ('http_desktop', GETDATE(), 2),
+    ('http_laptop', GETDATE(), 2),
+    ('http_temperature_sensor', GETDATE(), 3),
+    ('http_distance_sensor', GETDATE(), 3);
 
 INSERT INTO records ([name], [creation_datetime], [parent], [content]) 
 VALUES 
-    ('on1', GETDATE(), 1, 'server_mqtt is turned on'),
-    ('off1', GETDATE(), 1, 'server_mqtt is turned off'),
-    ('on2', GETDATE(), 2, 'server_http is turned on'),
-    ('off2', GETDATE(), 2, 'server_http is turned off'),
+    ('on1', GETDATE(), 1, 'server_mail is turned on'),
+    ('off1', GETDATE(), 1, 'server_mail is turned off'),
+    ('on2', GETDATE(), 2, 'server_proxy is turned on'),
+    ('off2', GETDATE(), 2, 'server_proxy is turned off'),
     ('on3', GETDATE(), 3, 'desktop is turned on'),
     ('off3', GETDATE(), 3, 'desktop is turned off'),
     ('on4', GETDATE(), 4, 'laptop is turned on'),
     ('off4', GETDATE(), 4, 'laptop is turned off'),
-    ('on5', GETDATE(), 5, 'rj-45 is turned on'),
-    ('off5', GETDATE(), 5, 'rj-45 is turned off'),
-    ('on6', GETDATE(), 6, 'hdmi is turned on'),
-    ('off6', GETDATE(), 6, 'hdmi is turned off');
+    ('on5', GETDATE(), 5, 'temperature_sensor is turned on'),
+    ('off5', GETDATE(), 5, 'temperature_sensor is turned off'),
+    ('on6', GETDATE(), 6, 'distance_sensor is turned on'),
+    ('off6', GETDATE(), 6, 'distance_sensor is turned off');
 
 INSERT INTO notifications ([name], [creation_datetime], [parent], [event_type], [endpoint], [enabled]) 
 VALUES 

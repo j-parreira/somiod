@@ -33,11 +33,11 @@ namespace SmartHomeApp
         int daysToKeep;
 
         // topics is an array of MQTT topics to subscribe to
-        string[] topics = { "smarthome/smarthome_all", "lighting/parking_light",
-            "lighting/garden_light", "lighting/lighting_all",
-            "heating/air_conditioning", "heating/heater",
-            "heating/heating_all", "security/camera",
-            "security/alarm", "security/security_all" };
+        string[] topics = { "mqtt_smarthome/mqtt_smarthome_all", "mqtt_lighting/mqtt_parking_light",
+            "mqtt_lighting/mqtt_garden_light", "mqtt_lighting/mqtt_lighting_all",
+            "mqtt_heating/mqtt_air_conditioning", "mqtt_heating/mqtt_heater",
+            "mqtt_heating/mqtt_heating_all", "mqtt_security/mqtt_camera",
+            "mqtt_security/alarm", "mqtt_security/mqtt_security_all" };
 
         public Form1()
         {
@@ -60,19 +60,19 @@ namespace SmartHomeApp
         {
             try
             {
-                string[] applications = { "smarthome", "lighting", "heating", "security" };
+                string[] applications = { "mqtt_smarthome", "mqtt_lighting", "mqtt_heating", "mqtt_security" };
                 (string application, string container)[] containersAndNotifications =
                 {
-                    ("smarthome", "smarthome_all"),
-                    ("lighting", "parking_light"),
-                    ("lighting", "garden_light"),
-                    ("lighting", "lighting_all"),
-                    ("heating", "air_conditioning"),
-                    ("heating", "heater"),
-                    ("heating", "heating_all"),
-                    ("security", "camera"),
-                    ("security", "alarm"),
-                    ("security", "security_all")
+                    ("mqtt_smarthome", "mqtt_smarthome_all"),
+                    ("mqtt_lighting", "mqtt_parking_light"),
+                    ("mqtt_lighting", "mqtt_garden_light"),
+                    ("mqtt_lighting", "mqtt_lighting_all"),
+                    ("mqtt_heating", "mqtt_air_conditioning"),
+                    ("mqtt_heating", "mqtt_heater"),
+                    ("mqtt_heating", "mqtt_heating_all"),
+                    ("mqtt_security", "mqtt_camera"),
+                    ("mqtt_security", "mqtt_alarm"),
+                    ("mqtt_security", "mqtt_security_all")
                 };
                 foreach (var app in applications)
                 {
@@ -278,7 +278,7 @@ namespace SmartHomeApp
             }
             switch (topic)
             {
-                case "smarthome/smarthome_all":
+                case "mqtt_smarthome/mqtt_smarthome_all":
                     if (message == "ON")
                     {
                         ToggleAll(true);
@@ -288,7 +288,7 @@ namespace SmartHomeApp
                         ToggleAll(false);
                     }
                     break;
-                case "lighting/parking_light":
+                case "mqtt_lighting/mqtt_parking_light":
                     if (message == "ON")
                     {
                         ToggleParkingLight(true);
@@ -298,7 +298,7 @@ namespace SmartHomeApp
                         ToggleParkingLight(false);
                     }
                     break;
-                case "lighting/garden_light":
+                case "mqtt_lighting/mqtt_garden_light":
                     if (message == "ON")
                     {
                         ToggleGardenLight(true);
@@ -308,7 +308,7 @@ namespace SmartHomeApp
                         ToggleGardenLight(false);
                     }
                     break;
-                case "lighting/lighting_all":
+                case "mqtt_lighting/mqtt_lighting_all":
                     if (message == "ON")
                     {
                         ToggleLighting(true);
@@ -318,7 +318,7 @@ namespace SmartHomeApp
                         ToggleLighting(false);
                     }
                     break;
-                case "heating/air_conditioning":
+                case "mqtt_heating/mqtt_air_conditioning":
                     if (message == "ON")
                     {
                         ToggleAirConditioning(true);
@@ -328,7 +328,7 @@ namespace SmartHomeApp
                         ToggleAirConditioning(false);
                     }
                     break;
-                case "heating/heater":
+                case "mqtt_heating/mqtt_heater":
                     if (message == "ON")
                     {
                         ToggleHeater(true);
@@ -338,7 +338,7 @@ namespace SmartHomeApp
                         ToggleHeater(false);
                     }
                     break;
-                case "heating/heating_all":
+                case "mqtt_heating/mqtt_heating_all":
                     if (message == "ON")
                     {
                         ToggleHeating(true);
@@ -348,7 +348,7 @@ namespace SmartHomeApp
                         ToggleHeating(false);
                     }
                     break;
-                case "security/camera":
+                case "mqtt_security/mqtt_camera":
                     if (message == "ON")
                     {
                         ToggleCamera(true);
@@ -358,7 +358,7 @@ namespace SmartHomeApp
                         ToggleCamera(false);    
                     }
                     break;
-                case "security/alarm":
+                case "mqtt_security/mqtt_alarm":
                     if (message == "ON")
                     {
                         ToggleAlarm(true);
@@ -368,7 +368,7 @@ namespace SmartHomeApp
                         ToggleAlarm(false);
                     }
                     break;
-                case "security/security_all":
+                case "mqtt_security/mqtt_security_all":
                     if (message == "ON")
                     {
                         ToggleSecurity(true);

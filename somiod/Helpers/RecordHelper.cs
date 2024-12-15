@@ -276,26 +276,36 @@ namespace somiod.Helpers
             {
                 throw new Exception("Error adding record to database", e);
             }
-            string topic = application + "/" + container;
-            string content = record.content;
-            string event_type = "creation";
-            string message = event_type + ";" + content;
-            List<string> endpoints = MqttAndHttpHelper.FindEndpointsToSend(application, container, "1");
-            foreach (var endpoint in endpoints)
+
+            // Send notifications
+            try
             {
-                if (endpoint.StartsWith("mqtt://"))
+                string topic = application + "/" + container;
+                string content = record.content;
+                string event_type = "creation";
+                string message = event_type + ";" + content;
+                List<string> endpoints = MqttAndHttpHelper.FindEndpointsToSend(application, container, "1");
+                foreach (var endpoint in endpoints)
                 {
-                    MqttAndHttpHelper.PublishMqttMessage(topic, message, endpoint);
-                }
-                else if (endpoint.StartsWith("http://"))
-                {
-                    MqttAndHttpHelper.SendHttpPostRequest(topic, content, event_type, endpoint);
-                }
-                else
-                {
-                    throw new Exception("Invalid endpoint...");
+                    if (endpoint.StartsWith("mqtt://"))
+                    {
+                        MqttAndHttpHelper.PublishMqttMessage(topic, message, endpoint);
+                    }
+                    else if (endpoint.StartsWith("http://"))
+                    {
+                        MqttAndHttpHelper.SendHttpPostRequest(topic, content, event_type, endpoint);
+                    }
+                    else
+                    {
+                        throw new Exception("Invalid endpoint...");
+                    }
                 }
             }
+            catch (Exception e)
+            {
+                throw new Exception("Error sending notifications", e);
+            }
+
             return record;
         }
 
@@ -324,24 +334,33 @@ namespace somiod.Helpers
             {
                 throw new Exception("Error deleting record from database", e);
             }
-            string topic = application + "/" + container;
-            string event_type = "deletion";
-            string message = event_type + ";" + content;
-            List<string> endpoints = MqttAndHttpHelper.FindEndpointsToSend(application, container, "2");
-            foreach (var endpoint in endpoints)
+
+            // Send notifications
+            try
             {
-                if (endpoint.StartsWith("mqtt://"))
+                string topic = application + "/" + container;
+                string event_type = "deletion";
+                string message = event_type + ";" + content;
+                List<string> endpoints = MqttAndHttpHelper.FindEndpointsToSend(application, container, "2");
+                foreach (var endpoint in endpoints)
                 {
-                    MqttAndHttpHelper.PublishMqttMessage(topic, message, endpoint);
+                    if (endpoint.StartsWith("mqtt://"))
+                    {
+                        MqttAndHttpHelper.PublishMqttMessage(topic, message, endpoint);
+                    }
+                    else if (endpoint.StartsWith("http://"))
+                    {
+                        MqttAndHttpHelper.SendHttpPostRequest(topic, content, event_type, endpoint);
+                    }
+                    else
+                    {
+                        throw new Exception("Invalid endpoint...");
+                    }
                 }
-                else if (endpoint.StartsWith("http://"))
-                {
-                    MqttAndHttpHelper.SendHttpPostRequest(topic, content, event_type, endpoint);
-                }
-                else
-                {
-                    throw new Exception("Invalid endpoint...");
-                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error sending notifications", e);
             }
         }
     }
