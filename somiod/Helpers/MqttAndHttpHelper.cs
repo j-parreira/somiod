@@ -5,15 +5,18 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
+using System.Net.Http.Headers;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Web;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
+using System.Xml;
 
 namespace somiod.Helpers
 {
-    public class MqttHelper
+    public class MqttAndHttpHelper
     {
         // Method to find endpoints to send notifications
         internal static List<string> FindEndpointsToSend(string application, string container, string eventType)
@@ -57,28 +60,53 @@ namespace somiod.Helpers
         }
 
         // Method to publish MQTT messages
-        internal static void PublishMqttMessages(string topic, string message, List<string> endpointsToSend)
+        internal static void PublishMqttMessage(string topic, string message, string endpoint)
         {
-            MqttClient mClient;
             try
             {
-                foreach (var endpoint in endpointsToSend)
+                MqttClient mClient;
+                Uri uri = new Uri(endpoint);
+                mClient = new MqttClient(IPAddress.Parse(uri.Host));
+                mClient.Connect(Guid.NewGuid().ToString());
+                Thread.Sleep(50);
+                if (!mClient.IsConnected)
                 {
-                    mClient = new MqttClient(IPAddress.Parse(endpoint));
-                    mClient.Connect(Guid.NewGuid().ToString());
-                    Thread.Sleep(50);
-                    if (!mClient.IsConnected)
-                    {
-                        throw new Exception("Error connecting to message broker...");
-                    }
-                    mClient.Publish(topic, Encoding.UTF8.GetBytes(message));
-                    Thread.Sleep(50);
-                    mClient.Disconnect();
+                    throw new Exception("Error connecting to message broker...");
                 }
+                mClient.Publish(topic, Encoding.UTF8.GetBytes(message));
+                Thread.Sleep(50);
+                mClient.Disconnect();
             }
             catch (Exception e)
             {
-                throw new Exception("Error publishing notifications", e);
+                throw new Exception("Error publishing mqtt message", e);
+            }
+        }
+
+        // Method to send HTTP POST requests
+        internal static void SendHttpPostRequest(string topic, string content,string eventType, string endpoint)
+        {
+            Message message = new Message
+            {
+                topic = topic,
+                content = content,
+                event_type = eventType
+            };
+
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    string requestBody = XMLHelper.SerializeXmlUtf8<Message>(message);
+                    HttpContent httpContent = new StringContent(requestBody, Encoding.UTF8, "application/xml");
+                    HttpResponseMessage response = client.PostAsync(endpoint, httpContent).Result;
+                    int statusCode = (int)response.StatusCode;
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Error sending http post request", e);
+                }
             }
         }
     }

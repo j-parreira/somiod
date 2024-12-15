@@ -4,8 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
+using System.Threading;
 using System.Web;
 using System.Web.Services.Description;
 using uPLibrary.Networking.M2Mqtt;
@@ -274,16 +277,32 @@ namespace somiod.Helpers
                 throw new Exception("Error adding record to database", e);
             }
             string topic = application + "/" + container;
-            string message = "creation;" + record.content;
-            List<string> endpoints = MqttHelper.FindEndpointsToSend(application, container, "1");
-            MqttHelper.PublishMqttMessages(topic, message, endpoints);
+            string content = record.content;
+            string event_type = "creation";
+            string message = event_type + ";" + content;
+            List<string> endpoints = MqttAndHttpHelper.FindEndpointsToSend(application, container, "1");
+            foreach (var endpoint in endpoints)
+            {
+                if (endpoint.StartsWith("mqtt://"))
+                {
+                    MqttAndHttpHelper.PublishMqttMessage(topic, message, endpoint);
+                }
+                else if (endpoint.StartsWith("http://"))
+                {
+                    MqttAndHttpHelper.SendHttpPostRequest(topic, content, event_type, endpoint);
+                }
+                else
+                {
+                    throw new Exception("Invalid endpoint...");
+                }
+            }
             return record;
         }
 
-        // Method to update record in database under a container in an application and publish MQTT messages or send HTTP post
+        // Method to delete record in database under a container in an application and publish MQTT messages or send HTTP post
         internal static void DeleteRecordFromDatabase(string application, string container, string record)
         {
-            string message = FindRecordInDatabase(application, container, record).content;
+            string content = FindRecordInDatabase(application, container, record).content;
             var cont = ContainerHelper.FindContainerInDatabase(application, container);
             try
             {
@@ -306,9 +325,24 @@ namespace somiod.Helpers
                 throw new Exception("Error deleting record from database", e);
             }
             string topic = application + "/" + container;
-            message = "deletion;" + message;
-            List<string> endpoints = MqttHelper.FindEndpointsToSend(application, container, "2");
-            MqttHelper.PublishMqttMessages(topic, message, endpoints);
+            string event_type = "deletion";
+            string message = event_type + ";" + content;
+            List<string> endpoints = MqttAndHttpHelper.FindEndpointsToSend(application, container, "2");
+            foreach (var endpoint in endpoints)
+            {
+                if (endpoint.StartsWith("mqtt://"))
+                {
+                    MqttAndHttpHelper.PublishMqttMessage(topic, message, endpoint);
+                }
+                else if (endpoint.StartsWith("http://"))
+                {
+                    MqttAndHttpHelper.SendHttpPostRequest(topic, content, event_type, endpoint);
+                }
+                else
+                {
+                    throw new Exception("Invalid endpoint...");
+                }
+            }
         }
     }
 }

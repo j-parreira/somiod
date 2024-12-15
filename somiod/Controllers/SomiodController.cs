@@ -25,6 +25,7 @@ namespace somiod.Controllers
             Indent = true,
             UseXmlSerializer = true
         };
+
         // ---------------------------- Applications ----------------------------
         // GET: api/somiod
         [Route("")]

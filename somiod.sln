@@ -8,6 +8,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App_Test_Endpoints", "App_Test_Endpoints\App_Test_Endpoints.csproj", "{280FB115-6205-4200-A85E-5C41879FBC43}"
 	ProjectSection(ProjectDependencies) = postProject
 		{73993F91-3FE3-4949-BEB7-BD8A891F0972} = {73993F91-3FE3-4949-BEB7-BD8A891F0972}
+		{F0CF9A20-245E-4290-A77E-F1B0B6D98400} = {F0CF9A20-245E-4290-A77E-F1B0B6D98400}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartHomeApp", "SmartHomeApp\SmartHomeApp.csproj", "{E345D1B4-81D4-4308-BB7C-F970873EE465}"
@@ -16,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MobileApp", "CellPhoneApp\M
 	ProjectSection(ProjectDependencies) = postProject
 		{E345D1B4-81D4-4308-BB7C-F970873EE465} = {E345D1B4-81D4-4308-BB7C-F970873EE465}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExternalAPI", "ExternalAPI\ExternalAPI.csproj", "{F0CF9A20-245E-4290-A77E-F1B0B6D98400}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +42,10 @@ Global
 		{278A3101-9417-4FFA-A969-D8F8958C7441}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{278A3101-9417-4FFA-A969-D8F8958C7441}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{278A3101-9417-4FFA-A969-D8F8958C7441}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0CF9A20-245E-4290-A77E-F1B0B6D98400}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0CF9A20-245E-4290-A77E-F1B0B6D98400}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0CF9A20-245E-4290-A77E-F1B0B6D98400}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0CF9A20-245E-4290-A77E-F1B0B6D98400}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

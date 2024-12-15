@@ -217,7 +217,7 @@ namespace SmartHomeApp
                         creation_datetime = DateTime.Now,
                         parent = 0,
                         event_type = "1",
-                        endpoint = "127.0.0.1",
+                        endpoint = "mqtt://127.0.0.1",
                         enabled = true
                     };
                     string fullURI = baseURI + applicationName + "/" + containerName;

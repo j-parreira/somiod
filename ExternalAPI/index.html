@@ -1,0 +1,122 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>External Web Service - HTTP Notifications Endpoint</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+        }
+
+        main {
+            padding: 20px;
+            width: 90%;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 5px;
+            background-color: #f9f9f9;
+            border-radius: 3px;
+        }
+
+            li:hover {
+                background-color: #f1f1f1;
+            }
+
+        input[type="button"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+            input[type="button"]:hover {
+                background-color: #45a049;
+            }
+
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            background: #4CAF50;
+            color: white;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>External Web Service - HTTP Notifications Endpoint</h1>
+    </header>
+    <main>
+        <input type="button" value="Get All Messages" onclick="fetchMessages();" />
+        <h2>All HTTP Notifications</h2>
+        <ul id="messages"></ul>
+    </main>
+    <footer>
+        <p>External Web Service - HTTP Notifications Endpoint</p>
+    </footer>
+
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.4.min.js"></script>
+    <script>
+        // URI of the external web service
+        var uri = 'http://localhost:61958/api/message/';
+
+        // Automatically fetch records on page load
+        $(document).ready(function () {
+            fetchMessages();
+        });
+
+        // Function to fetch and display records
+        function fetchMessages() {
+            $.get(uri)
+                .done(function (data) {
+                    // Clear existing records
+                    $('#messages').empty();
+
+                    // Add each record to the list
+                    $.each(data, function (key, item) {
+                        $('<li>', { text: formatItem(item) }).appendTo($('#messages'));
+                    });
+                })
+                .fail(function (jqxhr, textStatus, error) {
+                    var err = textStatus + ", " + error;
+                    alert("Request failed: " + err);
+                });
+        }
+
+        // Format item for display
+        function formatItem(item) {
+            return `Topic: ${item.topic}; Content: ${item.content}; Event Type: ${item.event_type}`;
+        }
+    </script>
+</body>
+</html>
