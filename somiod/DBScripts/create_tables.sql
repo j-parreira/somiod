@@ -1,4 +1,9 @@
-﻿CREATE TABLE [dbo].[applications]
+﻿/**
+* @brief Somiod - Projeto de Integração de Sistemas
+* @date 2024-12-18
+* @authors Diogo Abegão, João Parreira, Marcelo Oliveira, Pedro Barbeiro
+*/
+CREATE TABLE [dbo].[applications]
 (
 	[id] INT IDENTITY(1, 1) NOT NULL,
 	[name] NVARCHAR (50) NOT NULL,

@@ -1,4 +1,9 @@
-﻿using somiod.Models;
+﻿/**
+* @brief Somiod - Projeto de Integração de Sistemas
+* @date 2024-12-18
+* @authors Diogo Abegão, João Parreira, Marcelo Oliveira, Pedro Barbeiro
+*/
+using somiod.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
